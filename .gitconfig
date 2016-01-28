@@ -1,0 +1,38 @@
+[alias]
+
+	s = status
+	d = diff
+	c = commit
+	co = checkout
+	b = branch
+	m = merge
+	l = log
+	a = add
+
+[user]
+
+	name = Shota Iguchi
+	email = e.iguchi1124@gmail.com
+
+[core]
+
+	excludesfile = /Users/shota/.gitignore_global
+
+[difftool "sourcetree"]
+
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+
+[mergetool "sourcetree"]
+
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+
+[url "https://"]
+
+	insteadOf = git://
+
+[color]
+	ui = auto
+[push]
+	default = matching

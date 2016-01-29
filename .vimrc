@@ -73,6 +73,7 @@ NeoBundle 'vim-ruby/vim-ruby'
 NeoBundle 'tpope/vim-endwise'
 
 NeoBundle 'slim-template/vim-slim'
+NeoBundle 'tpope/vim-haml'
 
 call neobundle#end()
 

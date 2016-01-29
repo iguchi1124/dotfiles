@@ -1,3 +1,7 @@
+filetype plugin indent off
+
+syntax on
+
 set number
 set cursorline
 set laststatus=2
@@ -53,4 +57,23 @@ if has("autocmd")
     \ endif
 endif
 
-syntax on
+if has('vim_starting')
+  set runtimepath+=~/.dotfiles/.vim/bundle/neobundle.vim/
+endif
+
+call neobundle#begin(expand('~/.dotfiles/.vim/bundle/'))
+
+NeoBundleFetch 'Shougo/neobundle.vim'
+
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'scrooloose/nerdtree'
+
+call neobundle#end()
+
+let NERDTreeShowHidden = 1
+let file_name = expand("%:p")
+if has('vim_starting') &&  file_name == ""
+    autocmd VimEnter * execute 'NERDTree ./'
+endif
+
+filetype plugin indent on

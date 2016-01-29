@@ -55,7 +55,7 @@ call neobundle#begin(expand('~/.dotfiles/.vim/bundle/'))
 
 NeoBundleFetch 'Shougo/neobundle.vim'
 
-NeoBundle 'altercation/vim-colors-solarized'
+NeoBundle 'w0ng/vim-hybrid'
 
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'scrooloose/nerdtree'
@@ -89,11 +89,10 @@ omap <silent> <C-e>      :NERDTreeToggle<CR>
 imap <silent> <C-e> <Esc>:NERDTreeToggle<CR>
 cmap <silent> <C-e> <C-u>:NERDTreeToggle<CR>
 
-let g:solarized_termcolors=256
+syntax on
 
-syntax enable
 set background=dark
-colorscheme solarized
+colorscheme hybrid
 
 autocmd FileType html inoremap <silent> <buffer> </ </<C-x><C-o>
 

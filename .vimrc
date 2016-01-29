@@ -72,6 +72,8 @@ NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'vim-ruby/vim-ruby'
 NeoBundle 'tpope/vim-endwise'
 
+NeoBundle 'slim-template/vim-slim'
+
 call neobundle#end()
 
 let NERDTreeShowHidden = 1

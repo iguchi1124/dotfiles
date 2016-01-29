@@ -27,7 +27,6 @@ zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin \
 
 zstyle ':completion:*:processes' command 'ps x -o pid,s,args'
 
-
 autoload -Uz vcs_info
 autoload -Uz add-zsh-hook
 

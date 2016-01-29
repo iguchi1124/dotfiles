@@ -66,6 +66,7 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'vim-ruby/vim-ruby'
 
 call neobundle#end()
 

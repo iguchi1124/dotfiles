@@ -66,7 +66,7 @@ NeoBundle 'bronson/vim-trailing-whitespace'
 NeoBundle 'mattn/emmet-vim'
 NeoBundle 'othree/html5.vim'
 NeoBundle 'hail2u/vim-css3-syntax'
-NeoBundle 'taichouchou2/vim-javascript'
+NeoBundle 'pangloss/vim-javascript'
 NeoBundle 'kchmck/vim-coffee-script'
 
 NeoBundle 'vim-ruby/vim-ruby'
@@ -98,3 +98,5 @@ colorscheme solarized
 autocmd FileType html inoremap <silent> <buffer> </ </<C-x><C-o>
 
 filetype plugin indent on
+
+NeoBundleCheck

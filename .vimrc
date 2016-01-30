@@ -36,17 +36,15 @@ set wildmenu wildmode=list:longest,full
 set history=10000
 set noerrorbells
 
-imap { {}<LEFT>
-imap [ []<LEFT>
-imap ( ()<LEFT>
-
+" save last cursor position
 autocmd BufReadPost * if line("'\"") > 0 && line ("'\"") <= line("$") | exe "normal! g'\"" | endif
 
-set rtp+=~/.vim/bundle/Vundle.vim
+set runtimepath+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 Plugin 'VundleVim/Vundle.vim'
 
+" color scheme
 Plugin 'w0ng/vim-hybrid'
 
 Plugin 'Shougo/unite.vim'
@@ -55,20 +53,24 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'vim-scripts/AnsiEsc.vim'
 Plugin 'bronson/vim-trailing-whitespace'
 
+" html/css/js
 Plugin 'mattn/emmet-vim'
 Plugin 'othree/html5.vim'
 Plugin 'hail2u/vim-css3-syntax'
 Plugin 'pangloss/vim-javascript'
 Plugin 'kchmck/vim-coffee-script'
 
+" ruby
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'tpope/vim-endwise'
 
+" ruby template engine
 Plugin 'slim-template/vim-slim'
 Plugin 'tpope/vim-haml'
 
 call vundle#end()
 
+" nerdtree
 let NERDTreeShowHidden = 1
 let file_name = expand("%:p")
 if has('vim_starting') &&  file_name == ""
@@ -81,11 +83,13 @@ omap <silent> <C-e>      :NERDTreeToggle<CR>
 imap <silent> <C-e> <Esc>:NERDTreeToggle<CR>
 cmap <silent> <C-e> <C-u>:NERDTreeToggle<CR>
 
+" syntax highlighter
 syntax on
 
 set background=dark
 colorscheme hybrid
 
+" html
 autocmd FileType html inoremap <silent> <buffer> </ </<C-x><C-o>
 
 filetype plugin indent on

@@ -40,42 +40,34 @@ imap { {}<LEFT>
 imap [ []<LEFT>
 imap ( ()<LEFT>
 
-if has("autocmd")
-    autocmd BufReadPost *
-    \ if line("'\"") > 0 && line ("'\"") <= line("$") |
-    \   exe "normal! g'\"" |
-    \ endif
-endif
+autocmd BufReadPost * if line("'\"") > 0 && line ("'\"") <= line("$") | exe "normal! g'\"" | endif
 
-if has('vim_starting')
-  set runtimepath+=~/.dotfiles/.vim/bundle/neobundle.vim/
-endif
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
-call neobundle#begin(expand('~/.dotfiles/.vim/bundle/'))
+Plugin 'VundleVim/Vundle.vim'
 
-NeoBundleFetch 'Shougo/neobundle.vim'
+Plugin 'w0ng/vim-hybrid'
 
-NeoBundle 'w0ng/vim-hybrid'
+Plugin 'Shougo/unite.vim'
+Plugin 'scrooloose/nerdtree'
 
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'scrooloose/nerdtree'
+Plugin 'vim-scripts/AnsiEsc.vim'
+Plugin 'bronson/vim-trailing-whitespace'
 
-NeoBundle 'vim-scripts/AnsiEsc.vim'
-NeoBundle 'bronson/vim-trailing-whitespace'
+Plugin 'mattn/emmet-vim'
+Plugin 'othree/html5.vim'
+Plugin 'hail2u/vim-css3-syntax'
+Plugin 'pangloss/vim-javascript'
+Plugin 'kchmck/vim-coffee-script'
 
-NeoBundle 'mattn/emmet-vim'
-NeoBundle 'othree/html5.vim'
-NeoBundle 'hail2u/vim-css3-syntax'
-NeoBundle 'pangloss/vim-javascript'
-NeoBundle 'kchmck/vim-coffee-script'
+Plugin 'vim-ruby/vim-ruby'
+Plugin 'tpope/vim-endwise'
 
-NeoBundle 'vim-ruby/vim-ruby'
-NeoBundle 'tpope/vim-endwise'
+Plugin 'slim-template/vim-slim'
+Plugin 'tpope/vim-haml'
 
-NeoBundle 'slim-template/vim-slim'
-NeoBundle 'tpope/vim-haml'
-
-call neobundle#end()
+call vundle#end()
 
 let NERDTreeShowHidden = 1
 let file_name = expand("%:p")
@@ -98,4 +90,3 @@ autocmd FileType html inoremap <silent> <buffer> </ </<C-x><C-o>
 
 filetype plugin indent on
 
-NeoBundleCheck

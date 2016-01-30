@@ -19,12 +19,8 @@ autoload -Uz compinit
 compinit
 
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
-
 zstyle ':completion:*' ignore-parents parent pwd ..
-
-zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin \
-           /usr/sbin /usr/bin /sbin /bin /usr/X11R6/bin
-
+zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin /usr/sbin /usr/bin /sbin /bin /usr/X11R6/bin
 zstyle ':completion:*:processes' command 'ps x -o pid,s,args'
 
 autoload -Uz vcs_info
@@ -59,6 +55,7 @@ alias cp='cp -i'
 alias mv='mv -i'
 alias mkdir='mkdir -p'
 
+# bundler
 alias b='bundle'
 alias be='bundle exec'
 
@@ -80,14 +77,17 @@ case ${OSTYPE} in
     ;;
 esac
 
+# ruby env
 export RBENV_ROOT="$HOME/.rbenv"
 export PATH="$RBENV_ROOT/bin:$PATH"
 eval "$(rbenv init -)"
 
+# python env
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
+# go env
 if [ -x "`which go`" ]; then
   export GOROOT=`go env GOROOT`
   export GOPATH=$HOME/code/go-local

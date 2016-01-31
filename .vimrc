@@ -39,6 +39,10 @@ set noerrorbells
 " save last cursor position
 autocmd BufReadPost * if line("'\"") > 0 && line ("'\"") <= line("$") | exe "normal! g'\"" | endif
 
+" automatic closing parenthesis
+inoremap { {}<LEFT>
+inoremap ( ()<LEFT>
+
 set runtimepath+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 

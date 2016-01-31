@@ -60,6 +60,9 @@ Plugin 'hail2u/vim-css3-syntax'
 Plugin 'pangloss/vim-javascript'
 Plugin 'kchmck/vim-coffee-script'
 
+" typescript
+Plugin 'leafgarland/typescript-vim'
+
 " ruby
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'tpope/vim-endwise'

@@ -96,8 +96,11 @@ syntax on
 set background=dark
 colorscheme hybrid
 
-" html
+" automatic closing html tags
 autocmd FileType html inoremap <silent> <buffer> </ </<C-x><C-o>
+
+" *.tsx same as a typescript files
+autocmd BufNewFile,BufRead *.{ts,tsx} set filetype=typescript
 
 filetype plugin indent on
 

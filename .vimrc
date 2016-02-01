@@ -75,6 +75,9 @@ Plugin 'tpope/vim-endwise'
 Plugin 'slim-template/vim-slim'
 Plugin 'tpope/vim-haml'
 
+" go
+Plugin 'fatih/vim-go'
+
 call vundle#end()
 
 " nerdtree

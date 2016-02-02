@@ -78,6 +78,11 @@ Plugin 'tpope/vim-haml'
 " go
 Plugin 'fatih/vim-go'
 
+" python
+Plugin 'hdima/python-syntax'
+Plugin 'andviro/flake8-vim'
+Plugin 'hynek/vim-python-pep8-indent'
+
 call vundle#end()
 
 " nerdtree

@@ -57,7 +57,9 @@ alias mkdir='mkdir -p'
 
 # bundler
 alias b='bundle'
-alias be='bundle exec'
+alias bi='b install'
+alias bu='b update'
+alias be='b exec'
 
 if which pbcopy >/dev/null 2>&1 ; then
   alias -g C='| pbcopy'

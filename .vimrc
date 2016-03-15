@@ -30,7 +30,6 @@ set shiftwidth=2
 set autoindent
 set smartindent
 set clipboard=unnamed,unnamedplus
-set mouse=a
 set shellslash
 set wildmenu wildmode=list:longest,full
 set history=10000

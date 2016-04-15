@@ -102,6 +102,6 @@ eval "$(pyenv init -)"
 # go env
 if [ -x "`which go`" ]; then
   export GOROOT=`go env GOROOT`
-  export GOPATH=$HOME/code/go-local
+  export GOPATH=$HOME/go
   export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 fi

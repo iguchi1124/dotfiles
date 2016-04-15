@@ -16,8 +16,6 @@ set hlsearch
 set ignorecase
 set incsearch
 set laststatus=2
-set list
-set listchars=tab:▸\
 set modifiable
 set nobackup
 set noerrorbells
@@ -31,7 +29,7 @@ set sidescroll=1
 set sidescrolloff=16
 set smartcase
 set smartindent
-set tabstop=2
+set tabstop=4
 set whichwrap=b,s,h,l,<,>,[,]
 set wildmenu
 set wrapscan

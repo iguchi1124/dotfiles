@@ -61,6 +61,10 @@ alias bi='b install'
 alias bu='b update'
 alias be='b exec'
 
+# thefuck
+alias fuck='eval $(thefuck $(fc -ln -1))'
+alias FUCK='fuck'
+
 if which pbcopy >/dev/null 2>&1 ; then
   alias -g C='| pbcopy'
 elif which xsel >/dev/null 2>&1 ; then

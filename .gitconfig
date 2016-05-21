@@ -1,10 +1,7 @@
 [user]
-
 	name = Shota Iguchi
 	email = e.iguchi1124@gmail.com
-
 [alias]
-
 	s = status
 	d = diff
 	c = commit
@@ -13,16 +10,10 @@
 	m = merge
 	l = log
 	a = add
-
 [color]
-
 	ui = auto
-
 [push]
-
 	default = matching
-
 [core]
-
 	excludesfile = ~/.gitignore_global
 	editor = vim

@@ -91,12 +91,10 @@ bindkey '^R' peco-history-selection
 # ruby env
 export RBENV_ROOT="$HOME/.rbenv"
 export PATH="$RBENV_ROOT/bin:$PATH"
-eval "$(rbenv init -)"
 
 # python env
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
 
 # go env
 if [ -x "`which go`" ]; then

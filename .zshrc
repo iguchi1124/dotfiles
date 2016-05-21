@@ -48,7 +48,6 @@ setopt hist_ignore_all_dups
 setopt hist_ignore_space
 setopt hist_reduce_blanks
 setopt extended_glob
-bindkey '^R' history-incremental-pattern-search-backward
 
 alias rm='rm -i'
 alias cp='cp -i'

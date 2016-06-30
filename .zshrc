@@ -54,12 +54,6 @@ alias cp='cp -i'
 alias mv='mv -i'
 alias mkdir='mkdir -p'
 
-# bundler
-alias b='bundle'
-alias bi='b install'
-alias bu='b update'
-alias be='b exec'
-
 if which pbcopy >/dev/null 2>&1 ; then
   alias -g C='| pbcopy'
 elif which xsel >/dev/null 2>&1 ; then
@@ -78,7 +72,6 @@ case ${OSTYPE} in
     ;;
 esac
 
-# peco
 function peco-history-selection() {
   BUFFER=`history -n 1 | tail -r  | awk '!a[$0]++' | peco`
   CURSOR=$#BUFFER
@@ -88,17 +81,14 @@ function peco-history-selection() {
 zle -N peco-history-selection
 bindkey '^R' peco-history-selection
 
-# ruby env
 export RBENV_ROOT="$HOME/.rbenv"
 export PATH="$RBENV_ROOT/bin:$PATH"
 eval "$(rbenv init -)"
 
-# python env
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
-# go env
 if [ -x "`which go`" ]; then
   export GOROOT=`go env GOROOT`
   export GOPATH=$HOME/go

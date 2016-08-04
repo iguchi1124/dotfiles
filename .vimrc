@@ -40,7 +40,6 @@ inoremap [ []<LEFT>
 
 set runtimepath+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'w0ng/vim-hybrid'
 Plugin 'Shougo/unite.vim'
@@ -61,7 +60,6 @@ Plugin 'fatih/vim-go'
 Plugin 'hdima/python-syntax'
 Plugin 'andviro/flake8-vim'
 Plugin 'hynek/vim-python-pep8-indent'
-
 call vundle#end()
 
 let NERDTreeShowHidden = 1
@@ -82,7 +80,6 @@ set background=dark
 colorscheme hybrid
 
 autocmd FileType html inoremap <silent> <buffer> </ </<C-x><C-o>
-
 autocmd BufNewFile,BufRead *.{ts,tsx} set filetype=typescript
 
 filetype plugin indent on

@@ -2,4 +2,7 @@
 *~
 *.swp
 
-.zsh/autossh.zsh
+.vim/bundle/*
+!.vim/bundle/Vundle.vim
+
+.zsh/local.zsh

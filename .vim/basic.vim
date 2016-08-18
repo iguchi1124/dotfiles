@@ -9,7 +9,6 @@ set encoding=utf-8
 set expandtab
 set gdefault
 set helpheight=999
-set hidden
 set history=10000
 set hlsearch
 set ignorecase

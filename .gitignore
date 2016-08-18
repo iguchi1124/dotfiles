@@ -1,5 +1,4 @@
-.DS_Store
-*~
-*.swp
+.vim/bundle/*
+!.vim/bundle/Vundle.vim
 
-.zsh/autossh.zsh
+.zsh/local.zsh

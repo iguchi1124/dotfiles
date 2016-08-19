@@ -2,3 +2,5 @@
 !.vim/bundle/Vundle.vim
 
 .zsh/local.zsh
+
+Gemfile.lock

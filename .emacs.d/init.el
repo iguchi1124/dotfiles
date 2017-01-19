@@ -4,11 +4,6 @@
       (menu-bar-mode -1)
       (set-frame-size (selected-frame) 120 40))
 
-(when (require 'color-theme)
-  (color-theme-initialize)
-  (when (require 'color-theme-solarized)
-    (color-theme-solarized-dark)))
-
 (setq delete-auto-save-files t)
 (setq make-backup-files nil)
 

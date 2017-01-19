@@ -1,10 +1,6 @@
 .vim/bundle/*
 !.vim/bundle/Vundle.vim
 
-*.elc
-.cask
-*.~undo-tree
-
 .netrwhist
 
 .zsh/local.zsh

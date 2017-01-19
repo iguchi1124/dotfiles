@@ -1,8 +1,2 @@
-.vim/bundle/*
-!.vim/bundle/Vundle.vim
-
 .netrwhist
-
-.zsh/local.zsh
-
 Gemfile.lock

@@ -10,6 +10,7 @@
     (color-theme-solarized-dark)))
 
 (setq delete-auto-save-files t)
+(setq make-backup-files nil)
 
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)

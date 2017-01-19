@@ -1,3 +1,5 @@
-if "$(uname)" == "Darwin"; then
-    alias emacs="/Applications/Emacs.app/Contents/MacOS/Emacs -nw"
-fi
+case ${OSTYPE} in
+    darwin*)
+        alias emacs="/Applications/Emacs.app/Contents/MacOS/Emacs -nw"
+        ;;
+esac

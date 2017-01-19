@@ -9,6 +9,8 @@
   (when (require 'color-theme-solarized)
     (color-theme-solarized-dark)))
 
+(setq delete-auto-save-files t)
+
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
 (set-keyboard-coding-system 'utf-8)

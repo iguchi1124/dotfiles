@@ -2,11 +2,14 @@ if &compatible
   set nocompatible
 endif
 
-set runtimepath+=~/.vim/bundles/repos/github.com/Shougo/dein.vim
+let s:dein = expand('~/.cache/dein')
+let s:config = expand('~/.vim')
 
-if dein#load_state('~/.vim/bundles')
-  call dein#begin('~/.vim/bundles')
-  call dein#load_toml('~/.vim/dein.toml')
+execute 'set runtimepath^=' . fnamemodify(s:dein . '/repos/github.com/Shougo/dein.vim', ':p')
+
+if dein#load_state(s:dein)
+  call dein#begin(s:dein)
+  call dein#load_toml(s:config . '/dein.toml')
   call dein#end()
   call dein#save_state()
 endif

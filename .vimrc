@@ -14,6 +14,12 @@ if dein#load_state(s:dein)
   call dein#save_state()
 endif
 
+set number
+set cursorline
+
+colorscheme molokai
+highlight Normal ctermbg=none
+
 filetype plugin indent on
 syntax enable
 

@@ -12,3 +12,6 @@ repo = 'Shougo/neomru.vim'
 
 [[plugins]]
 repo = 'Shougo/neocomplete.vim'
+
+[[plugins]]
+repo = 'tomasr/molokai'

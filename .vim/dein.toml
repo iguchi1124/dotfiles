@@ -9,3 +9,6 @@ hook_add = '''
 
 [[plugins]]
 repo = 'Shougo/neomru.vim'
+
+[[plugins]]
+repo = 'Shougo/neocomplete.vim'

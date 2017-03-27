@@ -16,6 +16,8 @@ endif
 
 set number
 set cursorline
+set tabstop=2
+set shiftwidth=2
 
 colorscheme molokai
 highlight Normal ctermbg=none

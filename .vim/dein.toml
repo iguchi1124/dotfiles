@@ -4,7 +4,7 @@ repo = 'Shougo/dein.vim'
 [[plugins]]
 repo = 'Shougo/unite.vim'
 hook_add = '''
-  source ~/.vim/plugins/unite.vim
+  source ~/.vim/plugin/unite.vim
 '''
 
 [[plugins]]

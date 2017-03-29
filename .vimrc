@@ -16,6 +16,7 @@ endif
 
 set number
 set cursorline
+set expandtab
 set tabstop=2
 set shiftwidth=2
 

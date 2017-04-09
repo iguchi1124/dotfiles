@@ -3,9 +3,6 @@ repo = 'Shougo/dein.vim'
 
 [[plugins]]
 repo = 'Shougo/unite.vim'
-hook_add = '''
-  source ~/.vim/plugin/unite.vim
-'''
 
 [[plugins]]
 repo = 'Shougo/neomru.vim'
@@ -15,3 +12,6 @@ repo = 'Shougo/neocomplete.vim'
 
 [[plugins]]
 repo = 'tomasr/molokai'
+
+[[plugins]]
+repo = 'scrooloose/nerdtree'

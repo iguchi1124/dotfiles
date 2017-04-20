@@ -14,8 +14,11 @@ sh ./installer.sh ~/.cache/dein
 
 see https://github.com/Shougo/dein.vim
 
-### Install tmux and reattach-to-user-namespace
+### Install homebrew
 ```
-brew install tmux
-brew install reattach-to-user-namespace
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew tap Homebrew/bundle
+brew bundle
 ```
+
+see https://brew.sh and https://github.com/Homebrew/homebrew-bundle

@@ -15,3 +15,6 @@ repo = 'tomasr/molokai'
 
 [[plugins]]
 repo = 'scrooloose/nerdtree'
+
+[[plugins]]
+repo = 'ntpeters/vim-better-whitespace'

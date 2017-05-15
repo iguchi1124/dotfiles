@@ -18,3 +18,9 @@ repo = 'scrooloose/nerdtree'
 
 [[plugins]]
 repo = 'ntpeters/vim-better-whitespace'
+
+[[plugins]]
+repo = 'fatih/vim-go'
+
+[[plugins]]
+repo = 'kchmck/vim-coffee-script'

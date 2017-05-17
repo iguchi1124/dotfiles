@@ -22,8 +22,7 @@ set shiftwidth=2
 
 autocmd QuickFixCmdPost *grep* cwindow
 
-colorscheme molokai
-highlight Normal ctermbg=none
+colorscheme apprentice
 
 filetype plugin indent on
 syntax enable

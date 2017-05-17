@@ -11,7 +11,7 @@ repo = 'Shougo/neomru.vim'
 repo = 'Shougo/neocomplete.vim'
 
 [[plugins]]
-repo = 'tomasr/molokai'
+repo = 'romainl/Apprentice'
 
 [[plugins]]
 repo = 'scrooloose/nerdtree'

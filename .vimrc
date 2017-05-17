@@ -20,6 +20,8 @@ set expandtab
 set tabstop=2
 set shiftwidth=2
 
+autocmd QuickFixCmdPost *grep* cwindow
+
 colorscheme molokai
 highlight Normal ctermbg=none
 

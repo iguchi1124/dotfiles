@@ -10,6 +10,7 @@
 	m = merge
 	l = log
 	a = add
+	lg = log --stat --graph --decorate=full
 [color]
 	ui = auto
 [push]
@@ -17,3 +18,6 @@
 [core]
 	excludesfile = ~/.gitignore_global
 	editor = vim
+[merge "mergepbx"]
+	name = Xcode project files merger
+	driver = mergepbx %O %A %B

@@ -24,3 +24,6 @@ repo = 'fatih/vim-go'
 
 [[plugins]]
 repo = 'kchmck/vim-coffee-script'
+
+[[plugins]]
+repo = 'rking/ag.vim'

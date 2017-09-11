@@ -20,6 +20,7 @@ set expandtab
 set tabstop=2
 set shiftwidth=2
 set noswapfile
+set pastetoggle=<C-G>
 
 autocmd QuickFixCmdPost *grep* cwindow
 

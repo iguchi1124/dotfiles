@@ -17,7 +17,7 @@ endif
 set number
 set cursorline
 set expandtab
-set tabstop=2
+set tabstop=4
 set shiftwidth=2
 set noswapfile
 set pastetoggle=<C-G>

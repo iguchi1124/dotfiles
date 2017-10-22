@@ -21,6 +21,7 @@ set tabstop=2
 set shiftwidth=2
 set noswapfile
 set pastetoggle=<C-G>
+set backspace=indent,eol,start
 
 autocmd QuickFixCmdPost *grep* cwindow
 

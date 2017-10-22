@@ -3,13 +3,18 @@
 ## Setup
 
 ```
-sh install.sh
+git clone git@github.com:iguchi1124/dotfiles.git ~/.dotfiles --recursive
+cd ~/.dotfiles && sh install.sh
 ```
 
 ### Install dein.vim
 ```
 curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh
 sh ./installer.sh ~/.cache/dein
+```
+
+```
+:call dein#install()
 ```
 
 see https://github.com/Shougo/dein.vim

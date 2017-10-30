@@ -27,3 +27,7 @@ repo = 'kchmck/vim-coffee-script'
 
 [[plugins]]
 repo = 'rking/ag.vim'
+
+[[plugins]]
+
+repo = 'elixir-editors/vim-elixir'

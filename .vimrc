@@ -25,7 +25,8 @@ set backspace=indent,eol,start
 
 autocmd QuickFixCmdPost *grep* cwindow
 
-colorscheme apprentice
+set background=dark
+colorscheme hybrid_material
 
 filetype plugin indent on
 syntax enable

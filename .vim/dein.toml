@@ -11,9 +11,6 @@ repo = 'Shougo/neomru.vim'
 repo = 'Shougo/neocomplete.vim'
 
 [[plugins]]
-repo = 'romainl/Apprentice'
-
-[[plugins]]
 repo = 'scrooloose/nerdtree'
 
 [[plugins]]
@@ -29,5 +26,7 @@ repo = 'kchmck/vim-coffee-script'
 repo = 'rking/ag.vim'
 
 [[plugins]]
-
 repo = 'elixir-editors/vim-elixir'
+
+[[plugins]]
+repo = 'kristijanhusak/vim-hybrid-material'

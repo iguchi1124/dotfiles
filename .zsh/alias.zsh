@@ -1,5 +1,6 @@
 alias b='bundle'
-alias be='bundle exec'
+alias be='noglob bundle exec'
+alias bundle='noglob bundle'
 alias rake='noglob rake'
 alias d='docker'
 alias dc='docker-compose'

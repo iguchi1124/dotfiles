@@ -30,3 +30,6 @@ repo = 'elixir-editors/vim-elixir'
 
 [[plugins]]
 repo = 'kristijanhusak/vim-hybrid-material'
+
+[[plugins]]
+repo = 'leafgarland/typescript-vim'

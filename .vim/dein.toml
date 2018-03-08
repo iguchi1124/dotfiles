@@ -33,3 +33,6 @@ repo = 'kristijanhusak/vim-hybrid-material'
 
 [[plugins]]
 repo = 'leafgarland/typescript-vim'
+
+[[plugins]]
+repo = 'posva/vim-vue'

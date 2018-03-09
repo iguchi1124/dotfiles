@@ -36,3 +36,6 @@ repo = 'leafgarland/typescript-vim'
 
 [[plugins]]
 repo = 'posva/vim-vue'
+
+[[plugins]]
+repo = 'dart-lang/dart-vim-plugin'

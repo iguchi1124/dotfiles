@@ -39,3 +39,6 @@ repo = 'posva/vim-vue'
 
 [[plugins]]
 repo = 'dart-lang/dart-vim-plugin'
+
+[[plugins]]
+repo = 'google/vim-jsonnet'

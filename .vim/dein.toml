@@ -2,18 +2,6 @@
 repo = 'Shougo/dein.vim'
 
 [[plugins]]
-repo = 'Shougo/unite.vim'
-
-[[plugins]]
-repo = 'Shougo/neomru.vim'
-
-[[plugins]]
-repo = 'Shougo/neocomplete.vim'
-
-[[plugins]]
-repo = 'scrooloose/nerdtree'
-
-[[plugins]]
 repo = 'ntpeters/vim-better-whitespace'
 
 [[plugins]]
@@ -27,9 +15,6 @@ repo = 'rking/ag.vim'
 
 [[plugins]]
 repo = 'elixir-editors/vim-elixir'
-
-[[plugins]]
-repo = 'kristijanhusak/vim-hybrid-material'
 
 [[plugins]]
 repo = 'leafgarland/typescript-vim'

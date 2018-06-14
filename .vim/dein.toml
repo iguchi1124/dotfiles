@@ -27,3 +27,6 @@ repo = 'dart-lang/dart-vim-plugin'
 
 [[plugins]]
 repo = 'google/vim-jsonnet'
+
+[[plugins]]
+repo = 'tomasr/molokai'

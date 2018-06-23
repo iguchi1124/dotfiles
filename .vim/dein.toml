@@ -30,3 +30,6 @@ repo = 'google/vim-jsonnet'
 
 [[plugins]]
 repo = 'tomasr/molokai'
+
+[[plugins]]
+repo = 'pangloss/vim-javascript'

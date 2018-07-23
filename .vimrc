@@ -27,6 +27,19 @@ set tabstop=4
 
 autocmd QuickFixCmdPost *grep* cwindow
 
+function s:createMissingDirectory()
+  let dir = expand("<afile>:p:h:")
+  if !isdirectory(dir) && confirm("Create a new directory [".dir."]?", "&Yes\n&No") == 1
+    call mkdir(dir, "p")
+    file %
+  endif
+endfunction
+
+augroup create-missing-directory
+  autocmd!
+  autocmd BufNewFile * call s:createMissingDirectory()
+augroup END
+
 set background=dark
 colorscheme molokai
 

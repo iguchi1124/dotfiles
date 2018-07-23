@@ -14,14 +14,16 @@ if dein#load_state(s:dein)
   call dein#save_state()
 endif
 
-set number
+set backspace=indent,eol,start
 set cursorline
 set expandtab
-set tabstop=2
-set shiftwidth=2
+set hlsearch
 set noswapfile
+set number
 set pastetoggle=<C-G>
-set backspace=indent,eol,start
+set shiftwidth=2
+set showmode
+set tabstop=4
 
 autocmd QuickFixCmdPost *grep* cwindow
 

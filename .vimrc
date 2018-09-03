@@ -19,6 +19,7 @@ set cursorline
 set expandtab
 set hlsearch
 set noswapfile
+set nowrap
 set number
 set pastetoggle=<C-G>
 set shiftwidth=2

@@ -5,3 +5,6 @@
 
 # ruby
 vendor/bundle
+
+# redis
+dump.rdb

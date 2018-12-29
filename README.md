@@ -4,7 +4,7 @@
 
 ```
 git clone git@github.com:iguchi1124/dotfiles.git ~/.dotfiles --recursive
-cd ~/.dotfiles && sh install.sh
+cd ~/.dotfiles && ./install
 ```
 
 ### Install dein.vim

@@ -1,7 +1,5 @@
 alias b='bundle'
 alias be='bundle exec'
-alias bundle='bundle'
-alias rake='rake'
 alias d='docker'
 alias dc='docker-compose'
 alias t='tmux attach || tmux'

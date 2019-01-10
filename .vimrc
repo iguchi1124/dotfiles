@@ -2,17 +2,21 @@ if &compatible
   set nocompatible
 endif
 
-let s:dein = expand('~/.cache/dein')
-let s:config = expand('~/.vim')
+call plug#begin('~/.vim/plugged')
 
-execute 'set runtimepath^=' . fnamemodify(s:dein . '/repos/github.com/Shougo/dein.vim', ':p')
+Plug 'ntpeters/vim-better-whitespace'
+Plug 'fatih/vim-go'
+Plug 'kchmck/vim-coffee-script'
+Plug 'rking/ag.vim'
+Plug 'elixir-editors/vim-elixir'
+Plug 'leafgarland/typescript-vim'
+Plug 'posva/vim-vue'
+Plug 'dart-lang/dart-vim-plugin'
+Plug 'google/vim-jsonnet'
+Plug 'tomasr/molokai'
+Plug 'pangloss/vim-javascript'
 
-if dein#load_state(s:dein)
-  call dein#begin(s:dein)
-  call dein#load_toml(s:config . '/dein.toml')
-  call dein#end()
-  call dein#save_state()
-endif
+call plug#end()
 
 set backspace=indent,eol,start
 set cursorline
@@ -47,7 +51,3 @@ colorscheme molokai
 
 filetype plugin indent on
 syntax enable
-
-if dein#check_install()
-  call dein#install()
-endif

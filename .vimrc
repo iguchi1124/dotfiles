@@ -15,6 +15,7 @@ Plug 'dart-lang/dart-vim-plugin'
 Plug 'google/vim-jsonnet'
 Plug 'tomasr/molokai'
 Plug 'pangloss/vim-javascript'
+Plug 'vim-ruby/vim-ruby'
 
 call plug#end()
 

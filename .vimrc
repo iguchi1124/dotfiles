@@ -21,6 +21,7 @@ call plug#end()
 
 set backspace=indent,eol,start
 set cursorline
+set encoding=utf-8
 set expandtab
 set hlsearch
 set noswapfile

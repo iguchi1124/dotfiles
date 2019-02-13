@@ -90,3 +90,7 @@ SAVEHIST=1000000
 for file in $HOME/.zsh/*; do
   source $file
 done
+
+for file in $HOME/.zsh/local/*; do
+  source $file
+done

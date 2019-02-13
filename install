@@ -6,7 +6,6 @@ DOTPATH=$HOME/.dotfiles
 
 ln -snfv "$DOTPATH/.gemrc" "$HOME/.gemrc"
 ln -snfv "$DOTPATH/.gitignore_global" "$HOME/.gitignore_global"
-ln -snfv "$DOTPATH/.pryrc" "$HOME/.pryrc"
 ln -snfv "$DOTPATH/.railsrc" "$HOME/.railsrc"
 ln -snfv "$DOTPATH/.tmux" "$HOME/.tmux"
 ln -snfv "$DOTPATH/.tmux.conf" "$HOME/.tmux.conf"

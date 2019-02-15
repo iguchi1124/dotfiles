@@ -87,12 +87,12 @@ HISTFILE=~/.zsh_history
 HISTSIZE=1000000
 SAVEHIST=1000000
 
-for file in $HOME/.zsh/*; do
-  source $file
-done
-
 if [ -d $HOME/.zsh/local ] && [ -n "$(ls -A $HOME/.zsh/local)" ]; then
   for file in $HOME/.zsh/local/*; do
     source $file
   done
 fi
+
+for file in $HOME/.zsh/*; do
+  source $file
+done

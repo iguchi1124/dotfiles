@@ -24,6 +24,7 @@ set cursorline
 set encoding=utf-8
 set expandtab
 set hlsearch
+set laststatus=2
 set noswapfile
 set nowrap
 set number

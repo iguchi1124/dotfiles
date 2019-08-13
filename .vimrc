@@ -1,21 +1,10 @@
-if &compatible
-  set nocompatible
-endif
-
 call plug#begin('~/.vim/plugged')
 
 Plug 'ntpeters/vim-better-whitespace'
-Plug 'fatih/vim-go'
-Plug 'kchmck/vim-coffee-script'
 Plug 'rking/ag.vim'
-Plug 'elixir-editors/vim-elixir'
-Plug 'leafgarland/typescript-vim'
-Plug 'posva/vim-vue'
-Plug 'dart-lang/dart-vim-plugin'
 Plug 'google/vim-jsonnet'
 Plug 'tomasr/molokai'
-Plug 'pangloss/vim-javascript'
-Plug 'vim-ruby/vim-ruby'
+Plug 'sheerun/vim-polyglot'
 
 call plug#end()
 

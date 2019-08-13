@@ -1,6 +1,5 @@
 .tmux/plugins/*
 !.tmux/plugins/tpm/
 .tmux/resurrect
-.vim/autoload
 .vim/plugged
 .zsh/local

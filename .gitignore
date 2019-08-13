@@ -1,5 +1,4 @@
 .tmux/plugins/*
-!.tmux/plugins/tpm/
 .tmux/resurrect
 .vim/plugged
 .zsh/local

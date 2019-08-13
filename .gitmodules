@@ -1,9 +1,9 @@
 [submodule ".zsh/oh-my-zsh"]
 	path = .zsh/oh-my-zsh
 	url = git@github.com:robbyrussell/oh-my-zsh.git
-[submodule ".tmux/plugins/tpm"]
-	path = .tmux/plugins/tpm
-	url = git@github.com:tmux-plugins/tpm.git
 [submodule ".vim/vim-plug"]
 	path = .vim/vim-plug
 	url = git@github.com:junegunn/vim-plug.git
+[submodule ".tmux/tpm"]
+	path = .tmux/tpm
+	url = git@github.com:tmux-plugins/tpm.git

@@ -3,8 +3,8 @@ call plug#begin('~/.vim/plugged')
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'rking/ag.vim'
 Plug 'google/vim-jsonnet'
-Plug 'tomasr/molokai'
 Plug 'sheerun/vim-polyglot'
+Plug 'joshdick/onedark.vim'
 
 call plug#end()
 
@@ -25,8 +25,7 @@ set tabstop=4
 
 autocmd QuickFixCmdPost *grep* cwindow
 
-set background=dark
-colorscheme molokai
-
 filetype plugin indent on
-syntax enable
+
+syntax on
+color onedark

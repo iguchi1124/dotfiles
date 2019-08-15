@@ -1,11 +1,11 @@
 call plug#begin('~/.vim/plugged')
 
 Plug 'google/vim-jsonnet'
-Plug 'joshdick/onedark.vim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'rking/ag.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'sheerun/vim-polyglot'
+Plug 'tomasr/molokai'
 
 call plug#end()
 
@@ -35,4 +35,4 @@ map <C-e> :NERDTreeToggle<CR>
 filetype plugin indent on
 
 syntax on
-color onedark
+color molokai

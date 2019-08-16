@@ -1,8 +1,8 @@
 source ~/.zplug/init.zsh
+
 zplug "zplug/zplug", hook-build:"zplug --self-manage"
 
 zplug "chrissicool/zsh-256color"
-zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, as:theme
 zplug "mafredri/zsh-async"
 zplug "zsh-users/zsh-autosuggestions"
 zplug "zsh-users/zsh-completions"
@@ -10,6 +10,7 @@ zplug "zsh-users/zsh-history-substring-search"
 zplug "zsh-users/zsh-syntax-highlighting"
 
 zplug "~/.zsh", from:local
+zplug "~/.zsh/local", from:local
 
 if ! zplug check --verbose; then
   printf "Install? [y/N]: "

@@ -32,10 +32,6 @@ https://github.com/zplug/zplug
 curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
 ```
 
-### Install powerline fonts
-
-https://github.com/powerline/fonts
-
 ### Install vim-plug
 
 https://github.com/junegunn/vim-plug

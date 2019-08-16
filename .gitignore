@@ -1,4 +1,2 @@
-.tmux/plugins/*
-.tmux/resurrect
-.vim/plugged
-.zsh/local
+.vimrc_local
+.zshrc_local

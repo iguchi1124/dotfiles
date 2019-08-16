@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 set -ex
 
@@ -6,10 +6,34 @@ DOTPATH=$HOME/.dotfiles
 
 ln -snfv "$DOTPATH/.gemrc" "$HOME/.gemrc"
 ln -snfv "$DOTPATH/.gitignore_global" "$HOME/.gitignore_global"
-ln -snfv "$DOTPATH/.railsrc" "$HOME/.railsrc"
-ln -snfv "$DOTPATH/.tmux" "$HOME/.tmux"
 ln -snfv "$DOTPATH/.tmux.conf" "$HOME/.tmux.conf"
-ln -snfv "$DOTPATH/.vim" "$HOME/.vim"
 ln -snfv "$DOTPATH/.vimrc" "$HOME/.vimrc"
-ln -snfv "$DOTPATH/.zsh" "$HOME/.zsh"
+ln -snfv "$DOTPATH/.vimrc_local" "$HOME/.vimrc_local"
 ln -snfv "$DOTPATH/.zshrc" "$HOME/.zshrc"
+ln -snfv "$DOTPATH/.zshrc_local" "$HOME/.zshrc_local"
+ln -snfv "$DOTPATH/.Brewfile" "$HOME/.Brewfile"
+
+if [ ! -x "$(command -v brew)" ]; then
+  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+fi
+
+if [ ! $(brew tap | grep "homebrew/bundle") ]; then
+  brew tap homebrew/bundle
+fi
+
+if [ ! $(brew bundle check --global) ]; then
+  brew bundle install --global
+fi
+
+if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
+  git clone git@github.com:tmux-plugins/tpm.git $HOME/.tmux/plugins/tpm && $HOME/.tmux/plugins/tpm/bin/install_plugins
+fi
+
+if [ ! -d "$HOME/.zplug" ]; then
+  export ZPLUG_HOME=$HOME/.zplug
+  git clone git@github.com:zplug/zplug.git $ZPLUG_HOME
+fi
+
+if [ ! -f "$HOME/.vim/autload/plug.vim" ]; then
+  curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+fi

@@ -1,5 +1,0 @@
-alias b='bundle'
-alias be='bundle exec'
-alias d='docker'
-alias dc='docker-compose'
-alias t='tmux attach || tmux'

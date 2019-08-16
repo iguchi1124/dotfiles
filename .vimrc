@@ -43,3 +43,7 @@ au FileType unite inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vspli
 
 syntax on
 color molokai
+
+if filereadable("$HOME/.vimrc_local")
+  source $HOME/.vimrc_local
+endif

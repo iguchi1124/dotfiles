@@ -24,6 +24,14 @@ brew tap Homebrew/bundle
 brew bundle
 ```
 
+### Install zplug
+
+https://github.com/zplug/zplug
+
+```
+curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
+```
+
 ### Install vim-plug
 
 https://github.com/junegunn/vim-plug

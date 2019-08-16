@@ -1,13 +1,15 @@
 source ~/.zplug/init.zsh
-zplug 'zplug/zplug', hook-build:'zplug --self-manage'
-zplug "~/.zsh", from:local
+zplug "zplug/zplug", hook-build:"zplug --self-manage"
+
+zplug "chrissicool/zsh-256color"
+zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, as:theme
 zplug "mafredri/zsh-async"
-zplug "sindresorhus/pure", use:pure.zsh, as:theme
-zplug "zsh-users/zsh-syntax-highlighting"
-zplug "zsh-users/zsh-history-substring-search"
 zplug "zsh-users/zsh-autosuggestions"
 zplug "zsh-users/zsh-completions"
-zplug "chrissicool/zsh-256color"
+zplug "zsh-users/zsh-history-substring-search"
+zplug "zsh-users/zsh-syntax-highlighting"
+
+zplug "~/.zsh", from:local
 
 if ! zplug check --verbose; then
   printf "Install? [y/N]: "

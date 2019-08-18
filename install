@@ -4,7 +4,7 @@ set -e
 
 DOTPATH=$HOME/.dotfiles
 
-for file in ".Brewfile" ".config/nvim/init.vim" ".gemrc" ".gitignore_global" ".tmux.conf" ".vimrc" ".vimrc_local" ".zshrc" ".zshrc_local"
+for file in ".Brewfile" ".config/nvim/init.vim" ".gemrc" ".gitignore_global" ".tmux.conf" ".vimrc" ".zshrc"
 do
   src="$DOTPATH/$file"
   dist="$HOME/$file"

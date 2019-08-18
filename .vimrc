@@ -13,9 +13,6 @@ set number
 
 autocmd QuickFixCmdPost *grep* cwindow
 
-filetype plugin indent on
-
-syntax on
 color molokai
 
 if filereadable("$HOME/.vimrc_local")

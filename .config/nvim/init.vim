@@ -1,14 +1,3 @@
-filetype on
-filetype indent on
-filetype plugin on
-
-set clipboard+=unnamed
-set noswapfile
-set number
-
-" Reload init.vim setting
-nnoremap <space>s :<C-u>source $HOME/.config/nvim/init.vim<CR>
-
 call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'ntpeters/vim-better-whitespace'
@@ -27,6 +16,10 @@ Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 
 call plug#end()
+
+set clipboard+=unnamed
+set noswapfile
+set number
 
 " deoplete
 let g:deoplete#enable_at_startup = 1
@@ -108,5 +101,4 @@ endfunction
 nnoremap <silent>- :Defx `expand('%:p:h')` -show-ignored-files -search=`expand('%:p')`<CR>
 nnoremap <Leader>- :Defx -split=vertical -winwidth=35 -direction=topleft<CR>
 
-syntax on
 color molokai

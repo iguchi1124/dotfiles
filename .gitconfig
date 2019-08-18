@@ -10,7 +10,6 @@
 	m = merge
 	l = log
 	a = add
-	lg = log --stat --graph --decorate=full
 [color]
 	ui = auto
 [push]

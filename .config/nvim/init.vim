@@ -3,8 +3,8 @@ filetype indent on
 filetype plugin on
 
 set clipboard+=unnamed
-set number
 set noswapfile
+set number
 
 " Reload init.vim setting
 nnoremap <space>s :<C-u>source $HOME/.config/nvim/init.vim<CR>

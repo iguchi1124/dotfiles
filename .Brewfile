@@ -16,3 +16,8 @@ brew "tmux"
 brew "vim"
 brew "zsh"
 brew "zsh-completions"
+brew "python"
+brew "python@2"
+
+tap "neovim/neovim"
+brew "neovim"

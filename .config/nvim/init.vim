@@ -62,6 +62,8 @@ function! s:denite_filter_my_settings() abort
   imap <silent><buffer> <C-o> <Plug>(denite_filter_quit)
 endfunction
 
+call denite#custom#kind('file', 'default_action', 'split')
+
 call denite#custom#var('file/rec', 'command', ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
 
 call denite#custom#var('grep', 'command', ['ag'])

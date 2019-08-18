@@ -14,6 +14,8 @@ Plug 'tomasr/molokai'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
 call plug#end()
 
@@ -100,5 +102,9 @@ endfunction
 
 nnoremap <silent>- :Defx `expand('%:p:h')` -show-ignored-files -search=`expand('%:p')`<CR>
 nnoremap <Leader>- :Defx -split=vertical -winwidth=35 -direction=topleft<CR>
+
+" airline
+let g:airline_powerline_fonts = 1
+let g:airline_theme='simple'
 
 color molokai

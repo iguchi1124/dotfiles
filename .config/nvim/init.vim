@@ -40,7 +40,7 @@ imap <expr><TAB> pumvisible() ? "\<C-n>" : neosnippet#expandable_or_jumpable() ?
 
 " denite
 nmap <silent> <C-u><C-t> :<C-u>Denite filetype<CR>
-nmap <silent> <C-u><C-p> :<C-u>Denite file/rec<CR>
+nmap <silent> <C-u><C-f> :<C-u>Denite file/rec<CR>
 nmap <silent> <C-u><C-j> :<C-u>Denite line<CR>
 nmap <silent> <C-u><C-g> :<C-u>Denite grep<CR>
 nmap <silent> <C-u><C-]> :<C-u>DeniteCursorWord grep<CR>

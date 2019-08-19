@@ -2,14 +2,20 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'rking/ag.vim'
+Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-buffer.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'prabirshrestha/asyncomplete-neosnippet.vim'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'sheerun/vim-polyglot'
 Plug 'Shougo/denite.nvim'
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Shougo/neomru.vim'
 Plug 'Shougo/neosnippet.vim'
-Plug 'Shougo/neosnippet-snippets'
 Plug 'Shougo/neoyank.vim'
-Plug 'sheerun/vim-polyglot'
+Plug 'thomasfaingnaert/vim-lsp-snippets'
+Plug 'thomasfaingnaert/vim-lsp-neosnippet'
 Plug 'tomasr/molokai'
 Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-sensible'
@@ -23,15 +29,26 @@ set clipboard+=unnamed
 set noswapfile
 set number
 
-" deoplete
-let g:deoplete#enable_at_startup = 1
-
-inoremap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-
 " neosnippet
 imap <C-k> <Plug>(neosnippet_expand_or_jump)
 smap <C-k> <Plug>(neosnippet_expand_or_jump)
 xmap <C-k> <Plug>(neosnippet_expand_target)
+
+" asyncomplete
+call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
+  \ 'name': 'buffer',
+  \ 'whitelist': ['*'],
+  \ 'completor': function('asyncomplete#sources#buffer#completor'),
+  \ 'config': {
+  \    'max_buffer_size': 5000000,
+  \  },
+  \ }))
+
+call asyncomplete#register_source(asyncomplete#sources#neosnippet#get_source_options({
+  \ 'name': 'neosnippet',
+  \ 'whitelist': ['*'],
+  \ 'completor': function('asyncomplete#sources#neosnippet#completor'),
+  \ }))
 
 " denite
 nmap <silent> <C-u><C-t> :<C-u>Denite filetype<CR>
@@ -106,5 +123,25 @@ nnoremap <Leader>- :Defx -split=vertical -winwidth=35 -direction=topleft<CR>
 " airline
 let g:airline_powerline_fonts = 1
 let g:airline_theme='simple'
+
+" vim-lsp
+if executable('solargraph')
+  " gem install solargraph
+  au User lsp_setup call lsp#register_server({
+    \ 'name': 'solargraph',
+    \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
+    \ 'initialization_options': {"diagnostics": "true"},
+    \ 'whitelist': ['ruby'],
+    \ })
+endif
+
+if executable('gopls')
+  au User lsp_setup call lsp#register_server({
+    \ 'name': 'gopls',
+    \ 'cmd': {server_info->['gopls', '-mode', 'stdio']},
+    \ 'whitelist': ['go'],
+    \ })
+  autocmd BufWritePre *.go silent LspDocumentFormatSync
+endif
 
 color molokai

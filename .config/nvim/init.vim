@@ -125,6 +125,8 @@ let g:airline_powerline_fonts = 1
 let g:airline_theme='simple'
 
 " vim-lsp
+let g:lsp_diagnostics_enabled = 0
+
 if executable('solargraph')
   " gem install solargraph
   au User lsp_setup call lsp#register_server({

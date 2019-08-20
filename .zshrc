@@ -29,6 +29,9 @@ if [ -e "$HOME/.zshrc_local" ]; then
   source "$HOME/.zshrc_local"
 fi
 
+# zsh-autosuggestions
+bindkey '^a' autosuggest-accept
+
 # peco
 function peco-select-history() {
   local tac

@@ -1,22 +1,20 @@
 call plug#begin('~/.local/share/nvim/plugged')
 
+Plug 'autozimu/LanguageClient-neovim', {
+      \ 'branch': 'next',
+      \ 'do': 'bash install.sh',
+      \ }
+
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'rking/ag.vim'
-Plug 'prabirshrestha/async.vim'
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/asyncomplete-buffer.vim'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
-Plug 'prabirshrestha/asyncomplete-neosnippet.vim'
-Plug 'prabirshrestha/vim-lsp'
 Plug 'sheerun/vim-polyglot'
-Plug 'Shougo/denite.nvim'
 Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'Shougo/denite.nvim'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Shougo/neomru.vim'
-Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neoyank.vim'
-Plug 'thomasfaingnaert/vim-lsp-snippets'
-Plug 'thomasfaingnaert/vim-lsp-neosnippet'
 Plug 'tomasr/molokai'
+Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -24,31 +22,38 @@ Plug 'vim-airline/vim-airline-themes'
 call plug#end()
 
 set clipboard+=unnamed
+set completeopt+=menuone
 set noswapfile
 set number
 
-" neosnippet
-imap <C-k> <Plug>(neosnippet_expand_or_jump)
-smap <C-k> <Plug>(neosnippet_expand_or_jump)
-xmap <C-k> <Plug>(neosnippet_expand_target)
+" deoplete.nvim
+let g:deoplete#enable_at_startup = 1
 
-" asyncomplete
-call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
-  \ 'name': 'buffer',
-  \ 'whitelist': ['*'],
-  \ 'completor': function('asyncomplete#sources#buffer#completor'),
-  \ 'config': {
-  \    'max_buffer_size': 5000000,
-  \  },
-  \ }))
+" LanguageClient-neovim
+let g:LanguageClient_serverCommands = {
+			\ 'go': ['gopls'],
+			\ 'ruby': ['solargraph', 'stdio']
+			\ }
 
-call asyncomplete#register_source(asyncomplete#sources#neosnippet#get_source_options({
-  \ 'name': 'neosnippet',
-  \ 'whitelist': ['*'],
-  \ 'completor': function('asyncomplete#sources#neosnippet#completor'),
-  \ }))
+function SetLSPShortcuts()
+  nnoremap <leader>ld :call LanguageClient#textDocument_definition()<CR>
+  nnoremap <leader>lr :call LanguageClient#textDocument_rename()<CR>
+  nnoremap <leader>lf :call LanguageClient#textDocument_formatting()<CR>
+  nnoremap <leader>lt :call LanguageClient#textDocument_typeDefinition()<CR>
+  nnoremap <leader>lx :call LanguageClient#textDocument_references()<CR>
+  nnoremap <leader>la :call LanguageClient_workspace_applyEdit()<CR>
+  nnoremap <leader>lc :call LanguageClient#textDocument_completion()<CR>
+  nnoremap <leader>lh :call LanguageClient#textDocument_hover()<CR>
+  nnoremap <leader>ls :call LanguageClient_textDocument_documentSymbol()<CR>
+  nnoremap <leader>lm :call LanguageClient_contextMenu()<CR>
+endfunction()
 
-" denite
+augroup LSP
+  autocmd!
+  autocmd FileType go,ruby call SetLSPShortcuts()
+augroup END
+
+" denite.nvim
 nmap <silent> <C-u><C-t> :<C-u>Denite filetype<CR>
 nmap <silent> <C-u><C-f> :<C-u>Denite file/rec<CR>
 nmap <silent> <C-u><C-j> :<C-u>Denite line<CR>
@@ -84,7 +89,7 @@ call denite#custom#var('grep', 'pattern_opt', [])
 call denite#custom#var('grep', 'separator', ['--'])
 call denite#custom#var('grep', 'final_opts', [])
 
-" defx
+" defx.nvim
 autocmd FileType defx call s:defx_my_settings()
 function! s:defx_my_settings() abort
   nnoremap <silent><buffer><expr> <CR> defx#do_action('open', 'wincmd w \| drop')
@@ -116,32 +121,9 @@ function! s:defx_my_settings() abort
 endfunction
 
 nnoremap <silent>- :Defx `expand('%:p:h')` -show-ignored-files -search=`expand('%:p')`<CR>
-nnoremap <Leader>- :Defx -split=vertical -winwidth=35 -direction=topleft<CR>
+nnoremap <leader>- :Defx -split=vertical -winwidth=35 -direction=topleft<CR>
 
-" airline
+" vim-airline
 let g:airline_powerline_fonts = 1
-let g:airline_theme='simple'
-
-" vim-lsp
-let g:lsp_diagnostics_enabled = 0
-
-if executable('solargraph')
-  " gem install solargraph
-  au User lsp_setup call lsp#register_server({
-    \ 'name': 'solargraph',
-    \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
-    \ 'initialization_options': {"diagnostics": "true"},
-    \ 'whitelist': ['ruby'],
-    \ })
-endif
-
-if executable('gopls')
-  au User lsp_setup call lsp#register_server({
-    \ 'name': 'gopls',
-    \ 'cmd': {server_info->['gopls', '-mode', 'stdio']},
-    \ 'whitelist': ['go'],
-    \ })
-  autocmd BufWritePre *.go silent LspDocumentFormatSync
-endif
 
 color molokai

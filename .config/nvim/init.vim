@@ -5,6 +5,7 @@ Plug 'autozimu/LanguageClient-neovim', {
       \ 'do': 'bash install.sh',
       \ }
 
+Plug 'itchyny/lightline.vim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'rking/ag.vim'
 Plug 'sheerun/vim-polyglot'
@@ -16,8 +17,6 @@ Plug 'Shougo/neoyank.vim'
 Plug 'tomasr/molokai'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 
 call plug#end()
 
@@ -33,9 +32,9 @@ let g:deoplete#enable_at_startup = 1
 
 " LanguageClient-neovim
 let g:LanguageClient_serverCommands = {
-			\ 'go': ['gopls'],
-			\ 'ruby': ['solargraph', 'stdio']
-			\ }
+  \ 'go': ['gopls'],
+  \ 'ruby': ['solargraph', 'stdio']
+  \ }
 
 function SetLSPShortcuts()
   nnoremap <leader>ld :call LanguageClient#textDocument_definition()<CR>
@@ -125,7 +124,17 @@ endfunction
 nnoremap <silent>- :Defx `expand('%:p:h')` -show-ignored-files -search=`expand('%:p')`<CR>
 nnoremap <leader>- :Defx -split=vertical -winwidth=35 -direction=topleft<CR>
 
-" vim-airline
-let g:airline_powerline_fonts = 1
+" lightline.vim
+let g:lightline = {
+  \   'active': {
+  \     'left': [
+  \       [ 'mode', 'paste' ],
+  \       [ 'gitbranch', 'readonly', 'filename', 'modified' ]
+  \     ]
+  \   },
+  \   'component_function': {
+  \     'gitbranch': 'fugitive#head'
+  \   },
+  \ }
 
 color molokai

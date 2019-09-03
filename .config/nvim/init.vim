@@ -22,10 +22,16 @@ call plug#end()
 
 set clipboard+=unnamed
 set completeopt+=menuone
+set expandtab
 set noswapfile
 set number
+set softtabstop=2
+set shiftwidth=2
+set tabstop=4
 
 let mapleader = ","
+
+nnoremap <leader>h :set hlsearch! hlsearch?<CR>
 
 " deoplete.nvim
 let g:deoplete#enable_at_startup = 1

@@ -6,14 +6,12 @@ Plug 'autozimu/LanguageClient-neovim', {
       \ }
 
 Plug 'itchyny/lightline.vim'
+Plug 'junegunn/fzf', { 'do': './install --bin' } | Plug 'junegunn/fzf.vim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'rking/ag.vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'Shougo/denite.nvim'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'Shougo/neomru.vim'
-Plug 'Shougo/neoyank.vim'
 Plug 'tomasr/molokai'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
@@ -62,42 +60,6 @@ augroup LSP
   autocmd FileType go,ruby,typescript,typescript.tsx call SetLSPShortcuts()
 augroup END
 
-" denite.nvim
-nmap <silent> <C-u><C-t> :<C-u>Denite filetype<CR>
-nmap <silent> <C-u><C-f> :<C-u>Denite file/rec<CR>
-nmap <silent> <C-u><C-j> :<C-u>Denite line<CR>
-nmap <silent> <C-u><C-g> :<C-u>Denite grep<CR>
-nmap <silent> <C-u><C-]> :<C-u>DeniteCursorWord grep<CR>
-nmap <silent> <C-u><C-u> :<C-u>Denite file_mru<CR>
-nmap <silent> <C-u><C-y> :<C-u>Denite neoyank<CR>
-nmap <silent> <C-u><C-r> :<C-u>Denite -resume<CR>
-
-autocmd FileType denite call s:denite_my_settings()
-function! s:denite_my_settings() abort
-  nnoremap <silent><buffer><expr> <CR> denite#do_map('do_action')
-  nnoremap <silent><buffer><expr> d denite#do_map('do_action', 'delete')
-  nnoremap <silent><buffer><expr> p denite#do_map('do_action', 'preview')
-  nnoremap <silent><buffer><expr> q denite#do_map('quit')
-  nnoremap <silent><buffer><expr> i denite#do_map('open_filter_buffer')
-  nnoremap <silent><buffer><expr> <Space> denite#do_map('toggle_select').'j'
-endfunction
-
-autocmd FileType denite-filter call s:denite_filter_my_settings()
-function! s:denite_filter_my_settings() abort
-  imap <silent><buffer> <C-o> <Plug>(denite_filter_quit)
-endfunction
-
-call denite#custom#kind('file', 'default_action', 'split')
-
-call denite#custom#var('file/rec', 'command', ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
-
-call denite#custom#var('grep', 'command', ['ag'])
-call denite#custom#var('grep', 'default_opts', ['-i', '--vimgrep'])
-call denite#custom#var('grep', 'recursive_opts', [])
-call denite#custom#var('grep', 'pattern_opt', [])
-call denite#custom#var('grep', 'separator', ['--'])
-call denite#custom#var('grep', 'final_opts', [])
-
 " defx.nvim
 autocmd FileType defx call s:defx_my_settings()
 function! s:defx_my_settings() abort
@@ -130,7 +92,7 @@ function! s:defx_my_settings() abort
 endfunction
 
 nnoremap <silent>- :Defx `expand('%:p:h')` -show-ignored-files -search=`expand('%:p')`<CR>
-nnoremap <leader>- :Defx -split=vertical -winwidth=35 -direction=topleft<CR>
+nnoremap <leader>- :Defx -show-ignored-files -split=vertical -winwidth=35 -direction=topleft<CR>
 
 " lightline.vim
 let g:lightline = {
@@ -144,5 +106,24 @@ let g:lightline = {
   \     'gitbranch': 'fugitive#head'
   \   },
   \ }
+
+" fzf.vim
+command! -bang -nargs=* GGrep
+  \ call fzf#vim#grep(
+  \   'git grep --line-number '.shellescape(<q-args>), 0,
+  \   { 'dir': systemlist('git rev-parse --show-toplevel')[0] }, <bang>0)
+
+command! -bang Colors
+  \ call fzf#vim#colors({'left': '15%', 'options': '--reverse'}, <bang>0)
+
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview('up:60%')
+  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \   <bang>0)
+
+command! -bang -nargs=? -complete=dir Files
+  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 
 color molokai

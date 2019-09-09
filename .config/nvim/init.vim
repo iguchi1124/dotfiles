@@ -39,7 +39,9 @@ let g:deoplete#enable_at_startup = 1
 " LanguageClient-neovim
 let g:LanguageClient_serverCommands = {
   \ 'go': ['gopls'],
-  \ 'ruby': ['solargraph', 'stdio']
+  \ 'ruby': ['solargraph', 'stdio'],
+  \ 'typescript': ['typescript-language-server', '--stdio'],
+  \ 'typescript.tsx': ['typescript-language-server', '--stdio']
   \ }
 
 function SetLSPShortcuts()
@@ -57,7 +59,7 @@ endfunction()
 
 augroup LSP
   autocmd!
-  autocmd FileType go,ruby call SetLSPShortcuts()
+  autocmd FileType go,ruby,typescript,typescript.tsx call SetLSPShortcuts()
 augroup END
 
 " denite.nvim

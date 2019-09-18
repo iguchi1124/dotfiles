@@ -4,7 +4,7 @@ set -e
 
 DOTPATH=$HOME/.dotfiles
 
-for file in ".Brewfile" ".config/nvim/init.vim" ".gemrc" ".gitignore_global" ".tmux.conf" ".vimrc" ".zshrc"
+for file in ".Brewfile" ".config/nvim/init.vim" ".gemrc" ".gitignore_global" ".tmux.conf" ".zshrc"
 do
   src="$DOTPATH/$file"
   dist="$HOME/$file"
@@ -31,10 +31,6 @@ fi
 if [ ! -d "$HOME/.zplug" ]; then
   export ZPLUG_HOME=$HOME/.zplug
   git clone git@github.com:zplug/zplug.git $ZPLUG_HOME
-fi
-
-if [ ! -f "$HOME/.vim/autoload/plug.vim" ]; then
-  curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 fi
 
 if [ ! -f "$HOME/.local/share/nvim/site/autoload/plug.vim" ]; then

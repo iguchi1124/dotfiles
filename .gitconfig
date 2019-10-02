@@ -1,6 +1,6 @@
 [user]
 	name = Shota Iguchi
-	email = shota-iguchi@cookpad.com
+	email = s.iguchi1124@gmail.com
 [alias]
 	s = status
 	d = diff
@@ -19,6 +19,5 @@
 [core]
 	excludesfile = ~/.gitignore_global
 	editor = vim
-[merge "mergepbx"]
-	name = Xcode project files merger
-	driver = mergepbx %O %A %B
+[include]
+	path = ~/.gitconfig.local

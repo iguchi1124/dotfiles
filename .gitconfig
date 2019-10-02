@@ -10,8 +10,8 @@
 	m = merge
 	l = log
 	a = add
-	delete-all-branches = !git branch | grep -v "master" | xargs git branch -D
-	delete-merged-branches = !git branch --merged | grep -v \\* | xargs -I % git branch -d %
+	delete-all-branches = !git branch | grep -v \\* | grep -v 'master' | xargs git branch -D
+	delete-merged-branches = !git branch --merged | grep -v \\* | grep -v 'master' | xargs git branch -d
 [color]
 	ui = auto
 [push]

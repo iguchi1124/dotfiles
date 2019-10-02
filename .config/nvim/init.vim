@@ -35,6 +35,8 @@ nnoremap <leader>h :set hlsearch! hlsearch?<CR>
 let g:deoplete#enable_at_startup = 1
 
 " LanguageClient-neovim
+set hidden
+
 let g:LanguageClient_serverCommands = {
   \ 'go': ['gopls'],
   \ 'ruby': ['solargraph', 'stdio'],

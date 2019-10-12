@@ -6,7 +6,7 @@ Plug 'autozimu/LanguageClient-neovim', {
       \ }
 
 Plug 'itchyny/lightline.vim'
-Plug 'junegunn/fzf', { 'do': './install --bin' } | Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegunn/fzf.vim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'rking/ag.vim'
 Plug 'sheerun/vim-polyglot'

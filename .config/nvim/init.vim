@@ -10,6 +10,7 @@ Plug 'junegunn/fzf', { 'do': './install --bin' } | Plug 'junegunn/fzf.vim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'rking/ag.vim'
 Plug 'sheerun/vim-polyglot'
+Plug 'Shougo/echodoc.vim'
 Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'tomasr/molokai'
@@ -28,8 +29,6 @@ set shiftwidth=2
 set tabstop=4
 
 let mapleader = ","
-
-nnoremap <leader>h :set hlsearch! hlsearch?<CR>
 
 " deoplete.nvim
 let g:deoplete#enable_at_startup = 1
@@ -127,5 +126,10 @@ command! -bang -nargs=* Rg
 
 command! -bang -nargs=? -complete=dir Files
   \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+
+" echodoc.vim
+set cmdheight=2
+let g:echodoc#enable_at_startup = 1
+let g:echodoc#type = 'signature'
 
 color molokai

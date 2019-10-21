@@ -3,6 +3,9 @@
 # ruby
 vendor/bundle
 
+# solargraph
+.solargraph.yml
+
 # redis
 dump.rdb
 

@@ -50,3 +50,6 @@ export PATH=$PATH:$GOPATH/bin
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# llvm
+export PATH="/usr/local/opt/llvm/bin:$PATH"

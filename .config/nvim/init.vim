@@ -37,11 +37,15 @@ let g:deoplete#enable_at_startup = 1
 set hidden
 
 let g:LanguageClient_serverCommands = {
+  \ 'c': ['clangd', '-background-index'],
+  \ 'cpp': ['clangd', '-background-index'],
   \ 'go': ['gopls'],
   \ 'ruby': ['solargraph', 'stdio'],
   \ 'typescript': ['typescript-language-server', '--stdio'],
   \ 'typescript.tsx': ['typescript-language-server', '--stdio']
   \ }
+
+let g:LanguageClient_diagnosticsEnable = 0
 
 function SetLSPShortcuts()
   nnoremap <leader>ld :call LanguageClient#textDocument_definition()<CR>
@@ -58,7 +62,7 @@ endfunction()
 
 augroup LSP
   autocmd!
-  autocmd FileType go,ruby,typescript,typescript.tsx call SetLSPShortcuts()
+  autocmd FileType c,cpp,go,ruby,typescript,typescript.tsx call SetLSPShortcuts()
 augroup END
 
 " defx.nvim

@@ -16,6 +16,7 @@ brew "tmux"
 brew "vim"
 brew "zsh"
 brew "zsh-completions"
+brew "llvm"
 
 tap "neovim/neovim"
 brew "neovim"

@@ -16,3 +16,6 @@ dump.rdb
 
 # JetBrains IDE
 .idea/
+
+# direnv
+.envrc

@@ -1,3 +1,5 @@
+export EDITOR=vim
+
 # rbenv
 export RBENV_ROOT="$HOME/.rbenv"
 export PATH="$RBENV_ROOT/bin:$PATH"
@@ -13,11 +15,9 @@ export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 
 # fzf
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f "$HOME/.fzf.zsh" ] && source ~/.fzf.zsh
 
 # llvm
 export PATH="/usr/local/opt/llvm/bin:$PATH"
 
-if [ -e "$HOME/.zshenv_local" ]; then
-  source "$HOME/.zshenv_local"
-fi
+[ -f "$HOME/.zshenv_local" ] && source "$HOME/.zshenv_local"

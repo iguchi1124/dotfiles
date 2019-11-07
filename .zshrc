@@ -32,7 +32,7 @@ fi
 alias ls='ls -GF'
 
 # zsh-autosuggestions
-bindkey '^a' autosuggest-accept
+bindkey '^F' autosuggest-accept
 
 # rbenv
 export RBENV_ROOT="$HOME/.rbenv"

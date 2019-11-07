@@ -16,6 +16,8 @@ fi
 
 zplug load
 
+bindkey -e
+
 setopt interactive_comments
 
 HISTFILE=~/.zsh_history

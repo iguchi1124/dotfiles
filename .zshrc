@@ -24,12 +24,31 @@ SAVEHIST=1000000
 
 PROMPT="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ %s)%{$fg_bold[green]%}%p %{$fg[cyan]%}%c %{$reset_color%}"
 
-if [ -e "$HOME/.zshrc_local" ]; then
-  source "$HOME/.zshrc_local"
-fi
-
 # ls
 alias ls='ls -GF'
 
 # zsh-autosuggestions
 bindkey '^F' autosuggest-accept
+
+# rbenv
+export RBENV_ROOT=$HOME/.rbenv
+export PATH=$RBENV_ROOT/bin:$PATH
+eval "$(rbenv init -)"
+
+# pyenv
+export PYENV_ROOT=$HOME/.pyenv
+export PATH=$PYENV_ROOT/bin:$PATH
+eval "$(pyenv init -)"
+
+# go
+export GOPATH=$HOME/go
+export PATH=$GOPATH/bin:$PATH
+
+# llvm
+export PATH=/usr/local/opt/llvm/bin:$PATH
+
+# fzf
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# .zshrc_local
+[ -f ~/.zshrc_local ] && source ~/.zshrc_local

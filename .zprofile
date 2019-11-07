@@ -4,6 +4,4 @@ killjobs() {
   xargs -n1 pkill -SIGINT -g
 }
 
-if [ -e "$HOME/.zprofile_local" ]; then
-  source "$HOME/.zprofile_local"
-fi
+[ -f ~/.zprofile_local ] && source ~/.zprofile_local

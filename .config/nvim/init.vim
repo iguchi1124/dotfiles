@@ -25,6 +25,7 @@ set expandtab
 set noswapfile
 set number
 set softtabstop=2
+set sh=zsh
 set shiftwidth=2
 set tabstop=4
 

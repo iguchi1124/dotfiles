@@ -1,10 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
 DOTPATH=$HOME/.dotfiles
 
-for file in ".Brewfile" ".config/nvim/init.vim" ".gemrc" ".gitignore_global" ".tmux.conf" ".zshrc" ".zshenv" ".zprofile"
+for file in ".Brewfile" ".config/nvim/init.vim" ".gemrc" ".gitconfig" ".gitignore_global" ".tmux.conf" ".zshrc" ".zshenv" ".zprofile"
 do
   src="$DOTPATH/$file"
   dist="$HOME/$file"

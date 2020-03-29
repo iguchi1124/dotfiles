@@ -21,4 +21,4 @@
 	excludesfile = ~/.gitignore_global
 	editor = vim
 [include]
-	path = ~/.gitconfig.local
+	path = ~/.gitconfig_local

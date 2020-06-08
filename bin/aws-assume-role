@@ -60,7 +60,7 @@ if [ -n "$duration_seconds" ]; then
 fi
 
 if [ -n "$token_code" ]; then
-  cmd+=" --token-code $token_code"
+    cmd+=" --token-code $token_code"
 fi
 
 json=$(eval $cmd)

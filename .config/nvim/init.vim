@@ -21,13 +21,9 @@ call plug#end()
 
 set clipboard+=unnamed
 set completeopt+=menuone
-set expandtab
 set noswapfile
 set number
-set softtabstop=2
 set sh=zsh
-set shiftwidth=2
-set tabstop=4
 
 let mapleader = ","
 

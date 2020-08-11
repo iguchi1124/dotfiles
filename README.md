@@ -3,6 +3,5 @@
 ## Install
 
 ```
-git clone git@github.com:iguchi1124/dotfiles.git ~/.dotfiles
-~/.dotfiles/setup.sh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/iguchi1124/dotfiles/master/setup.sh)"
 ```

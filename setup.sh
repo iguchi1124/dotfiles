@@ -1,10 +1,25 @@
 #!/bin/bash
 
-set -e
+set -ex
+
+TOOLS=(
+  "git"
+  "brew"
+)
+
+for cmd in "${TOOLS[@]}"; do
+  if ! command -v $cmd &> /dev/null; then
+    echo "$cmd is required to be installed."
+    exit 1
+  fi
+done
 
 DOTPATH=$HOME/.dotfiles
+if [ ! -d $DOTPATH ]; then
+  git clone git@github.com:iguchi1124/dotfiles.git $DOTPATH
+fi
 
-for file in ".Brewfile" .config/nvim/**/*.vim ".gemrc" ".gitconfig" ".gitignore_global" ".tmux.conf" ".zshrc" ".zshenv" ".zprofile"
+for file in .config/nvim/**/*.vim ".Brewfile" ".gemrc" ".gitconfig" ".gitignore_global" ".tmux.conf" ".zshrc" ".zshenv" ".zprofile"
 do
   src="$DOTPATH/$file"
   dist="$HOME/$file"
@@ -13,10 +28,6 @@ do
     ln -snfv $src $dist
   fi
 done
-
-if [ ! -x "$(command -v brew)" ]; then
-  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-fi
 
 if [ ! $(brew tap | grep "homebrew/bundle") ]; then
   brew tap homebrew/bundle

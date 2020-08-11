@@ -19,7 +19,7 @@ if [ ! -d $DOTPATH ]; then
   git clone git@github.com:iguchi1124/dotfiles.git $DOTPATH
 fi
 
-for file in .config/nvim/**/*.vim ".Brewfile" ".gemrc" ".gitconfig" ".gitignore_global" ".tmux.conf" ".zshrc" ".zshenv" ".zprofile"
+for file in .config/**/* ".Brewfile" ".gemrc" ".gitconfig" ".tmux.conf" ".zshrc" ".zshenv" ".zprofile"
 do
   src="$DOTPATH/$file"
   dist="$HOME/$file"

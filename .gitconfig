@@ -18,7 +18,6 @@
 [push]
 	default = matching
 [core]
-	excludesfile = ~/.gitignore_global
 	editor = vim
 [include]
 	path = ~/.gitconfig_local

@@ -40,13 +40,13 @@ if has('nvim')
   set hidden
 
   let g:LanguageClient_serverCommands = {
-    \ 'c': ['clangd', '-background-index'],
-    \ 'cpp': ['clangd', '-background-index'],
-    \ 'go': ['gopls'],
-    \ 'ruby': ['solargraph', 'stdio'],
-    \ 'typescript': ['typescript-language-server', '--stdio'],
-    \ 'typescript.tsx': ['typescript-language-server', '--stdio']
-    \ }
+        \ 'c': ['clangd', '-background-index'],
+        \ 'cpp': ['clangd', '-background-index'],
+        \ 'go': ['gopls'],
+        \ 'ruby': ['solargraph', 'stdio'],
+        \ 'typescript': ['typescript-language-server', '--stdio'],
+        \ 'typescript.tsx': ['typescript-language-server', '--stdio']
+        \ }
 
   let g:LanguageClient_diagnosticsEnable = 0
 
@@ -110,21 +110,41 @@ endif
 
 " lightline.vim
 let g:lightline = {
-  \   'active': {
-  \     'left': [
-  \       [ 'mode', 'paste' ],
-  \       [ 'gitbranch', 'readonly', 'filename', 'modified' ]
-  \     ]
-  \   },
-  \   'component_function': {
-  \     'gitbranch': 'fugitive#head'
-  \   },
-  \ }
+      \   'active': {
+      \     'left': [
+      \       [ 'mode', 'paste' ],
+      \       [ 'gitbranch', 'readonly', 'filename', 'modified' ]
+      \     ]
+      \   },
+      \   'component_function': {
+      \     'gitbranch': 'fugitive#head'
+      \   },
+      \ }
 
 " fzf.vim
-command! -bang -nargs=* GGrep
-  \ call fzf#vim#grep(
-  \   'git grep --line-number -- '.shellescape(<q-args>), 0,
-  \   fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}), <bang>0)
+function! s:fzf_git_root()
+  let root = split(system('git rev-parse --show-toplevel'), '\n')[0]
+  return v:shell_error ? '' : root
+endfunction
+
+function! s:fzf_warn(message)
+  echohl WarningMsg
+  echom a:message
+  echohl None
+  return 0
+endfunction
+
+function! s:fzf_git_grep(pattern, bang)
+  let root = s:fzf_git_root()
+  if empty(root)
+    return s:fzf_warn('Not in git repo')
+  endif
+
+  call fzf#vim#grep(
+        \ 'git grep --line-number -- '.shellescape(a:pattern), 0,
+        \ fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}), a:bang)
+endfunction
+
+command! -bang -nargs=* GGrep call s:fzf_git_grep(<q-args>, <bang>0)
 
 color molokai

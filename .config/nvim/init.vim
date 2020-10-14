@@ -26,13 +26,50 @@ set completeopt+=menuone
 set noswapfile
 set sh=zsh
 
-if has('nvim')
-  set number
-endif
-
 let mapleader = ","
 
+" lightline.vim
+let g:lightline = {
+      \   'active': {
+      \     'left': [
+      \       [ 'mode', 'paste' ],
+      \       [ 'gitbranch', 'readonly', 'filename', 'modified' ]
+      \     ]
+      \   },
+      \   'component_function': {
+      \     'gitbranch': 'fugitive#head'
+      \   },
+      \ }
+
+" fzf.vim
+function! s:fzf_git_root()
+  let root = split(system('git rev-parse --show-toplevel'), '\n')[0]
+  return v:shell_error ? '' : root
+endfunction
+
+function! s:fzf_warn(message)
+  echohl WarningMsg
+  echom a:message
+  echohl None
+  return 0
+endfunction
+
+function! s:fzf_git_grep(pattern, bang)
+  let root = s:fzf_git_root()
+  if empty(root)
+    return s:fzf_warn('Not in git repo')
+  endif
+
+  call fzf#vim#grep(
+        \ 'git grep --line-number -- '.shellescape(a:pattern), 0,
+        \ fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}), a:bang)
+endfunction
+
+command! -bang -nargs=* GGrep call s:fzf_git_grep(<q-args>, <bang>0)
+
 if has('nvim')
+  set number
+
   " deoplete.nvim
   let g:deoplete#enable_at_startup = 1
 
@@ -107,44 +144,5 @@ if has('nvim')
   let g:echodoc#enable_at_startup = 1
   let g:echodoc#type = 'signature'
 endif
-
-" lightline.vim
-let g:lightline = {
-      \   'active': {
-      \     'left': [
-      \       [ 'mode', 'paste' ],
-      \       [ 'gitbranch', 'readonly', 'filename', 'modified' ]
-      \     ]
-      \   },
-      \   'component_function': {
-      \     'gitbranch': 'fugitive#head'
-      \   },
-      \ }
-
-" fzf.vim
-function! s:fzf_git_root()
-  let root = split(system('git rev-parse --show-toplevel'), '\n')[0]
-  return v:shell_error ? '' : root
-endfunction
-
-function! s:fzf_warn(message)
-  echohl WarningMsg
-  echom a:message
-  echohl None
-  return 0
-endfunction
-
-function! s:fzf_git_grep(pattern, bang)
-  let root = s:fzf_git_root()
-  if empty(root)
-    return s:fzf_warn('Not in git repo')
-  endif
-
-  call fzf#vim#grep(
-        \ 'git grep --line-number -- '.shellescape(a:pattern), 0,
-        \ fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}), a:bang)
-endfunction
-
-command! -bang -nargs=* GGrep call s:fzf_git_grep(<q-args>, <bang>0)
 
 color molokai

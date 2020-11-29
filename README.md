@@ -3,5 +3,5 @@
 ## Install
 
 ```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/iguchi1124/dotfiles/master/setup.sh)"
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/iguchi1124/dotfiles/main/setup.sh)"
 ```

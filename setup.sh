@@ -14,12 +14,25 @@ for cmd in "${TOOLS[@]}"; do
   fi
 done
 
+if [ -z "$XDG_CONFIG_HOME" ]; then
+  XDG_CONFIG_HOME="$HOME/.config"
+fi
+
 DOTPATH=$HOME/.dotfiles
 if [ ! -d $DOTPATH ]; then
   git clone git@github.com:iguchi1124/dotfiles.git $DOTPATH
 fi
 
-for file in .config/**/* ".Brewfile" ".tmux.conf" ".vimrc" ".zshrc" ".zshenv" ".zprofile"
+for file in $DOTPATH/.config/**/*
+do
+  dist=$XDG_CONFIG_HOME${file#$DOTPATH/.config}
+  mkdir -p $(dirname $dist)
+  if [ ! -f $dist ]; then
+    ln -snfv $file $dist
+  fi
+done
+
+for file in ".Brewfile" ".tmux.conf" ".vimrc" ".zshrc" ".zshenv" ".zprofile"
 do
   src="$DOTPATH/$file"
   dist="$HOME/$file"

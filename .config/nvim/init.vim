@@ -82,7 +82,8 @@ if has('nvim')
         \ 'go': ['gopls'],
         \ 'ruby': ['solargraph', 'stdio'],
         \ 'typescript': ['typescript-language-server', '--stdio'],
-        \ 'typescript.tsx': ['typescript-language-server', '--stdio']
+        \ 'typescript.tsx': ['typescript-language-server', '--stdio'],
+        \ 'typescriptreact': ['typescript-language-server', '--stdio']
         \ }
 
   let g:LanguageClient_diagnosticsEnable = 0
@@ -102,7 +103,7 @@ if has('nvim')
 
   augroup LSP
     autocmd!
-    autocmd FileType c,cpp,go,ruby,typescript,typescript.tsx call SetLSPShortcuts()
+    autocmd FileType c,cpp,go,ruby,typescript,typescript.tsx,typescriptreact call SetLSPShortcuts()
   augroup END
 
   " defx.nvim

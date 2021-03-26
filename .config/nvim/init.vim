@@ -88,7 +88,7 @@ if has('nvim')
 
   let g:LanguageClient_diagnosticsEnable = 0
 
-  function SetLSPShortcuts()
+  function! s:lsp_shortcuts()
     nnoremap <leader>ld :call LanguageClient#textDocument_definition()<CR>
     nnoremap <leader>lr :call LanguageClient#textDocument_rename()<CR>
     nnoremap <leader>lf :call LanguageClient#textDocument_formatting()<CR>
@@ -103,12 +103,11 @@ if has('nvim')
 
   augroup LSP
     autocmd!
-    autocmd FileType c,cpp,go,ruby,typescript,typescript.tsx,typescriptreact call SetLSPShortcuts()
+    autocmd FileType c,cpp,go,ruby,typescript,typescript.tsx,typescriptreact call s:lsp_shortcuts()
   augroup END
 
   " defx.nvim
-  autocmd FileType defx call s:defx_my_settings()
-  function! s:defx_my_settings() abort
+  function! s:defx_settings() abort
     setlocal nonumber
     nnoremap <silent><buffer><expr> <CR> defx#do_action('open', 'wincmd w \| drop')
     nnoremap <silent><buffer><expr> c defx#do_action('copy')
@@ -137,6 +136,8 @@ if has('nvim')
     nnoremap <silent><buffer><expr> <C-g> defx#do_action('print')
     nnoremap <silent><buffer><expr> cd defx#do_action('change_vim_cwd')
   endfunction
+
+  autocmd FileType defx call s:defx_settings()
 
   nnoremap <silent>- :Defx `expand('%:p:h')` -show-ignored-files -search=`expand('%:p')`<CR>
   nnoremap <leader>- :Defx -show-ignored-files -split=vertical -winwidth=35 -direction=topleft<CR>

@@ -109,6 +109,7 @@ if has('nvim')
   " defx.nvim
   autocmd FileType defx call s:defx_my_settings()
   function! s:defx_my_settings() abort
+    setlocal nonumber
     nnoremap <silent><buffer><expr> <CR> defx#do_action('open', 'wincmd w \| drop')
     nnoremap <silent><buffer><expr> c defx#do_action('copy')
     nnoremap <silent><buffer><expr> m defx#do_action('move')

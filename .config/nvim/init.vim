@@ -1,7 +1,8 @@
 call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'itchyny/lightline.vim'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'sheerun/vim-polyglot'
 Plug 'tomasr/molokai'
@@ -42,22 +43,22 @@ let g:lightline = {
       \ }
 
 " fzf.vim
-function! s:fzf_git_root()
+function! s:FzfGitRoot()
   let root = split(system('git rev-parse --show-toplevel'), '\n')[0]
   return v:shell_error ? '' : root
 endfunction
 
-function! s:fzf_warn(message)
+function! s:FzfWarn(message)
   echohl WarningMsg
   echom a:message
   echohl None
   return 0
 endfunction
 
-function! s:fzf_git_grep(pattern, bang)
-  let root = s:fzf_git_root()
+function! s:FzfGitGrep(pattern, bang)
+  let root = s:FzfGitRoot()
   if empty(root)
-    return s:fzf_warn('Not in git repo')
+    return s:FzfWarn('Not in git repo')
   endif
 
   call fzf#vim#grep(
@@ -65,7 +66,7 @@ function! s:fzf_git_grep(pattern, bang)
         \ fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}), a:bang)
 endfunction
 
-command! -bang -nargs=* GGrep call s:fzf_git_grep(<q-args>, <bang>0)
+command! -bang -nargs=* GGrep call s:FzfGitGrep(<q-args>, <bang>0)
 
 if has('nvim')
   set number
@@ -88,7 +89,7 @@ if has('nvim')
 
   let g:LanguageClient_diagnosticsEnable = 0
 
-  function! s:lsp_shortcuts()
+  function! s:LspConfig()
     nnoremap <leader>ld :call LanguageClient#textDocument_definition()<CR>
     nnoremap <leader>lr :call LanguageClient#textDocument_rename()<CR>
     nnoremap <leader>lf :call LanguageClient#textDocument_formatting()<CR>
@@ -101,13 +102,13 @@ if has('nvim')
     nnoremap <leader>lm :call LanguageClient_contextMenu()<CR>
   endfunction()
 
-  augroup LSP
+  augroup lsp_config
     autocmd!
-    autocmd FileType c,cpp,go,ruby,typescript,typescript.tsx,typescriptreact call s:lsp_shortcuts()
+    autocmd FileType c,cpp,go,ruby,typescript,typescript.tsx,typescriptreact call s:LspConfig()
   augroup END
 
   " defx.nvim
-  function! s:defx_settings() abort
+  function! s:DefxConfig() abort
     setlocal nonumber
     nnoremap <silent><buffer><expr> <CR> defx#do_action('open', 'wincmd w \| drop')
     nnoremap <silent><buffer><expr> c defx#do_action('copy')
@@ -137,7 +138,10 @@ if has('nvim')
     nnoremap <silent><buffer><expr> cd defx#do_action('change_vim_cwd')
   endfunction
 
-  autocmd FileType defx call s:defx_settings()
+  augroup defx_config
+    autocmd!
+    autocmd FileType defx call s:DefxConfig()
+  augroup END
 
   nnoremap <silent>- :Defx `expand('%:p:h')` -show-ignored-files -search=`expand('%:p')`<CR>
   nnoremap <leader>- :Defx -show-ignored-files -split=vertical -winwidth=35 -direction=topleft<CR>

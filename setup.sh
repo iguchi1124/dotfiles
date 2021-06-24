@@ -60,7 +60,3 @@ fi
 if [ ! -f "$HOME/.vim/autoload/plug.vim" ]; then
   curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 fi
-
-if [ ! -f "$HOME/.local/share/nvim/site/autoload/plug.vim" ]; then
-  curl -fLo $HOME/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-fi

@@ -66,4 +66,7 @@ command! -bang -nargs=* GGrep call s:FzfGitGrep(<q-args>, <bang>0)
 " vim-lsp
 let g:lsp_diagnostics_enabled = 0
 
+nmap <silent> <leader>ld <plug>(lsp-definition)
+nmap <silent> <leader>lf <plug>(lsp-document-format)
+
 color molokai

@@ -53,8 +53,7 @@ if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
 fi
 
 if [ ! -d "$HOME/.zplug" ]; then
-  export ZPLUG_HOME=$HOME/.zplug
-  git clone git@github.com:zplug/zplug.git $ZPLUG_HOME
+  curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
 fi
 
 if [ ! -f "$HOME/.vim/autoload/plug.vim" ]; then

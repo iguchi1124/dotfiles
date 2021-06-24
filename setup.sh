@@ -46,8 +46,6 @@ if [ ! $(brew tap | grep "homebrew/bundle") ]; then
   brew tap homebrew/bundle
 fi
 
-brew bundle check --global || brew bundle install --global
-
 if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
   git clone git@github.com:tmux-plugins/tpm.git $HOME/.tmux/plugins/tpm && $HOME/.tmux/plugins/tpm/bin/install_plugins
 fi

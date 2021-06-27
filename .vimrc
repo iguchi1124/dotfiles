@@ -65,8 +65,17 @@ command! -bang -nargs=* GGrep call s:FzfGitGrep(<q-args>, <bang>0)
 
 " vim-lsp
 let g:lsp_diagnostics_enabled = 0
+let g:lsp_document_code_action_signs_enabled = 0
 
-nmap <silent> <leader>ld <plug>(lsp-definition)
-nmap <silent> <leader>lf <plug>(lsp-document-format)
+function! s:LspConfig() abort
+  nmap <buffer> <leader>ld <plug>(lsp-definition)
+  nmap <buffer> <leader>lr <plug>(lsp-rename)
+  nmap <buffer> <leader>lf <plug>(lsp-document-format)
+endfunction
+
+augroup lsp_install
+  au!
+  autocmd User lsp_buffer_enabled call s:LspConfig()
+augroup END
 
 color molokai

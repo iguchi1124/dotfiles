@@ -1,11 +1,9 @@
 call plug#begin('~/.vim/plugged')
 
-Plug 'itchyny/lightline.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'tomasr/molokai'
-Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-sensible'
 
 " vim-lsp
@@ -23,19 +21,6 @@ set number
 set sh=zsh
 
 let mapleader = ","
-
-" lightline.vim
-let g:lightline = {
-      \   'active': {
-      \     'left': [
-      \       [ 'mode', 'paste' ],
-      \       [ 'gitbranch', 'readonly', 'filename', 'modified' ]
-      \     ]
-      \   },
-      \   'component_function': {
-      \     'gitbranch': 'fugitive#head'
-      \   },
-      \ }
 
 " fzf.vim
 function! s:FzfGitRoot()

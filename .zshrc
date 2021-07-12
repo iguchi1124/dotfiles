@@ -30,7 +30,7 @@ PROMPT="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ %s)%{$fg_bold[green]%}%
 alias ls='ls -GF'
 
 # zsh-autosuggestions
-bindkey '^F' autosuggest-accept
+bindkey '^l' autosuggest-accept
 
 # rbenv
 export RBENV_ROOT=$HOME/.rbenv

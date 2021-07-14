@@ -23,13 +23,9 @@ if [ ! -d $DOTPATH ]; then
   git clone git@github.com:iguchi1124/dotfiles.git $DOTPATH
 fi
 
-for file in $DOTPATH/.config/**/*
+for config in $DOTPATH/.config/*
 do
-  dist=$XDG_CONFIG_HOME${file#$DOTPATH/.config}
-  mkdir -p $(dirname $dist)
-  if [ ! -f $dist ]; then
-    ln -snfv $file $dist
-  fi
+  ln -snfv $config $XDG_CONFIG_HOME
 done
 
 for file in ".Brewfile" ".tmux.conf" ".vimrc" ".zshrc" ".zshenv" ".zprofile"

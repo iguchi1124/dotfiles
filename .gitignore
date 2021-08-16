@@ -1,2 +1,5 @@
 .config/karabiner/*
 !.config/karabiner/karabiner.json
+
+.vim/*
+!.vim/after

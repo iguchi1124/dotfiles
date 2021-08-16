@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 TOOLS=(
   "git"
@@ -28,14 +28,10 @@ do
   ln -snfv $config $XDG_CONFIG_HOME
 done
 
-for file in ".Brewfile" ".tmux.conf" ".vimrc" ".zshrc" ".zshenv" ".zprofile"
+for file in ".Brewfile" ".tmux.conf" ".vim" ".vimrc" ".zshrc" ".zshenv" ".zprofile"
 do
   src="$DOTPATH/$file"
-  dist="$HOME/$file"
-  mkdir -p $(dirname $dist)
-  if [ -f $src ] && [ ! -f $dist ]; then
-    ln -snfv $src $dist
-  fi
+  ln -snfv $src $HOME
 done
 
 if [ ! $(brew tap | grep "homebrew/bundle") ]; then

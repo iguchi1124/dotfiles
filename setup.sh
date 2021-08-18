@@ -4,7 +4,7 @@ set -e
 
 TOOLS=(
   "git"
-  "brew"
+  "zsh"
 )
 
 for cmd in "${TOOLS[@]}"; do
@@ -28,15 +28,11 @@ do
   ln -snfv $config $XDG_CONFIG_HOME
 done
 
-for file in ".Brewfile" ".tmux.conf" ".vim" ".vimrc" ".zshrc" ".zshenv" ".zprofile"
+for file in ".tmux.conf" ".vim" ".vimrc" ".zshrc" ".zshenv" ".zprofile"
 do
   src="$DOTPATH/$file"
   ln -snfv $src $HOME
 done
-
-if [ ! $(brew tap | grep "homebrew/bundle") ]; then
-  brew tap homebrew/bundle
-fi
 
 if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
   git clone git@github.com:tmux-plugins/tpm.git $HOME/.tmux/plugins/tpm && $HOME/.tmux/plugins/tpm/bin/install_plugins
@@ -48,4 +44,8 @@ fi
 
 if [ ! -f "$HOME/.vim/autoload/plug.vim" ]; then
   curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+fi
+
+if [ "$(uname)" == "Darwin" ]; then
+  $DOTPATH/macos/setup.sh
 fi

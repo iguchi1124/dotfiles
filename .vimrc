@@ -1,6 +1,7 @@
 call plug#begin('~/.vim/plugged')
 
 Plug 'sheerun/vim-polyglot'
+Plug 'tomasr/molokai'
 Plug 'tpope/vim-sensible'
 
 " vim-lsp
@@ -33,3 +34,5 @@ augroup lsp_install
   au!
   autocmd User lsp_buffer_enabled call s:LspConfig()
 augroup END
+
+color molokai

@@ -1,5 +1,5 @@
-.config/karabiner/*
-!.config/karabiner/karabiner.json
+.config/karabiner/assets/
+.config/karabiner/automatic_backups/
 
 .vim/autoload/
 .vim/plugged/

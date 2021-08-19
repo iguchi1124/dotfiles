@@ -46,7 +46,8 @@ if [ ! -f "$HOME/.vim/autoload/plug.vim" ]; then
   curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 fi
 
-if [ "$(uname)" == "Darwin" ]; then
+case "$(uname)" in
+Darwin*)
   MACOS_CONFIG="$DOTPATH/macos"
 
   for config in $MACOS_CONFIG/.config/*
@@ -64,4 +65,5 @@ if [ "$(uname)" == "Darwin" ]; then
   if [ ! $(brew tap | grep "homebrew/bundle") ]; then
     brew tap homebrew/bundle
   fi
-fi
+  ;;
+esac

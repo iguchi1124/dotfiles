@@ -7,6 +7,14 @@ TOOLS=(
   "zsh"
 )
 
+case "$(uname)" in
+Darwin*)
+  TOOLS+=(
+    "brew"
+  )
+  ;;
+esac
+
 for cmd in "${TOOLS[@]}"; do
   if ! command -v $cmd &> /dev/null; then
     echo "$cmd is required to be installed."

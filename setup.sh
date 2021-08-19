@@ -47,5 +47,21 @@ if [ ! -f "$HOME/.vim/autoload/plug.vim" ]; then
 fi
 
 if [ "$(uname)" == "Darwin" ]; then
-  $DOTPATH/macos/setup.sh
+  MACOS_CONFIG="$DOTPATH/macos"
+
+  for config in $MACOS_CONFIG/.config/*
+  do
+    echo $MACOS_CONFIG
+    ln -snfv $config $XDG_CONFIG_HOME
+  done
+
+  for file in ".Brewfile"
+  do
+    src="$MACOS_CONFIG/$file"
+    ln -snfv $src $HOME
+  done
+
+  if [ ! $(brew tap | grep "homebrew/bundle") ]; then
+    brew tap homebrew/bundle
+  fi
 fi

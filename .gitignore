@@ -1,2 +1,5 @@
 .vim/autoload/
 .vim/plugged/
+
+macos/.config/karabiner/assets/
+macos/.config/karabiner/automatic_backups/

@@ -7,14 +7,6 @@ TOOLS=(
   "zsh"
 )
 
-case "$(uname)" in
-Darwin*)
-  TOOLS+=(
-    "brew"
-  )
-  ;;
-esac
-
 for cmd in "${TOOLS[@]}"; do
   if ! command -v $cmd &> /dev/null; then
     echo "$cmd is required to be installed."
@@ -69,6 +61,10 @@ Darwin*)
     src="$MACOS_CONFIG/$file"
     ln -snfv $src $HOME
   done
+
+  if ! command -v brew >/dev/null
+    eval "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  fi
 
   if [ ! $(brew tap | grep "homebrew/bundle") ]; then
     brew tap homebrew/bundle

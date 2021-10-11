@@ -25,7 +25,7 @@ let g:lsp_diagnostics_enabled = 0
 let g:lsp_document_code_action_signs_enabled = 0
 
 function! s:LspConfig() abort
-  nmap <buffer> <leader>gd <plug>(lsp-definition)
+  nmap <buffer> gd <plug>(lsp-definition)
   nmap <buffer> <leader>rn <plug>(lsp-rename)
 endfunction
 

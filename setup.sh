@@ -48,22 +48,14 @@ fi
 
 case "$(uname)" in
 Darwin*)
-  MACOS_CONFIG="$DOTPATH/macos"
-
-  for config in $MACOS_CONFIG/.config/*
-  do
-    echo $MACOS_CONFIG
-    ln -snfv $config $XDG_CONFIG_HOME
-  done
-
   for file in ".Brewfile"
   do
-    src="$MACOS_CONFIG/$file"
+    src="$DOTPATH/$file"
     ln -snfv $src $HOME
   done
 
-  if ! command -v brew >/dev/null
-    eval "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  if ! command -v brew &> /dev/null; then
+    curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | zsh
   fi
 
   if [ ! $(brew tap | grep "homebrew/bundle") ]; then

@@ -34,4 +34,6 @@ augroup lsp_install
   autocmd User lsp_buffer_enabled call s:LspConfig()
 augroup END
 
+autocmd QuickFixCmdPost *grep* cwindow
+
 color molokai

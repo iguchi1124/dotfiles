@@ -20,7 +20,6 @@ set sh=zsh
 
 let mapleader = ","
 
-" vim-lsp
 let g:lsp_diagnostics_enabled = 0
 let g:lsp_document_code_action_signs_enabled = 0
 
@@ -34,6 +33,14 @@ augroup lsp_install
   autocmd User lsp_buffer_enabled call s:LspConfig()
 augroup END
 
-autocmd QuickFixCmdPost *grep* cwindow
+function! s:GitGrep(pattern) abort
+  setlocal grepprg=git\ grep\ -nI
+  silent exec 'grep '.a:pattern.' | cw'
+  redr!
+endfunction
+
+command! -nargs=? Ggrep call s:GitGrep(<q-args>)
+
+autocmd QuickFixCmdPost vimgrep cw
 
 color molokai

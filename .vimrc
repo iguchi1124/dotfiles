@@ -1,5 +1,6 @@
 call plug#begin('~/.vim/plugged')
 
+Plug 'google/vim-searchindex'
 Plug 'sheerun/vim-polyglot'
 Plug 'tomasr/molokai'
 Plug 'tpope/vim-sensible'
@@ -12,10 +13,11 @@ Plug 'mattn/vim-lsp-settings'
 
 call plug#end()
 
-set clipboard+=unnamed
-set completeopt+=menuone
+set clipboard=unnamed,unnamedplus
+set completeopt=menuone
 set noswapfile
 set number
+set scrolloff=4
 set sh=zsh
 
 let mapleader = ","

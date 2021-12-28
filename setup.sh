@@ -26,7 +26,7 @@ fi
 mkdir -p $XDG_CONFIG_HOME
 for config in $DOTPATH/.config/*
 do
-  ln -snfv $config $XDG_CONFIG_HOME/
+  ln -snfv $config $XDG_CONFIG_HOME
 done
 
 for file in ".tmux.conf" ".vim" ".vimrc" ".zshrc" ".zshenv" ".zprofile"

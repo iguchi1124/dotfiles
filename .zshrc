@@ -35,10 +35,15 @@ bindkey '^l' autosuggest-accept
 # rbenv
 export RBENV_ROOT=$HOME/.rbenv
 export PATH=$RBENV_ROOT/bin:$PATH
-eval "$(rbenv init -)"
+
+if command -v rbenv &> /dev/null; then
+  eval "$(rbenv init -)"
+fi
 
 # luarocks
-eval "$(luarocks path --bin)"
+if command -v luarocks &> /dev/null; then
+  eval "$(luarocks path --bin)"
+fi
 
 # go
 export GOPATH=$HOME/go

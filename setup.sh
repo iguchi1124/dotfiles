@@ -29,7 +29,7 @@ do
   ln -snfv $config $XDG_CONFIG_HOME
 done
 
-for file in ".tmux.conf" ".tmux.conf.wsl" ".vim" ".vimrc" ".zshrc" ".zshenv" ".zprofile"
+for file in ".tmux.conf" ".tmux.conf.*" ".vim" ".vimrc" ".zshrc" ".zshenv" ".zprofile"
 do
   src="$DOTPATH/$file"
   ln -snfv $src $HOME

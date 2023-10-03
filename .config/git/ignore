@@ -17,3 +17,7 @@ dump.rdb
 
 # JetBrains IDE
 .idea/
+
+# terraform
+.terraform.lock.hcl
+*.tfplan

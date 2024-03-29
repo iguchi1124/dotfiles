@@ -14,12 +14,12 @@ for cmd in "${TOOLS[@]}"; do
   fi
 done
 
-if [ -z "$XDG_CONFIG_HOME" ]; then
+if [[ -z "$XDG_CONFIG_HOME" ]]; then
   XDG_CONFIG_HOME="$HOME/.config"
 fi
 
 DOTPATH=$HOME/.dotfiles
-if [ ! -d $DOTPATH ]; then
+if [[ ! -d $DOTPATH ]]; then
   git clone git@github.com:iguchi1124/dotfiles.git $DOTPATH
 fi
 
@@ -35,16 +35,20 @@ do
   ln -snfv $src $HOME
 done
 
-if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
+if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
   git clone git@github.com:tmux-plugins/tpm.git $HOME/.tmux/plugins/tpm && $HOME/.tmux/plugins/tpm/bin/install_plugins
 fi
 
-if [ ! -d "$HOME/.zplug" ]; then
+if [[ ! -d "$HOME/.zplug" ]]; then
   curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
 fi
 
-if [ ! -f "$HOME/.vim/autoload/plug.vim" ]; then
+if [[ ! -f "$HOME/.vim/autoload/plug.vim" ]]; then
   curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+fi
+
+if ! command -v volta &> /dev/null; then
+  eval "$(curl https://get.volta.sh)"
 fi
 
 case "$(uname)" in
@@ -59,7 +63,7 @@ Darwin*)
     eval "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
 
-  if [ ! $(brew tap | grep "homebrew/bundle") ]; then
+  if [[ ! $(brew tap | grep "homebrew/bundle") ]]; then
     brew tap homebrew/bundle
   fi
   ;;

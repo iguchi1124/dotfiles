@@ -56,7 +56,7 @@ Darwin*)
   done
 
   if ! command -v brew &> /dev/null; then
-    curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | zsh
+    eval "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
 
   if [ ! $(brew tap | grep "homebrew/bundle") ]; then

@@ -1,5 +1,4 @@
 tap "homebrew/bundle"
-tap "homebrew/core"
 brew "envchain"
 brew "fzf"
 brew "gawk"

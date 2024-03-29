@@ -53,10 +53,14 @@ export PATH=$GOPATH/bin:$PATH
 export PATH=/usr/local/opt/llvm/bin:$PATH
 
 # fzf
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+if [[ -f ~/.fzf.zsh ]]; then
+  source ~/.fzf.zsh
+fi
 
 # homebrew
 export PATH=/opt/homebrew/bin:$PATH
 
 # .zshrc_local
-[ -f ~/.zshrc_local ] && source ~/.zshrc_local
+if [[ -f ~/.zshrc_local ]]; then
+  source ~/.zshrc_local
+fi

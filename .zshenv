@@ -1,3 +1,5 @@
 export EDITOR=vim
 
-[ -f ~/.zshenv_local ] && source ~/.zshenv_local
+if [[ -f ~/.zshenv_local ]]; then
+  source ~/.zshenv_local
+fi

@@ -63,8 +63,8 @@ export PATH=$GOPATH/bin:$PATH
 export PATH=/usr/local/opt/llvm/bin:$PATH
 
 # fzf
-if [[ -f ~/.fzf.zsh ]]; then
-  source ~/.fzf.zsh
+if command -v fzf &> /dev/null; then
+  eval "$(fzf --zsh)"
 fi
 
 # volta

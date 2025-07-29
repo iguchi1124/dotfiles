@@ -21,3 +21,10 @@ dump.rdb
 # terraform
 .terraform.lock.hcl
 *.tfplan
+
+# claude
+**/.claude/settings.local.json
+CLAUDE.md
+
+# gemini
+GEMINI.md

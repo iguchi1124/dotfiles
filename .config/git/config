@@ -11,9 +11,8 @@
 	l = log
 	a = add
 	sw = switch
-	delete-all-branches = !git branch | grep -v \\* | grep -v 'main' | xargs git branch -D
-	delete-merged-branches = !git branch --merged | grep -v \\* | grep -v 'main' | xargs git branch -d
-	current-branch = symbolic-ref --quiet --short HEAD
+	delete-all-branches = !git branch | grep -v '*' | grep -v 'main$' | grep -v 'master$' | xargs git branch -D
+	delete-merged-branches = !git branch --merged | grep -v '*' | grep -v 'main$' | grep -v 'master$' | xargs git branch -d
 [color]
 	ui = auto
 [push]

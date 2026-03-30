@@ -21,6 +21,7 @@ dump.rdb
 # terraform
 .terraform.lock.hcl
 *.tfplan
+tfplan
 
 # claude
 **/.claude/settings.local.json
@@ -34,3 +35,6 @@ GEMINI.md
 
 # Codex
 AGENTS.md
+
+# GitHub
+PULL_REQUEST.md

@@ -20,8 +20,11 @@ if [[ -z "$XDG_CONFIG_HOME" ]]; then
 fi
 
 DOTPATH=$HOME/.dotfiles
+DOTFILES_REPO="${DOTFILES_REPO:-https://github.com/iguchi1124/dotfiles.git}"
+TPM_REPO="${TPM_REPO:-https://github.com/tmux-plugins/tpm.git}"
+
 if [[ ! -d $DOTPATH ]]; then
-  git clone git@github.com:iguchi1124/dotfiles.git $DOTPATH
+  git clone "$DOTFILES_REPO" $DOTPATH
 fi
 
 mkdir -p $XDG_CONFIG_HOME
@@ -44,7 +47,7 @@ mkdir -p "$HOME/.vim"
 ln -snfv "$DOTPATH/.vim/after" "$HOME/.vim/after"
 
 if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
-  git clone git@github.com:tmux-plugins/tpm.git $HOME/.tmux/plugins/tpm && $HOME/.tmux/plugins/tpm/bin/install_plugins
+  git clone "$TPM_REPO" $HOME/.tmux/plugins/tpm && $HOME/.tmux/plugins/tpm/bin/install_plugins
 fi
 
 if [[ ! -d "$HOME/.zplug" ]]; then

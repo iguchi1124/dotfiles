@@ -1,20 +1,22 @@
-source ~/.zplug/init.zsh
+if [[ -f ~/.zplug/init.zsh ]]; then
+  source ~/.zplug/init.zsh
 
-zplug "zplug/zplug", hook-build:"zplug --self-manage"
+  zplug "zplug/zplug", hook-build:"zplug --self-manage"
 
-zplug "zsh-users/zsh-autosuggestions"
-zplug "zsh-users/zsh-completions"
-zplug "zsh-users/zsh-history-substring-search"
-zplug "zsh-users/zsh-syntax-highlighting", defer:2
+  zplug "zsh-users/zsh-autosuggestions"
+  zplug "zsh-users/zsh-completions"
+  zplug "zsh-users/zsh-history-substring-search"
+  zplug "zsh-users/zsh-syntax-highlighting", defer:2
 
-if ! zplug check --verbose; then
-  printf "Install? [y/N]: "
-  if read -q; then
-    echo; zplug install
+  if ! zplug check --verbose; then
+    printf "Install? [y/N]: "
+    if read -q; then
+      echo; zplug install
+    fi
   fi
-fi
 
-zplug load
+  zplug load
+fi
 
 bindkey -e
 
@@ -60,7 +62,11 @@ export GOPATH=$HOME/go
 export PATH=$GOPATH/bin:$PATH
 
 # llvm
-export PATH=/usr/local/opt/llvm/bin:$PATH
+if [[ -d /opt/homebrew/opt/llvm/bin ]]; then
+  export PATH=/opt/homebrew/opt/llvm/bin:$PATH
+elif [[ -d /usr/local/opt/llvm/bin ]]; then
+  export PATH=/usr/local/opt/llvm/bin:$PATH
+fi
 
 # fzf
 if command -v fzf &> /dev/null; then

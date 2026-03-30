@@ -3,6 +3,7 @@
 set -e
 
 TOOLS=(
+  "curl"
   "git"
   "zsh"
 )
@@ -29,11 +30,18 @@ do
   ln -snfv $config $XDG_CONFIG_HOME
 done
 
-for file in ".tmux.conf" ".tmux.conf.*" ".vim" ".vimrc" ".zshrc" ".zshenv" ".zprofile"
+for file in ".tmux.conf" ".tmux.conf.*" ".vimrc" ".zshrc" ".zshenv" ".zprofile"
 do
   src="$DOTPATH/$file"
   ln -snfv $src $HOME
 done
+
+if [[ -L "$HOME/.vim" && "$(readlink "$HOME/.vim")" == "$DOTPATH/.vim" ]]; then
+  rm "$HOME/.vim"
+fi
+
+mkdir -p "$HOME/.vim"
+ln -snfv "$DOTPATH/.vim/after" "$HOME/.vim/after"
 
 if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
   git clone git@github.com:tmux-plugins/tpm.git $HOME/.tmux/plugins/tpm && $HOME/.tmux/plugins/tpm/bin/install_plugins
@@ -48,7 +56,7 @@ if [[ ! -f "$HOME/.vim/autoload/plug.vim" ]]; then
 fi
 
 if ! command -v volta &> /dev/null; then
-  eval "$(curl https://get.volta.sh)"
+  curl -fsSL https://get.volta.sh | bash
 fi
 
 case "$(uname)" in
@@ -60,7 +68,7 @@ Darwin*)
   done
 
   if ! command -v brew &> /dev/null; then
-    eval "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
 
   if [[ ! $(brew tap | grep "homebrew/bundle") ]]; then

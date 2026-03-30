@@ -1,4 +1,4 @@
-call plug#begin('~/.vim/plugged')
+call plug#begin(expand('~/.vim/plugged'))
 
 Plug 'google/vim-searchindex'
 Plug 'sheerun/vim-polyglot'

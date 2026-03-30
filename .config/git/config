@@ -16,7 +16,7 @@
 [color]
 	ui = auto
 [push]
-	default = matching
+	default = simple
 [core]
 	editor = vim
 [pull]

@@ -1,5 +1,6 @@
 call plug#begin(expand('~/.vim/plugged'))
 
+let g:polyglot_disabled = ['autoindent', 'ftdetect']
 Plug 'google/vim-searchindex'
 Plug 'sheerun/vim-polyglot'
 Plug 'tomasr/molokai'
@@ -14,15 +15,14 @@ Plug 'mattn/vim-lsp-settings'
 call plug#end()
 
 set clipboard=unnamed,unnamedplus
-set completeopt=menuone
-set noswapfile
+set completeopt=menuone,noselect
 set number
 set scrolloff=4
 set sh=zsh
+set undofile
 
 let mapleader = ","
 
-let g:lsp_diagnostics_enabled = 0
 let g:lsp_document_code_action_signs_enabled = 0
 
 function! s:LspConfig() abort

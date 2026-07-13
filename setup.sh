@@ -73,9 +73,5 @@ Darwin*)
   if ! command -v brew &> /dev/null; then
     NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
-
-  if [[ ! $(brew tap | grep "homebrew/bundle") ]]; then
-    brew tap homebrew/bundle
-  fi
   ;;
 esac

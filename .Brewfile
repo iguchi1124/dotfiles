@@ -1,4 +1,3 @@
-tap "homebrew/bundle"
 brew "envchain"
 brew "fzf"
 brew "gawk"

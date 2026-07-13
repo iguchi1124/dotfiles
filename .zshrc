@@ -80,6 +80,9 @@ export PATH="$VOLTA_HOME/bin:$PATH"
 # homebrew
 export PATH=/opt/homebrew/bin:$PATH
 
+# XDG
+export PATH="$HOME/.local/bin:$PATH"
+
 # .zshrc_local
 if [[ -f ~/.zshrc_local ]]; then
   source ~/.zshrc_local

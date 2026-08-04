@@ -73,12 +73,13 @@ if command -v fzf &> /dev/null; then
   eval "$(fzf --zsh)"
 fi
 
-# volta
-export VOLTA_HOME="$HOME/.volta"
-export PATH="$VOLTA_HOME/bin:$PATH"
-
 # homebrew
 export PATH=/opt/homebrew/bin:$PATH
+
+# mise
+if command -v mise &> /dev/null; then
+  eval "$(mise activate zsh)"
+fi
 
 # XDG
 export PATH="$HOME/.local/bin:$PATH"

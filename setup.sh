@@ -58,10 +58,6 @@ if [[ ! -f "$HOME/.vim/autoload/plug.vim" ]]; then
   curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 fi
 
-if ! command -v volta &> /dev/null; then
-  curl -fsSL https://get.volta.sh | bash
-fi
-
 case "$(uname)" in
 Darwin*)
   for file in ".Brewfile"

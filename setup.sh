@@ -21,7 +21,6 @@ fi
 
 DOTPATH=$HOME/.dotfiles
 DOTFILES_REPO="${DOTFILES_REPO:-https://github.com/iguchi1124/dotfiles.git}"
-TPM_REPO="${TPM_REPO:-https://github.com/tmux-plugins/tpm.git}"
 
 if [[ ! -d $DOTPATH ]]; then
   git clone "$DOTFILES_REPO" $DOTPATH
@@ -33,7 +32,7 @@ do
   ln -snfv $config $XDG_CONFIG_HOME
 done
 
-for file in ".tmux.conf" ".tmux.conf.*" ".vimrc" ".zshrc" ".zshenv" ".zprofile"
+for file in ".tmux.conf" ".vimrc" ".zshrc" ".zshenv" ".zprofile"
 do
   src="$DOTPATH/$file"
   ln -snfv $src $HOME
@@ -45,10 +44,6 @@ fi
 
 mkdir -p "$HOME/.vim"
 ln -snfv "$DOTPATH/.vim/after" "$HOME/.vim/after"
-
-if [[ ! -d "$HOME/.tmux/plugins/tpm" ]]; then
-  git clone "$TPM_REPO" $HOME/.tmux/plugins/tpm && $HOME/.tmux/plugins/tpm/bin/install_plugins
-fi
 
 if [[ ! -d "$HOME/.zplug" ]]; then
   curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh

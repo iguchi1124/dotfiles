@@ -4,15 +4,10 @@
 # ruby
 vendor/bundle
 
-# solargraph
-.solargraph.yml
-
-# redis
-dump.rdb
-
 # vim
 .netrwhist
 *~
+*.un~
 *.swp
 
 # JetBrains IDE

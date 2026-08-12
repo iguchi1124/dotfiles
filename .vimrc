@@ -15,10 +15,7 @@ set clipboard=unnamed,unnamedplus
 set completeopt=menuone,noselect
 set number
 set scrolloff=4
-set sh=zsh
 set undofile
-
-let mapleader = ","
 
 let g:lsp_document_code_action_signs_enabled = 0
 

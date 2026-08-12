@@ -1,4 +1,3 @@
-brew "envchain"
 brew "fzf"
 brew "gcc"
 brew "git"

@@ -50,6 +50,4 @@ endfunction
 
 command! -nargs=? Rg call s:Rg(<q-args>)
 
-autocmd QuickFixCmdPost vimgrep cw
-
 color sorbet

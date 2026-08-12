@@ -12,7 +12,7 @@ Plug 'mattn/vim-lsp-settings'
 call plug#end()
 
 set clipboard=unnamed,unnamedplus
-set completeopt=menuone,noselect
+set completeopt=menuone,noinsert,noselect
 set number
 set scrolloff=4
 

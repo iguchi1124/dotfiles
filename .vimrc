@@ -34,11 +34,21 @@ augroup END
 
 function! s:GitGrep(pattern) abort
   setlocal grepprg=git\ grep\ -nI
+  set grepformat=%f:%l:%m
   silent exec 'grep '.a:pattern.' | cw'
   redr!
 endfunction
 
 command! -nargs=? Ggrep call s:GitGrep(<q-args>)
+
+function! s:Rg(pattern) abort
+  setlocal grepprg=rg\ --vimgrep\ --hidden\ --glob=!.git
+  set grepformat=%f:%l:%c:%m
+  silent exec 'grep '.a:pattern.' | cw'
+  redr!
+endfunction
+
+command! -nargs=? Rg call s:Rg(<q-args>)
 
 autocmd QuickFixCmdPost vimgrep cw
 

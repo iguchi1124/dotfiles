@@ -29,7 +29,16 @@ fi
 mkdir -p $XDG_CONFIG_HOME
 for config in $DOTPATH/.config/*
 do
-  ln -snfv $config $XDG_CONFIG_HOME
+  case "$(basename $config)" in
+  herdr)
+    # herdr keeps logs/sockets in its config dir, so link only config.toml
+    mkdir -p "$XDG_CONFIG_HOME/herdr"
+    ln -snfv "$config/config.toml" "$XDG_CONFIG_HOME/herdr"
+    ;;
+  *)
+    ln -snfv $config $XDG_CONFIG_HOME
+    ;;
+  esac
 done
 
 for file in ".tmux.conf" ".vimrc" ".zshrc" ".zshenv" ".zprofile"

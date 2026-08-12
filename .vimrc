@@ -2,7 +2,6 @@ call plug#begin(expand('~/.vim/plugged'))
 
 let g:polyglot_disabled = ['autoindent', 'ftdetect']
 Plug 'sheerun/vim-polyglot'
-Plug 'tomasr/molokai'
 Plug 'tpope/vim-sensible'
 
 " vim-lsp
@@ -44,4 +43,4 @@ command! -nargs=? Ggrep call s:GitGrep(<q-args>)
 
 autocmd QuickFixCmdPost vimgrep cw
 
-color molokai
+color sorbet

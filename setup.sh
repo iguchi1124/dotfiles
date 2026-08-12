@@ -27,18 +27,22 @@ if [[ ! -d $DOTPATH ]]; then
 fi
 
 mkdir -p $XDG_CONFIG_HOME
+# Create real directories and link files individually, so apps can keep
+# runtime files (logs, sockets, caches) next to the managed config.
 for config in $DOTPATH/.config/*
 do
-  case "$(basename $config)" in
-  herdr)
-    # herdr keeps logs/sockets in its config dir, so link only config.toml
-    mkdir -p "$XDG_CONFIG_HOME/herdr"
-    ln -snfv "$config/config.toml" "$XDG_CONFIG_HOME/herdr"
-    ;;
-  *)
-    ln -snfv $config $XDG_CONFIG_HOME
-    ;;
-  esac
+  name="$(basename "$config")"
+  target="$XDG_CONFIG_HOME/$name"
+
+  if [[ -L "$target" ]]; then
+    rm "$target"
+  fi
+  mkdir -p "$target"
+
+  for file in "$config"/*
+  do
+    ln -snfv "$file" "$target"
+  done
 done
 
 for file in ".tmux.conf" ".vimrc" ".zshrc" ".zshenv" ".zprofile"

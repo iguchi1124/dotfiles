@@ -1,6 +1,5 @@
 call plug#begin(expand('~/.vim/plugged'))
 
-let g:polyglot_disabled = ['autoindent', 'ftdetect']
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-sensible'
 

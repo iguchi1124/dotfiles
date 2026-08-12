@@ -39,11 +39,6 @@ if command -v rbenv &> /dev/null; then
   eval "$(rbenv init - zsh)"
 fi
 
-# luarocks
-if command -v luarocks &> /dev/null; then
-  eval "$(luarocks path --bin)"
-fi
-
 # go
 export GOPATH=$HOME/go
 export PATH=$GOPATH/bin:$PATH

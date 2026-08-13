@@ -1,32 +1,23 @@
-if [[ -f ~/.zplug/init.zsh ]]; then
-  source ~/.zplug/init.zsh
+export ZSH="$HOME/.oh-my-zsh"
 
-  zplug "zplug/zplug", hook-build:"zplug --self-manage"
+ZSH_THEME="robbyrussell"
 
-  zplug "zsh-users/zsh-autosuggestions"
-  zplug "zsh-users/zsh-completions"
-  zplug "zsh-users/zsh-history-substring-search"
-  zplug "zsh-users/zsh-syntax-highlighting", defer:2
+plugins=(
+  git
+  history-substring-search
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+)
 
-  if ! zplug check --verbose; then
-    printf "Install? [y/N]: "
-    if read -q; then
-      echo; zplug install
-    fi
-  fi
+if [[ -d $ZSH ]]; then
+  fpath+="${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-completions/src"
 
-  zplug load
+  source $ZSH/oh-my-zsh.sh
 fi
-
-bindkey -e
-
-setopt interactive_comments
 
 HISTFILE=~/.zsh_history
 HISTSIZE=1000000
 SAVEHIST=1000000
-
-PROMPT="%(?:%{$fg_bold[green]%}$ :%{$fg_bold[red]%}$ %s)%{$fg_bold[green]%}%p%{$fg[cyan]%}%c%{$reset_color%} "
 
 # ls
 alias ls='ls -GF'

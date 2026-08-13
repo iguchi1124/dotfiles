@@ -58,9 +58,17 @@ fi
 mkdir -p "$HOME/.vim"
 ln -snfv "$DOTPATH/.vim/after" "$HOME/.vim/after"
 
-if [[ ! -d "$HOME/.zplug" ]]; then
-  curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
+if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc
 fi
+
+ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
+for plugin in "zsh-autosuggestions" "zsh-completions" "zsh-syntax-highlighting"
+do
+  if [[ ! -d "$ZSH_CUSTOM/plugins/$plugin" ]]; then
+    git clone https://github.com/zsh-users/$plugin "$ZSH_CUSTOM/plugins/$plugin"
+  fi
+done
 
 if [[ ! -f "$HOME/.vim/autoload/plug.vim" ]]; then
   curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim

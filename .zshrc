@@ -8,7 +8,6 @@ plugins=(
   fzf
   history-substring-search
   mise
-  rbenv
   zsh-autosuggestions
   zsh-syntax-highlighting
 )

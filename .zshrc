@@ -34,13 +34,6 @@ fi
 export GOPATH=$HOME/go
 export PATH=$GOPATH/bin:$PATH
 
-# llvm
-if [[ -d /opt/homebrew/opt/llvm/bin ]]; then
-  export PATH=/opt/homebrew/opt/llvm/bin:$PATH
-elif [[ -d /usr/local/opt/llvm/bin ]]; then
-  export PATH=/usr/local/opt/llvm/bin:$PATH
-fi
-
 # fzf
 if command -v fzf &> /dev/null; then
   eval "$(fzf --zsh)"

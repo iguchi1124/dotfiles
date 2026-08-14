@@ -14,7 +14,6 @@ call plug#end()
 set clipboard=unnamed,unnamedplus
 set completeopt=menuone,noinsert,noselect
 set number
-set scrolloff=4
 
 let g:lsp_document_code_action_signs_enabled = 0
 

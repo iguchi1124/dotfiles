@@ -13,6 +13,9 @@ vendor/bundle
 # JetBrains IDE
 .idea/
 
+# vscode
+.vscode/
+
 # terraform
 .terraform.lock.hcl
 *.tfplan

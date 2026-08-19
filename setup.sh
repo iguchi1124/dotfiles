@@ -51,16 +51,6 @@ do
   ln -snfv $src $HOME
 done
 
-# Only CLAUDE.md and the agents: neither carries machine specific values. Hooks
-# are left alone because ~/.claude/settings.json has to be edited by hand to
-# invoke them.
-mkdir -p "$HOME/.claude/agents"
-ln -snfv "$DOTPATH/.claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
-for file in "$DOTPATH/.claude/agents"/*
-do
-  ln -snfv "$file" "$HOME/.claude/agents"
-done
-
 if [[ -L "$HOME/.vim" && "$(readlink "$HOME/.vim")" == "$DOTPATH/.vim" ]]; then
   rm "$HOME/.vim"
 fi

@@ -8,7 +8,7 @@
 # Linking this script does nothing on its own - ~/.claude/settings.json is what
 # invokes it. That file is not managed in this repo because it also holds
 # machine/project specific values, and setup.sh deliberately leaves ~/.claude
-# alone, so the entry below is installed separately. See CLAUDE.md.
+# alone, so the entry below is installed separately. See the claude-setup skill.
 #
 #   "hooks": {
 #     "PreToolUse": [

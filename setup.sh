@@ -51,6 +51,11 @@ do
   ln -snfv $src $HOME
 done
 
+# Only CLAUDE.md: it carries no machine specific values. Hooks are left alone
+# because ~/.claude/settings.json has to be edited by hand to invoke them.
+mkdir -p "$HOME/.claude"
+ln -snfv "$DOTPATH/.claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
+
 if [[ -L "$HOME/.vim" && "$(readlink "$HOME/.vim")" == "$DOTPATH/.vim" ]]; then
   rm "$HOME/.vim"
 fi

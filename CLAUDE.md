@@ -19,7 +19,13 @@ Two different strategies, and the distinction matters when adding new config:
 - **`.config/<app>/`** — the *directory* is created for real at `$XDG_CONFIG_HOME/<app>/` and each file inside is symlinked individually. Never symlink the directory itself: apps write runtime files (logs, sockets, caches) next to their config, and a symlinked directory would put that state inside this repo.
 - **Top-level files** (`.zshrc`, `.vimrc`, `.tmux.conf`, `.zshenv`, `.zprofile`, `.Brewfile`) — symlinked straight into `$HOME`.
 
-`setup.sh` also installs oh-my-zsh, its plugins, vim-plug, and Homebrew when missing. It intentionally touches nothing under `~/.claude`.
+`setup.sh` also installs oh-my-zsh, its plugins, vim-plug, and Homebrew when missing.
+
+Under `~/.claude` it links exactly one thing: `.claude/CLAUDE.md`. That file holds no machine or project specific values, so it can be linked unconditionally. Hooks are deliberately excluded — see below.
+
+## Global CLAUDE.md
+
+`.claude/CLAUDE.md` is symlinked to `~/.claude/CLAUDE.md`, which Claude Code loads in every session regardless of the working directory. Project level `CLAUDE.md` files are read in addition to it, and win where the two conflict.
 
 ## Claude Code hooks
 

@@ -13,7 +13,7 @@ Your final message is the return value to the caller, not prose for a human. Ret
 
 ## Investigate before planning
 
-- Read the repo's conventions first — `AGENTS.md` / `CLAUDE.md`, `.claude/rules/`, `docs/spec/`. Where they exist, the plan must follow them.
+- Read the repo's conventions first — `AGENTS.md` / `CLAUDE.md`, `README.md`. Where they exist, the plan must follow them.
 - Read the nearby existing implementation of the same kind. Matching an established pattern beats inventing one.
 - Note where tests live and how they are written, and find the build/lint/test commands.
 

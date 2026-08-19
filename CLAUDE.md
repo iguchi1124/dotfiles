@@ -21,11 +21,21 @@ Two different strategies, and the distinction matters when adding new config:
 
 `setup.sh` also installs oh-my-zsh, its plugins, vim-plug, and Homebrew when missing.
 
-Under `~/.claude` it links exactly one thing: `.claude/CLAUDE.md`. That file holds no machine or project specific values, so it can be linked unconditionally. Hooks are deliberately excluded — see below.
+Under `~/.claude` it links two things: `.claude/CLAUDE.md` and everything in `.claude/agents/`. Neither holds machine or project specific values, so both can be linked unconditionally. Hooks are deliberately excluded — see below.
 
 ## Global CLAUDE.md
 
 `.claude/CLAUDE.md` is symlinked to `~/.claude/CLAUDE.md`, which Claude Code loads in every session regardless of the working directory. Project level `CLAUDE.md` files are read in addition to it, and win where the two conflict.
+
+## Subagents
+
+`.claude/agents/` holds user level subagent definitions, each symlinked into `~/.claude/agents/`. They are available from any project. Files are linked individually rather than linking the directory, for the same reason as `.config/<app>/`.
+
+- **planner** — breaks a task into verifiable steps; writes no code
+- **generator** — implements a plan and gets lint and tests passing
+- **evaluator** — checks the result and returns PASS/FAIL with reproducible findings
+
+They are built to chain: planner's plan feeds generator, and evaluator's findings hand straight back to generator. Each one's prohibitions are what keep that separation intact, so read the whole file before trimming one.
 
 ## Claude Code hooks
 

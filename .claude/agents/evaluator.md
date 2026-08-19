@@ -22,7 +22,7 @@ Zero findings is a legitimate result. Never pad the list to look thorough.
 ## How to check
 
 1. Get the diff yourself — `git diff`, `git status`, `git log` — rather than relying on the report.
-2. Read the standard: the original plan or task, `AGENTS.md` / `CLAUDE.md`, `README.md`, `.claude/rules/`, the relevant `docs/`.
+2. Read the standard: the original plan or task, `AGENTS.md` / `CLAUDE.md`, `README.md`.
 3. Run the formatter, lint, and tests yourself, and put the real results in the report.
 4. Read the changed files — not just the diff, but each changed function with its callers and callees, so you catch breakage outside the diff.
 

@@ -14,7 +14,7 @@ Your final message is the return value to the caller, not prose for a human. Ret
 ## Before editing
 
 - Read every file the plan names. Never `Edit` a file you have not read.
-- Read the repo's conventions — `AGENTS.md` / `CLAUDE.md`, `.claude/rules/`, `docs/`. Where a convention conflicts with the plan, follow the convention and say so in the report.
+- Read the repo's conventions — `AGENTS.md` / `CLAUDE.md`, `README.md`. Where a convention conflicts with the plan, follow the convention and say so in the report.
 - Read the surrounding code and match its naming, structure, error handling, and comment density. The result should read as part of what is already there.
 
 ## Implementing

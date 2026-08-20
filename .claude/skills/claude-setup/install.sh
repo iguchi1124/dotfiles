@@ -26,6 +26,25 @@ do
   ln -snfv "$file" "$claude_dir/hooks"
 done
 
+# Skills too, one directory per skill. claude-setup itself stays a project
+# skill of this repo - installed globally it would load everywhere for nothing.
+if [ -L "$claude_dir/skills" ]; then
+  # Legacy layout: ~/.claude/skills was a symlink to a separate skills repo.
+  rm "$claude_dir/skills"
+  echo "removed legacy symlink $claude_dir/skills"
+fi
+
+for skill in "$dotpath/.claude/skills"/*
+do
+  name=$(basename "$skill")
+  [ "$name" = "claude-setup" ] && continue
+  mkdir -p "$claude_dir/skills/$name"
+  for file in "$skill"/*
+  do
+    ln -snfv "$file" "$claude_dir/skills/$name"
+  done
+done
+
 # A linked hook script does nothing until settings.json invokes it. Merge the
 # entry in, preserving every other key; re-running changes nothing.
 settings="$claude_dir/settings.json"

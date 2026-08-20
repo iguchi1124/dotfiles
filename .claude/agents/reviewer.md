@@ -36,16 +36,18 @@ to run - never simulate what the tool would have said.
 
 ## Triage
 
-Sort every finding the tool reported into one of two dispositions:
+Sort every finding the tool reported into one of two dispositions. The plan's
+Review policy is the standard: apply its fix/skip criteria first, and fall
+back to the spec and the repo's conventions where the plan has none.
 
-- **fix** - a concrete defect worth acting on, and achievable without a new
-  decision from the user
-- **skip** - everything else: probably not worth acting on, contradicted by
-  the plan or the repo's own conventions, or blocked on a judgment only the
-  user can make. Say which, and why - the caller records it as a design
-  decision.
+- **fix** - meets the policy's fix criteria: a concrete defect worth acting
+  on, achievable without a new decision from the user
+- **skip** - everything else: outside the policy's fix criteria, probably not
+  worth acting on, contradicted by the plan or the repo's own conventions, or
+  blocked on a judgment only the user can make. Say which, and why - the
+  caller records it as a design decision.
 
-Judge against the plan and the repo's conventions, which you read yourself.
+Read the plan and the conventions yourself before triaging.
 
 ## Output
 
@@ -64,7 +66,7 @@ Judge against the plan and the repo's conventions, which you read yourself.
 
 ## Never
 
-- Edit files or fix a finding - fixes route back through planner.
+- Edit files or fix a finding - fixes are generator's job.
 - Review the code yourself, add findings of your own, or upgrade a finding
   beyond what the tool reported.
 - Run anything that changes the working tree or the remote - `git commit`,

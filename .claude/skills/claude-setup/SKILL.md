@@ -107,8 +107,9 @@ before trimming one.
 ### harness
 
 The skill that chains all five: plan, implement, check, external review, report -
-looping evaluator findings back into generator and reviewer findings back into planner,
-then delivering the outcome as a report or a GitHub Pull Request/Issue. State passes
+looping evaluator findings back into generator, and reviewer findings back into
+generator too, triaged by the Review policy the plan sets in advance - then delivering
+the outcome as a report or a GitHub Pull Request/Issue. State passes
 through files in the project's `.claude/harness/<task-dir>/`, so long tasks survive
 context compaction and every agent is spawned fresh. Installed globally so it is one
 `/harness` away in any project.

@@ -67,7 +67,9 @@ Ground rules for every stage:
 
 Spawn `planner` with the user's request verbatim (no rewording), the
 task-dir path, and any constraints already stated in the conversation. Save
-the returned plan to `plan.md`.
+the returned plan to `plan.md`. The plan carries a **Review policy** - the
+fix/skip criteria reviewer will later triage external findings by; if it is
+missing, have planner add it before moving on.
 
 Show the user the plan's Goal, Step headings, and Open questions - a few
 lines, not the whole plan. If an Open question's assumption would change the
@@ -108,8 +110,9 @@ rubber stamp. Save the verdict to `eval-<n>.md`.
 Spawn a fresh `reviewer` with the task-dir path and the report number (same
 numbering rule, over `review-*.md`). It runs the external review tool the
 project has adopted (CodeRabbit, Copilot, ...) and triages each finding into
-`fix` or `skip`; it never reviews by itself. Save the triage to
-`review-<n>.md`.
+`fix` or `skip` **by the plan's Review policy** (in the mini loop, with no
+plan, it falls back to `spec.md` and the repo's conventions); it never
+reviews by itself. Save the triage to `review-<n>.md`.
 
 - **NO-REVIEWER / NOT-RUN** - nothing adopted, or nothing runnable. Note the
   reason for reporter and continue to Report.
@@ -118,10 +121,16 @@ project has adopted (CodeRabbit, Copilot, ...) and triages each finding into
   - `skip` findings accumulate for reporter as design decisions, with
     reviewer's why attached. Skipping is legitimate - a finding not worth
     acting on, or blocked on the user's judgment, is recorded, not fixed.
-  - `fix` findings go back to **planner**: spawn it with `review-<n>.md` and
-    `plan.md`, have it turn the accepted findings into a fix plan with its
-    own done-when conditions (appended to `plan.md`, original plan intact),
-    then run Generate → Evaluate → Review again.
+  - `fix` findings go straight back to **Generate** - the plan's Review
+    policy already decided their handling, so no new planning round. The
+    fresh generator's prompt names `review-<n>.md` and that fixing its `fix`
+    findings is the goal. Then Evaluate as usual - the fixes must PASS,
+    including no regression on the plan's original done-when conditions -
+    and Review again.
+
+So the loop on findings is reviewer → generator → evaluator (PASS) →
+reviewer. Go back to planner only if a `fix` finding turns out to invalidate
+the plan itself - that is a re-plan, not a fix round.
 
 At most two review rounds. Whatever `fix` findings remain after the second
 round are demoted to design decisions ("loop cap reached") and the harness

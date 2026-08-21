@@ -51,18 +51,6 @@ do
   ln -snfv "$src" "$HOME"
 done
 
-if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc
-fi
-
-ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
-for plugin in "zsh-autosuggestions" "zsh-completions" "zsh-syntax-highlighting"
-do
-  if [[ ! -d "$ZSH_CUSTOM/plugins/$plugin" ]]; then
-    git clone https://github.com/zsh-users/$plugin "$ZSH_CUSTOM/plugins/$plugin"
-  fi
-done
-
 if [[ ! -f "$XDG_CONFIG_HOME/vim/autoload/plug.vim" ]]; then
   curl -fLo "$XDG_CONFIG_HOME/vim/autoload/plug.vim" --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 fi

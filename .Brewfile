@@ -10,6 +10,8 @@ brew "ruby-build"
 brew "tmux"
 brew "vim"
 brew "zsh"
+brew "zsh-autosuggestions"
 brew "zsh-completions"
+brew "zsh-syntax-highlighting"
 
 cask "ghostty"

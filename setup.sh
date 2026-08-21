@@ -45,18 +45,11 @@ do
   done
 done
 
-for file in ".tmux.conf" ".vimrc" ".zshrc" ".zshenv" ".zprofile"
+for file in ".tmux.conf" ".zshrc" ".zshenv" ".zprofile"
 do
   src="$DOTPATH/$file"
-  ln -snfv $src $HOME
+  ln -snfv "$src" "$HOME"
 done
-
-if [[ -L "$HOME/.vim" && "$(readlink "$HOME/.vim")" == "$DOTPATH/.vim" ]]; then
-  rm "$HOME/.vim"
-fi
-
-mkdir -p "$HOME/.vim"
-ln -snfv "$DOTPATH/.vim/after" "$HOME/.vim/after"
 
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc
@@ -70,8 +63,8 @@ do
   fi
 done
 
-if [[ ! -f "$HOME/.vim/autoload/plug.vim" ]]; then
-  curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+if [[ ! -f "$XDG_CONFIG_HOME/vim/autoload/plug.vim" ]]; then
+  curl -fLo "$XDG_CONFIG_HOME/vim/autoload/plug.vim" --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 fi
 
 case "$(uname)" in
@@ -79,7 +72,7 @@ Darwin*)
   for file in ".Brewfile"
   do
     src="$DOTPATH/$file"
-    ln -snfv $src $HOME
+    ln -snfv "$src" "$HOME"
   done
 
   if ! command -v brew &> /dev/null; then

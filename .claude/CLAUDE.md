@@ -4,8 +4,8 @@ Personal rules that apply to every project.
 
 ## Writing to GitHub
 
-When creating or editing an issue comment, a PR comment, or a PR description,
-always end the body with this signature:
+When creating or editing an issue comment, a Pull Request comment, or a Pull Request
+description, always end the body with this signature:
 
 ```
 ---

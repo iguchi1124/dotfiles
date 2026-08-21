@@ -1,6 +1,6 @@
 ---
 name: generator
-description: Implements a plan or ticket — code, tests, docs — and gets lint and tests passing. Use as the executor for a planner's plan, or to fix evaluator findings. Handles "implement this", "write it per the plan", "fix these findings".
+description: Implements a plan or ticket — code, tests, docs — and gets lint and tests passing. Use as the executor for a planner's plan, or to fix evaluator or reviewer findings. Handles "implement this", "write it per the plan", "fix these findings".
 tools: Read, Write, Edit, Grep, Glob, Bash, WebFetch
 model: inherit
 ---

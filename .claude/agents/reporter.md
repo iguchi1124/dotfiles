@@ -44,11 +44,12 @@ Outcome first, in one line. Then, in order:
 - Diff `git status` against the `initial-status.txt` the orchestrator
   recorded in the task-dir before any stage ran (no baseline = every
   non-manifest change is unexpected). Stage only the manifest's files, by
-  name; `.claude/harness/` stays unstaged - the paper trail is not part of
-  the change. A changed file in neither the manifest nor the initial status
-  is a stop-and-report, not a `git add -A`. So is a manifest file that was
-  already dirty in the initial status - staging it would carry its pre-run
-  edits into the commit.
+  name; `.claude/harness/` stays unstaged and exempt from the comparison -
+  the harness writes its paper trail there after the baseline is recorded,
+  and it is not part of the change. Any other changed file in neither the
+  manifest nor the initial status is a stop-and-report, not a `git add -A`.
+  So is a manifest file that was already dirty in the initial status -
+  staging it would carry its pre-run edits into the commit.
 - The Pull Request body is the content above. Follow the GitHub-writing rules in the
   user's global `CLAUDE.md` (the generated-with signature at the end).
 
@@ -63,8 +64,10 @@ body is the content above, same GitHub-writing rules.
 The payload - title and body alike - is built from task artifacts, and
 artifacts can carry what must not reach GitHub - credentials, tokens, private
 paths, personal data. Sweep the whole payload for those before `gh pr create`
-or `gh issue create`. Anything found: stop and ask the user, showing what
-tripped the sweep and a redacted draft - never publish on your own judgment.
+or `gh issue create`. Anything found: stop and ask the user, naming only the
+finding's category and a redacted location, with a redacted draft - the
+matched value itself never appears in the stop message or the draft, and you
+never publish on your own judgment.
 
 ## Never
 

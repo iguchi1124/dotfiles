@@ -51,15 +51,6 @@ do
   ln -snfv $src $HOME
 done
 
-# Vim config now lives in $XDG_CONFIG_HOME/vim; a leftover ~/.vimrc or
-# ~/.vim/vimrc would make vim ignore it, so remove the old symlinks.
-for legacy in "$HOME/.vimrc" "$HOME/.vim/after"
-do
-  if [[ -L "$legacy" ]]; then
-    rm "$legacy"
-  fi
-done
-
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc
 fi

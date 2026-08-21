@@ -1,4 +1,4 @@
-call plug#begin(expand('~/.vim/plugged'))
+call plug#begin($XDG_DATA_HOME . '/vim/plugged')
 
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-sensible'
@@ -19,6 +19,10 @@ set clipboard=unnamed,unnamedplus
 set completeopt=menuone,noinsert,noselect
 set number
 
+" netrw
+let g:netrw_home = $XDG_DATA_HOME . '/vim'
+
+"lsp
 let g:lsp_document_code_action_signs_enabled = 0
 
 function! s:LspConfig() abort

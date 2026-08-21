@@ -18,6 +18,10 @@ if [[ -d $ZSH ]]; then
   source $ZSH/oh-my-zsh.sh
 fi
 
+# fzf
+export FZF_TMUX=1
+export FZF_TMUX_OPTS="-p 80%"
+
 # ls
 alias ls='ls -GF'
 

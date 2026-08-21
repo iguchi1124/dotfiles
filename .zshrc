@@ -18,10 +18,6 @@ if [[ -d $ZSH ]]; then
   source $ZSH/oh-my-zsh.sh
 fi
 
-HISTFILE=~/.zsh_history
-HISTSIZE=1000000
-SAVEHIST=1000000
-
 # ls
 alias ls='ls -GF'
 

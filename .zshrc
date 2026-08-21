@@ -8,17 +8,19 @@ setopt hist_ignore_dups
 setopt hist_ignore_space
 setopt share_history
 
-# plugins (Homebrew)
+# plugins
 if [[ -n $HOMEBREW_PREFIX ]]; then
   source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-  source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
 
-# zsh-completions
 if [[ -n $HOMEBREW_PREFIX ]]; then
   fpath=("$HOMEBREW_PREFIX/share/zsh-completions" "$HOMEBREW_PREFIX/share/zsh/site-functions" $fpath)
 fi
 autoload -Uz compinit && compinit
+
+if [[ -n $HOMEBREW_PREFIX ]]; then
+  source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+fi
 
 # fzf
 if command -v fzf &> /dev/null; then

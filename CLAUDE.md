@@ -21,7 +21,7 @@ Two different strategies, and the distinction matters when adding new config:
 
 Vim config lives in `.config/vim/` (Vim 9.1.0327+ reads `$XDG_CONFIG_HOME/vim/vimrc` when `~/.vimrc` and `~/.vim/vimrc` are absent), tmux config in `.config/tmux/` (tmux 3.1+ reads `$XDG_CONFIG_HOME/tmux/tmux.conf` when `~/.tmux.conf` is absent). Plugins and netrw state go to `$XDG_DATA_HOME/vim`, vim-plug itself to `$XDG_CONFIG_HOME/vim/autoload/`.
 
-`setup.sh` also installs oh-my-zsh, its plugins, vim-plug, and Homebrew when missing.
+`setup.sh` also installs vim-plug and Homebrew when missing. Zsh plugins (`zsh-autosuggestions`, `zsh-syntax-highlighting`) and completions are Homebrew packages managed through `.Brewfile`.
 
 It installs nothing under `~/.claude` — that is the `claude-setup` skill's job, see below.
 

@@ -39,8 +39,16 @@ Outcome first, in one line. Then, in order:
 
 - On the default branch, create a branch first - never commit to the default
   branch, and never force-push.
-- Check `git status` before staging and stage the harness's files by name;
-  anything unexpected in the tree is a stop-and-report, not a `git add -A`.
+- Build the changed-file manifest first: every file the generator's Changes
+  sections in `progress.md` name as new, modified or deleted.
+- Diff `git status` against the `initial-status.txt` the orchestrator
+  recorded in the task-dir before any stage ran (no baseline = every
+  non-manifest change is unexpected). Stage only the manifest's files, by
+  name; `.claude/harness/` stays unstaged - the paper trail is not part of
+  the change. A changed file in neither the manifest nor the initial status
+  is a stop-and-report, not a `git add -A`. So is a manifest file that was
+  already dirty in the initial status - staging it would carry its pre-run
+  edits into the commit.
 - The Pull Request body is the content above. Follow the GitHub-writing rules in the
   user's global `CLAUDE.md` (the generated-with signature at the end).
 
@@ -50,10 +58,19 @@ For work that needs tracking rather than merging - a harness run that stopped at
 its loop cap, or findings awaiting the user. Title is the outcome line; the
 body is the content above, same GitHub-writing rules.
 
+## Redaction, both GitHub modes
+
+The payload - title and body alike - is built from task artifacts, and
+artifacts can carry what must not reach GitHub - credentials, tokens, private
+paths, personal data. Sweep the whole payload for those before `gh pr create`
+or `gh issue create`. Anything found: stop and ask the user, showing what
+tripped the sweep and a redacted draft - never publish on your own judgment.
+
 ## Never
 
 - Choose `pull-request` or `issue` when the caller did not name it.
 - Force-push, push to the default branch, or merge/close anything.
+- Publish a title or body the redaction sweep has not cleared.
 - Soften a FAIL, omit a design decision, or report verification you did not
   see reported.
 - Edit source files - if something is broken, that goes in the report, not

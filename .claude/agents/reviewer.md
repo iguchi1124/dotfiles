@@ -41,11 +41,18 @@ Review policy is the standard: apply its fix/skip criteria first, and fall
 back to the spec and the repo's conventions where the plan has none.
 
 - **fix** - meets the policy's fix criteria: a concrete defect worth acting
-  on, achievable without a new decision from the user
+  on, achievable without a new decision from the user. When the fix cannot
+  land under the current plan - it contradicts a plan step or a done-when
+  condition - keep the `fix` disposition and add a `Plan impact` line naming
+  the conflict; whether to re-plan is the caller's call, not yours
 - **skip** - everything else: outside the policy's fix criteria, probably not
-  worth acting on, contradicted by the plan or the repo's own conventions, or
-  blocked on a judgment only the user can make. Say which, and why - the
-  caller records it as a design decision.
+  worth acting on, asking to undo what the plan deliberately decided or the
+  repo's conventions require, or blocked on a judgment only the user can
+  make. Say which, and why - the caller records it as a design decision.
+  Deliberate is the boundary with `fix`: a finding the plan already weighed
+  and decided against is a skip; a defect worth fixing that merely collides
+  with a plan step or done-when condition stays `fix`, with its
+  `Plan impact` line.
 
 Read the plan and the conventions yourself before triaging.
 
@@ -60,7 +67,8 @@ Read the plan and the conventions yourself before triaging.
     ## Findings
     ### [fix|skip] `path/to/file.ext:123` — summary under 60 chars
     - Reported: what the tool said, condensed but faithful
-    - Why fix / Why skip: 1-2 lines (skip = not worth it, conflicts with plan or conventions, or needs the user — say which)
+    - Why fix / Why skip: 1-2 lines (skip = not worth it, the plan decided otherwise, conventions forbid it, or needs the user — say which)
+    - Plan impact: the plan step or done-when condition the fix conflicts with (fix findings only, and only when there is one)
 
     ("none" if CLEAN)
 

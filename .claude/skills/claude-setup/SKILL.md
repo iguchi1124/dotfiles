@@ -7,7 +7,7 @@ description: Installs this repo's Claude Code configuration into ~/.claude - lin
 
 `setup.sh` links the shell, vim and tmux config, and stops there. Everything under
 `~/.claude` is installed by this skill instead, because one part of it -
-`~/.claude/settings.json` - carries machine and project specific values and can only
+`~/.claude/settings.json` - carries machine- and project-specific values and can only
 be merged into, never overwritten.
 
 ## What gets installed

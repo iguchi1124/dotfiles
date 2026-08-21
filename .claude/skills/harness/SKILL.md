@@ -40,6 +40,7 @@ task-dir and continue.
 | File | Written by | Holds |
 | --- | --- | --- |
 | `spec.md` | you, at the start | the user's request verbatim, plus stated constraints |
+| `initial-status.txt` | you, at the start | `git status --porcelain` before any stage runs - reporter's staging baseline |
 | `plan.md` | you, from planner's output | the plan, verbatim; fix plans appended below it |
 | `progress.md` | you, from generator's reports | one appended section per round |
 | `eval-<n>.md` | you, from evaluator's output | one verdict per file, numbered by existing files |
@@ -129,8 +130,12 @@ reviews by itself. Save the triage to `review-<n>.md`.
     and Review again.
 
 So the loop on findings is reviewer → generator → evaluator (PASS) →
-reviewer. Go back to planner only if a `fix` finding turns out to invalidate
-the plan itself - that is a re-plan, not a fix round.
+reviewer. The exception is a `fix` finding that invalidates the plan itself:
+reviewer flags one with a `Plan impact` line in its triage, and you confirm
+the conflict against `plan.md` yourself - the re-plan call is yours, never
+reviewer's. For those, spawn `planner` with the finding and the task-dir,
+append the returned fix plan to `plan.md`, and only then Generate. Ordinary
+`fix` findings - no plan impact - never wait on a planning round.
 
 At most two review rounds. Whatever `fix` findings remain after the second
 round are demoted to design decisions ("loop cap reached") and the harness
@@ -157,7 +162,9 @@ closing status line.
 - **One task-dir per feature.** A follow-up sprint on the same feature
   continues in the same task-dir; a different feature gets a new one.
 - If the main working tree has another branch's work in progress, isolate
-  the task in a `git worktree` (under the scratchpad) and tell generator not
-  to touch the main tree.
+  the task in a `git worktree` (under the scratchpad). Record the worktree's
+  absolute path in `spec.md`, put it in every agent prompt alongside the
+  task-dir, and require every stage - file edits, git, the external review -
+  to run inside that worktree, never the main tree.
 - At each stage transition, check that the facts your decisions rest on are
   in the task-dir files, not only in the conversation - add what is missing.

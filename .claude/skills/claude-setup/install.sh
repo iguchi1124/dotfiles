@@ -2,7 +2,7 @@
 # Installs this repo's Claude Code configuration into ~/.claude.
 #
 # Kept out of setup.sh because the last step edits ~/.claude/settings.json, which
-# also holds machine and project specific values and so can only be merged into.
+# also holds machine- and project-specific values and so can only be merged into.
 # See SKILL.md next to this script.
 set -eu
 

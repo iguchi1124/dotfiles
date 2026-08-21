@@ -45,7 +45,7 @@ do
   done
 done
 
-for file in ".tmux.conf" ".zshrc" ".zshenv" ".zprofile"
+for file in ".zshrc" ".zshenv" ".zprofile"
 do
   src="$DOTPATH/$file"
   ln -snfv "$src" "$HOME"

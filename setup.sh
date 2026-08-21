@@ -48,7 +48,7 @@ done
 for file in ".tmux.conf" ".zshrc" ".zshenv" ".zprofile"
 do
   src="$DOTPATH/$file"
-  ln -snfv $src $HOME
+  ln -snfv "$src" "$HOME"
 done
 
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
@@ -72,7 +72,7 @@ Darwin*)
   for file in ".Brewfile"
   do
     src="$DOTPATH/$file"
-    ln -snfv $src $HOME
+    ln -snfv "$src" "$HOME"
   done
 
   if ! command -v brew &> /dev/null; then

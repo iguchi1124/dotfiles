@@ -70,6 +70,10 @@ for round in 1..3:
   uncommitted changes が混ざらないよう、開始時に working tree がクリーンであることを
   確認し、クリーンでなければ報告して停止する
 - このモードはローカルレビュー CLI が必須。無い・認証切れなら報告して停止する
+- CodeRabbit CLI（0.7.5 時点）の呼び出し例:
+  `coderabbit review --committed --base <base> --agent`。
+  `--agent` で finding が JSON Lines で出る。`--plain` オプションは存在しない
+  （plain text がデフォルト）。まず `--help` で現行フラグを確認するのが安全
 - push・PR 作成はしない — それはユーザーの仕事。最終報告に「PR を作れば PR モードで
   続きを回せる」ことを添える
 - 終了条件・最終報告・自己改善ループは PR モードと共通（対象を「ローカル

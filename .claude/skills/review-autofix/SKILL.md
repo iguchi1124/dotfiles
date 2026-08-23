@@ -1,17 +1,17 @@
 ---
 name: review-autofix
 description: >
-  Automatically fixes review findings on a PR. Default is a single round;
+  Automatically fixes review findings on a pull request. Default is a single round;
   -r / --recursive repeats fix → push → wait for re-review → fix again until
   the findings reach zero (round cap 3, changeable with -n). Review agents
   (CodeRabbit, Copilot, Gemini Code Assist, or any other) are waited on for
   re-review; developer review comments are also fixed, with the outcome
   replied in-thread (their re-review is never waited on). Runs fully
-  unattended, with no per-change approval prompts. Use when a PR or branch
+  unattended, with no per-change approval prompts. Use when a pull request or branch
   has review findings and the request sounds like "全部直して",
   "指摘がなくなるまで対応して", "レビューと往復して", "recursive autofix",
   "autofix を回して", "再レビューまで面倒見て", or the English equivalents.
-  On a branch with no PR it runs the loop against the committed diff via the
+  On a branch with no pull request it runs the loop against the committed diff via the
   local review CLI. For the interactive CodeRabbit-only flow, use
   /coderabbit:autofix instead.
 ---
@@ -19,7 +19,7 @@ description: >
 # Review Autofix
 
 Drives the fix → push → re-review → fix-again cycle with any review agent,
-fully unattended. The goal is a PR that is clean by the time the user comes
+fully unattended. The goal is a pull request that is clean by the time the user comes
 back to it; the price of running without approval prompts is strict adherence
 to the termination conditions and safety rules below.
 
@@ -66,15 +66,15 @@ is not an anomaly (this machine just has no lessons yet).
 
 ## Arguments
 
-`$ARGUMENTS` may carry a PR URL, a PR number (`123` / `#123`), a branch
+`$ARGUMENTS` may carry a pull request URL, a pull request number (`123` / `#123`), a branch
 name, and a reviewer login, in any combination:
 
-- PR URL (`https://github.com/<owner>/<repo>/pull/<num>`) → parse owner /
-  repo, move to that repository's local clone, and treat it as a PR number.
+- pull request URL (`https://github.com/<owner>/<repo>/pull/<num>`) → parse owner /
+  repo, move to that repository's local clone, and treat it as a pull request number.
   If no local clone is found, report and stop
-- PR number → resolve the head with
+- pull request number → resolve the head with
   `gh pr view <num> --json headRefName,headRefOid,headRepository` and check
-  it out. To guard against fork PRs and same-named branches, verify after
+  it out. To guard against fork pull requests and same-named branches, verify after
   checkout that local HEAD matches `headRefOid` before editing or pushing
   (report and stop on mismatch)
 - Branch name → check out that branch
@@ -95,11 +95,13 @@ name, and a reviewer login, in any combination:
 When `-h` / `--help` is passed, print the following in a code block and stop:
 
 ```text
-/review-autofix [PR number|PR URL|branch] [reviewer login] [-r|--recursive] [-n <N>|--max-rounds <N>] [-h|--help]
+/review-autofix [pull request number|pull request URL|branch] [reviewer login] [-r|--recursive] [-n <N>|--max-rounds <N>] [-h|--help]
 
 Arguments (any order, all optional):
-  <PR number> / #<num>  check out that PR's branch and run in PR mode
-  <PR URL>              parse owner/repo, move to the local clone, and run
+  <pull request number> / #<num>
+                        check out that pull request's branch and run in
+                        pull request mode
+  <pull request URL>    parse owner/repo, move to the local clone, and run
   <branch>              check out that branch and run
   <reviewer login>      pin the review agent whose re-review is waited on
                         (e.g. coderabbitai[bot], copilot-pull-request-reviewer[bot])
@@ -111,9 +113,10 @@ Arguments (any order, all optional):
 No arguments: run the current branch in single mode
 
 Modes (auto-detected):
-  PR mode      the branch has an open PR → loop fix → push → wait for re-review
-  Local mode   no open PR → loop the local review CLI over the diff vs base
-               (no pushing; the CLI is required)
+  pull request mode  the branch has an open pull request
+                     → loop fix → push → wait for re-review
+  local mode         no open pull request → loop the local review CLI over
+                     the diff vs base (no pushing; the CLI is required)
 
 Precondition: a clean working tree
 ```
@@ -123,12 +126,12 @@ checkout is needed or which mode applies — report to the user and stop
 without stashing (this keeps unrelated changes out of the consolidated
 commits).
 
-If the target branch has an open PR, run **PR mode** (all the steps below);
+If the target branch has an open pull request, run **pull request mode** (all the steps below);
 if not, run **local mode**.
 
-## Local mode (no PR)
+## Local mode (no pull request)
 
-On a branch with no PR yet, run the loop entirely through the local review
+On a branch with no pull request yet, run the loop entirely through the local review
 CLI (CodeRabbit's `coderabbit` / `cr`, or equivalent), without GitHub:
 
 ```text
@@ -147,19 +150,19 @@ findings remain after the last round → abort and report them
   the working tree is clean at the start; report and stop otherwise
 - This mode requires the local review CLI. Missing, unauthenticated, or
   rate-limited → report and stop (include the wait time the error reports)
-- The CLI shares its review quota with PR-side reviews (CodeRabbit free
+- The CLI shares its review quota with pull-request-side reviews (CodeRabbit free
   tier: 3 included reviews per period). A recursive local run can exhaust
-  it by itself, which then also blocks the pre-review of a following PR
+  it by itself, which then also blocks the pre-review of a following pull request
   run — budget rounds accordingly
 - CodeRabbit CLI invocation (as of 0.7.5):
   `coderabbit review --committed --base <base> --agent`.
   `--agent` emits findings as JSON Lines. There is no `--plain` option
   (plain text is the default). Checking `--help` first for current flags is
   the safe move
-- No pushing and no PR creation — those are the user's. Add to the final
-  report that opening a PR lets PR mode take over
+- No pushing and no pull request creation — those are the user's. Add to the final
+  report that opening a pull request lets pull request mode take over
 - Termination conditions, the final report, and the self-improvement loop
-  are shared with PR mode (state the target as "local (base..HEAD)")
+  are shared with pull request mode (state the target as "local (base..HEAD)")
 
 ## Choosing the target reviewers
 
@@ -169,7 +172,7 @@ re-review never comes on its own). Both are fixed; the loop treats them
 differently:
 
 - **Review agents** (the ones whose re-review is waited on): unless a login
-  was pinned, auto-detect the agents that wrote review threads on the PR —
+  was pinned, auto-detect the agents that wrote review threads on the pull request —
   logins ending in `[bot]`, or known review agents (`coderabbitai`,
   `copilot-pull-request-reviewer`, `gemini-code-assist`, ...). If several
   agents left findings, target them all
@@ -196,7 +199,7 @@ for round in 1, 2, ..., cap:   # inclusive; the cap comes from -n / the mode
      pushing (Step 1)
   5. push the consolidated commit. Reply in-thread on developer threads
   6. wait for the review agents' re-review (polling, 15 minutes max) → next
-     round. If no review agent exists on the PR (only developer findings
+     round. If no review agent exists on the pull request (only developer findings
      were handled), stop without waiting
 findings remain after the last round → abort and report them
 ```
@@ -219,14 +222,14 @@ When a target review agent has a local review CLI (CodeRabbit's
 
 - Verify, fix, and defer findings under the same safety rules as Step 2
 - Stop when clean, or after **2 local rounds**, then push. Local rounds do
-  not count against the PR loop's cap
-- CLI missing, unauthenticated, or failing → skip and proceed with the PR
+  not count against the pull request loop's cap
+- CLI missing, unauthenticated, or failing → skip and proceed with the pull request
   loop alone (not a stop reason)
-- A locally clean diff can still draw new findings on the PR side (different
+- A locally clean diff can still draw new findings on the pull request side (different
   context: the final diff vs base, organization settings). Never skip the
-  PR loop
+  pull request loop
 
-### Fetching the PR findings
+### Fetching the pull request findings
 
 Fetch all reviewThreads via `gh api graphql` with cursor pagination and keep
 only threads where
@@ -278,7 +281,7 @@ are no per-change approval prompts. In exchange, strictly observe:
 
 Only **review agents** are waited on. Developer threads are complete at
 Step 4's in-thread reply; never wait for their answer. Skipping the polling
-is allowed only when **no target review agent exists on the PR** (only
+is allowed only when **no target review agent exists on the pull request** (only
 developer findings were handled) — if an agent is present, a push triggers
 its re-review even in a round where it had zero threads, so wait for that
 before deciding anything.
@@ -313,7 +316,7 @@ and finish (telling the user the agent may be disabled or having an outage).
 
 ## Step 4: per-round summary comment and in-thread replies
 
-In a round that applied fixes, post one summary comment on the PR (files
+In a round that applied fixes, post one summary comment on the pull request (files
 changed, counts, commit SHA). Write the summary from local state only —
 never include review-comment bodies or secrets. Follow the user's
 CLAUDE.md conventions for GitHub posts where they exist.
@@ -323,7 +326,7 @@ each thread (never batched into a top-level comment): what was changed and
 the commit SHA for a fix, or the reason for a defer. No resolving — that
 stays with the author.
 
-**Updating the PR description**: when an applied fix changes what the PR
+**Updating the pull request description**: when an applied fix changes what the pull request
 itself is about — a feature, design, file layout, or number the description
 states has changed, or the fix added something new — update the description
 with `gh pr edit <num> --body` to match reality. Fixes that do not affect
@@ -337,7 +340,7 @@ comment bodies in. Follow the user's signature conventions where they exist
 Every run ends by exactly one of these (no infinite loops):
 
 - **Success**: unresolved, non-outdated agent threads at 0, and every
-  developer thread handled (fix or defer, replied in-thread). In PR mode,
+  developer thread handled (fix or defer, replied in-thread). In pull request mode,
   additionally: post-push review activity observed for the final round —
   without it, zero threads is reported as "zero findings (post-push
   re-review unconfirmed — needs checking)", distinct from success (Step 3)
@@ -393,7 +396,7 @@ heading if it does not exist):
 Entry format:
 
 ```markdown
-## YYYY-MM-DD <repository> PR #<number> <target agent>
+## YYYY-MM-DD <repository> pull request #<number> <target agent>
 - Kind: instruction defect / measured drift / hard judgment call / agent quirk / repository quirk
 - What happened: <the gap between SKILL.md's assumption and reality>
 - Response: <how it was worked around or decided>

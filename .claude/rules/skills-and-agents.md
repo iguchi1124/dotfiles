@@ -21,6 +21,13 @@ is configuration too").
   occurs, fold lessons back into the skill's own `SKILL.md`. A lesson
   observed once is only recorded and promotes after it recurs; obvious,
   reproducibly-confirmed instruction defects may be fixed immediately.
+- **Rewrite, never append.** Every line a skill or agent carries is
+  context spent on every load, so folding a lesson in means re-editing
+  the existing text: merge it into the rule it refines, delete what it
+  supersedes, deduplicate what it overlaps. Stacking a new clause next to
+  an old one breeds duplicated instructions and token bloat — an edit
+  that only adds lines needs a reason the existing text could not absorb
+  it.
 - **Self-editing has boundaries.** Behavior-preserving clarifications may
   be applied without asking; semantic changes (loop caps, safety rules,
   stage structure) are the user's decision; safety rules are never relaxed

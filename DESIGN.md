@@ -21,6 +21,17 @@ sessions - next to their config. Per-file links keep the boundary: the repo
 owns the config, the machine owns the state. The cost is that new files
 need a re-run of the installer, which idempotency makes free.
 
+## Defaults first, configuration minimal
+
+Configure an application only where its default is actually wrong for this
+setup. Every line of config is a diff against the tool's documentation
+that has to be understood, carried across machines, and re-validated on
+upgrades - so the default is the baseline, not a starting point to
+override. The same goes for shortcuts: aliases and custom keybindings are
+added sparingly, for commands typed often enough to prove the need, never
+speculatively. A stock environment that stays close to what the tool's
+docs describe is the feature.
+
 ## XDG first
 
 Config lives under `.config/<app>/` and is installed to `$XDG_CONFIG_HOME`

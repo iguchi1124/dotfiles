@@ -96,7 +96,7 @@ the skill's own `SKILL.md`. Three boundaries keep this safe:
   on the machine, per "Machine state stays on the machine" below.
 
 These principles are enforced at editing time by
-`.claude/rules/skill-design.md`, a path-scoped rule that loads whenever a
+`.claude/rules/skills-and-agents.md`, a path-scoped rule that loads whenever a
 skill or subagent file is being changed.
 
 ## Machine state stays on the machine

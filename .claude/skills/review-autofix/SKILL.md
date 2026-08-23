@@ -1,8 +1,9 @@
 ---
-name: recursive-review-autofix
+name: review-autofix
 description: >
-  PR に付いたレビュー指摘が「ゼロになるまで」自動で 修正 → push → 再レビュー待ち →
-  再修正 を繰り返すループ（最大3周）。レビューエージェント（CodeRabbit / Copilot / Gemini Code Assist
+  PR に付いたレビュー指摘を自動で修正するスキル。デフォルトは「ゼロになるまで」
+  修正 → push → 再レビュー待ち → 再修正 を繰り返す recursive モード（最大3周）、
+  引数 `once` で 1 周だけの単発モード。レビューエージェント（CodeRabbit / Copilot / Gemini Code Assist
   など任意）は再レビューまで待って往復し、開発者のレビュー指摘も修正して in-thread で
   結果を返信する（開発者の再レビューは待たない）。承認プロンプトを挟まず全自動で回す。
   PR や branch にレビュー指摘が付いていて
@@ -12,12 +13,16 @@ description: >
   CodeRabbit 専用の対話版が欲しい場合は /coderabbit:autofix を使う。
 ---
 
-# Recursive Review Autofix
+# Review Autofix
 
 任意のレビューエージェントの指摘修正 → push → 再レビュー → 再修正のサイクルを、人の承認を
-挟まずに収束するまで自動で回すスキル。ユーザーが放置して戻ってきたときに PR がきれいに
+挟まずに自動で回すスキル。ユーザーが放置して戻ってきたときに PR がきれいに
 なっていることが目的。その代わり終了条件と安全ルール（後述）を厳密に守ることが信頼の
 前提になる。
+
+周回数はオプション: デフォルトは **recursive**（収束するまで最大 3 周）、引数に
+`once` があれば **単発**（1 周だけ実行し、再レビュー待ちまで済ませて終了。残指摘は
+報告に載せる）。以降の「最大 3 周」「for round in 1..3」は、once では 1 周と読み替える。
 
 ## コンセプト — なぜ切り離されたレビュアーか
 
@@ -34,14 +39,14 @@ description: >
 一方でレビュー自体を自分で代行しない（自分は差分を作った側で、切り離された視点は
 外からしか得られない）。
 
-このスキルは dotfiles 管理（`~/.dotfiles/.claude/skills/recursive-review-autofix/`、
+このスキルは dotfiles 管理（`~/.dotfiles/.claude/skills/review-autofix/`、
 `claude-setup` で `~/.claude/skills/` にリンク）。ただし学習ログ
-`~/.claude/skills/recursive-review-autofix/learnings.md` だけは**マシンローカルの
+`~/.claude/skills/review-autofix/learnings.md` だけは**マシンローカルの
 実ファイル**で、dotfiles では管理しない（マシン間で同期しない）。
 
 ## Step 0: 学習ログを読む
 
-実行を始める前に `~/.claude/skills/recursive-review-autofix/learnings.md` を読む。
+実行を始める前に `~/.claude/skills/review-autofix/learnings.md` を読む。
 過去の実行で判明した「指示どおりに動かなかった箇所」「レビューエージェント固有・環境固有の癖」
 「有効だった回避策」が日付つきで蓄積されているので、今回の実行ではそれを反映して動く。
 ファイルが無い・空でも異常ではない（このマシンでまだ学びがないだけ）。
@@ -58,7 +63,8 @@ description: >
 - branch 名 → その branch を checkout する
 - レビュアー login（`coderabbitai[bot]` / `copilot-pull-request-reviewer[bot]` など）→
   再レビューを待つ対象レビューエージェントをそれに固定する（開発者のスレッドの扱いは変わらない）
-- 引数なし → 現在の branch をそのまま使う
+- `once` → 単発モード。ループを 1 周で打ち切る（他の引数と併用可）
+- 引数なし → 現在の branch を recursive モードで回す
 
 working tree に uncommitted changes がある場合は、checkout の要否やモードに
 関係なく、勝手に stash せずユーザーに報告して停止する（無関係な変更が
@@ -256,9 +262,10 @@ description が説明している機能・設計・ファイル構成・数値�
 終了時は必ず以下をまとめて報告する:
 
 ```markdown
-## Recursive Review Autofix 結果
+## Review Autofix 結果
+- モード: recursive / once
 - 対象レビュアー: <login...>（レビューエージェント / 開発者の別を明記）
-- 実行周回: N / 3
+- 実行周回: N / 3（once は N / 1）
 - 適用した修正: X 件（commit: <sha>...、うち開発者の指摘 H 件は in-thread 返信済み）
 - defer した指摘: Y 件（それぞれ理由: 妥当でない / CI・インフラ領域 / lint 失敗 ...）
 - 最終状態: 指摘ゼロ ✅ / 残指摘 Z 件（要開発者判断）
@@ -279,7 +286,7 @@ defer した指摘が残っている場合、それは「機械的に直すべ�
 ### 1. learnings.md への追記
 
 今回の実行で以下に該当するものがあれば、
-`~/.claude/skills/recursive-review-autofix/learnings.md` に追記する
+`~/.claude/skills/review-autofix/learnings.md` に追記する
 （無ければ見出しだけの新規ファイルとして作る）:
 
 - SKILL.md の指示どおりに動かなかった箇所（コマンドの失敗、想定と違う API 応答など）と、
@@ -319,7 +326,7 @@ learnings.md への記録に続けて、承認を待たずに SKILL.md 本体の
   2 回記録された時点で**自動昇格する。1 回きりの事象で本体を書き換えると、スキルが
   特定ケースに過学習していくため
 
-編集は必ず `~/.dotfiles/.claude/skills/recursive-review-autofix/SKILL.md`
+編集は必ず `~/.dotfiles/.claude/skills/review-autofix/SKILL.md`
 （リンクの実体）に対して行い:
 
 - 反映済みの学びを learnings.md から削除する（二重管理を防ぐ）

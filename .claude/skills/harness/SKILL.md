@@ -156,7 +156,8 @@ non-blocker findings and the mode:
 
 Relay reporter's deliverable to the user as the harness's final message, add
 the task-dir path so the paper trail is findable, and nothing else beyond a
-closing status line.
+closing status line - except a Retrospect note (stage 6), the one thing
+allowed to follow it.
 
 ## 6. Retrospect - improve this skill
 
@@ -171,14 +172,16 @@ needed off-script clarification, a new gotcha worth the Gotchas list.
 Task-specific friction (flaky tests, odd repo layout) stays in the task-dir;
 only lessons that would change how the *next* run behaves qualify.
 
-If `retro.md` is empty or nothing qualifies, skip silently - no forced
-findings. Otherwise:
+If `retro.md` is missing or empty (a friction-free run never creates it) or
+nothing qualifies, skip silently - no forced findings. Otherwise:
 
 - Edit the source file `~/.dotfiles/.claude/skills/harness/SKILL.md` directly
   for wording fixes, missing gotchas, and clarified rules. The skill is
-  symlinked into `~/.claude`, so the edit takes effect next run. Leave the
-  change uncommitted and summarize it to the user after the harness's final
-  message - the commit is theirs.
+  symlinked into `~/.claude`, so the edit takes effect next run. This edit
+  targets the skill's canonical source, not the task's code, so it is the
+  one deliberate exception to the worktree rule in Gotchas - never route it
+  through a task worktree. Leave the change uncommitted and summarize it to
+  the user after the harness's final message - the commit is theirs.
 - A **structural** change (adding/removing a stage, changing loop caps or
   agent responsibilities) or any edit to a subagent under
   `~/.dotfiles/.claude/agents/` is proposed to the user first, never applied

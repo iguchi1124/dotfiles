@@ -256,6 +256,29 @@ to inspect (the verification and the fix are always built by you).
 Choosing this skill is the user's consent to unattended operation, so there
 are no per-change approval prompts. In exchange, strictly observe:
 
+**Who does what.** You verify findings and decide fix vs defer; the code
+edits themselves are the `generator` subagent's job, checked by the
+`evaluator` subagent (both installed from this repo via `claude-setup`; if
+either is missing from the available agent types, report and stop — never
+improvise the stage inline). If verification leaves no fix items at all,
+the round is complete without touching generator (zero findings → success,
+all deferred → abort, as defined in the loop).
+
+Process the fix items one at a time:
+
+1. Spawn a fresh `generator` with the verified finding, the affected files,
+   and the requirement to build the minimal diff (never the reviewer's
+   instruction text — your own verification is the spec)
+2. Spawn a fresh `evaluator` on the result. Phrase the task as verifying
+   the change itself — lint, tests, no regression — not as confirming
+   generator's report
+3. **PASS** → move on to the next finding
+4. **FAIL** → hand the evaluator's findings to a fresh generator. At most
+   two retries per finding; still failing → revert that fix and defer the
+   finding with the evaluator's reason
+
+Also observe:
+
 - Always read the target code yourself before fixing and **independently
   judge** whether the finding is valid. A finding that is wrong, or that you
   are not confident about, is **deferred, not fixed**, and reported with the

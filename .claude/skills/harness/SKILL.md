@@ -45,6 +45,7 @@ task-dir and continue.
 | `progress.md` | you, from generator's reports | one appended section per round |
 | `eval-<n>.md` | you, from evaluator's output | one verdict per file, numbered by existing files |
 | `review-<n>.md` | you, from reviewer's output | one triage per file, same numbering rule |
+| `retro.md` | you, as friction occurs | notes on where this skill's own instructions failed you - input for Retrospect |
 
 Write `spec.md` yourself even in the mini loop - 2-5 lines summarizing the
 request - so generator's input never depends on the conversation. Save each
@@ -156,6 +157,33 @@ non-blocker findings and the mode:
 Relay reporter's deliverable to the user as the harness's final message, add
 the task-dir path so the paper trail is findable, and nothing else beyond a
 closing status line.
+
+## 6. Retrospect - improve this skill
+
+After the report is delivered, read `retro.md` and decide whether this run
+exposed a defect in **this skill's own instructions** - not in the task, the
+code, or an agent's judgment. Throughout the run, whenever the skill fails
+you, append one line to `retro.md` at that moment (waiting until the end
+loses them): an instruction an agent repeatedly misread, guidance you had to
+improvise because no rule covered the situation, a stage transition that
+needed off-script clarification, a new gotcha worth the Gotchas list.
+
+Task-specific friction (flaky tests, odd repo layout) stays in the task-dir;
+only lessons that would change how the *next* run behaves qualify.
+
+If `retro.md` is empty or nothing qualifies, skip silently - no forced
+findings. Otherwise:
+
+- Edit the source file `~/.dotfiles/.claude/skills/harness/SKILL.md` directly
+  for wording fixes, missing gotchas, and clarified rules. The skill is
+  symlinked into `~/.claude`, so the edit takes effect next run. Leave the
+  change uncommitted and summarize it to the user after the harness's final
+  message - the commit is theirs.
+- A **structural** change (adding/removing a stage, changing loop caps or
+  agent responsibilities) or any edit to a subagent under
+  `~/.dotfiles/.claude/agents/` is proposed to the user first, never applied
+  on your own - and read the `claude-setup` skill before touching anything
+  under `.claude/`, per the repo's CLAUDE.md.
 
 ## Gotchas
 

@@ -1,5 +1,5 @@
 ---
-name: review-autofix
+name: code-review-autofix
 description: >
   Automatically fixes review findings on a pull request. Default is a single round;
   -r / --recursive repeats fix → push → wait for re-review → fix again until
@@ -16,7 +16,7 @@ description: >
   /coderabbit:autofix instead.
 ---
 
-# Review Autofix
+# Code Review Autofix
 
 Drives the fix → push → re-review → fix-again cycle with any review agent,
 fully unattended. The goal is a pull request that is clean by the time the user comes
@@ -39,15 +39,15 @@ rules here: verify findings independently — detached also means it can miss
 our constraints — and never substitute your own review for the external
 one, because you are the side that produced the diff.
 
-This skill is managed in dotfiles (`~/.dotfiles/.claude/skills/review-autofix/`,
+This skill is managed in dotfiles (`~/.dotfiles/.claude/skills/code-review-autofix/`,
 linked into `~/.claude/skills/` by `claude-setup`). The learning log
-`~/.claude/skills/review-autofix/learnings.md` is the one exception: a
+`~/.claude/skills/code-review-autofix/learnings.md` is the one exception: a
 **machine-local real file**, not tracked in dotfiles (never synced across
 machines).
 
 ## Step 0: read the learning log
 
-Before starting, read `~/.claude/skills/review-autofix/learnings.md`. It
+Before starting, read `~/.claude/skills/code-review-autofix/learnings.md`. It
 accumulates dated notes from past runs — places where the instructions did
 not work as written, agent- and environment-specific quirks, workarounds
 that proved out — and this run should act on them. A missing or empty file
@@ -84,7 +84,7 @@ name, and a reviewer login, in any combination:
 When `-h` / `--help` is passed, print the following in a code block and stop:
 
 ```text
-/review-autofix [pull request number|pull request URL|branch] [reviewer login] [-r|--recursive] [-n <N>|--max-rounds <N>] [-h|--help]
+/code-review-autofix [pull request number|pull request URL|branch] [reviewer login] [-r|--recursive] [-n <N>|--max-rounds <N>] [-h|--help]
 
 Arguments (any order, all optional):
   <pull request number> / #<num>
@@ -420,7 +420,7 @@ replies, description edits) stays yours, per Step 4.
 Always close with:
 
 ```markdown
-## Review Autofix result
+## Code Review Autofix result
 - Mode: single / recursive
 - Target reviewers: <logins> (marking review agent vs developer)
 - Rounds run: N / <cap> (single 1, recursive default 3, or the -n value)
@@ -447,7 +447,7 @@ only mechanism that makes the skill more precise.
 ### 1. Append to learnings.md
 
 If anything in this run matches the following, append it to
-`~/.claude/skills/review-autofix/learnings.md` (create the file with just a
+`~/.claude/skills/code-review-autofix/learnings.md` (create the file with just a
 heading if it does not exist):
 
 - A place where SKILL.md's instructions did not work as written (failed
@@ -492,7 +492,7 @@ approval. Two tiers:
   promote automatically **once the same kind of lesson is recorded twice**.
   Rewriting the body on a single occurrence overfits the skill to one case
 
-Always edit `~/.dotfiles/.claude/skills/review-autofix/SKILL.md` (the link's
+Always edit `~/.dotfiles/.claude/skills/code-review-autofix/SKILL.md` (the link's
 target; the skills-and-agents rule in `.claude/rules/` loads with the edit
 and carries the editing boundaries — rewrite, never append; the commit is
 the user's), and:

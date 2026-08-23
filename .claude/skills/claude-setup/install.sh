@@ -12,7 +12,7 @@ claude_dir="$HOME/.claude"
 
 # Link file by file, never the directory: Claude Code writes runtime state next
 # to these files, and a symlinked directory would put that state in this repo.
-mkdir -p "$claude_dir/agents" "$claude_dir/hooks"
+mkdir -p "$claude_dir/agents" "$claude_dir/hooks" "$claude_dir/rules"
 
 ln -snfv "$dotpath/.claude/CLAUDE.md" "$claude_dir/CLAUDE.md"
 
@@ -24,6 +24,11 @@ done
 for file in "$dotpath/.claude/hooks"/*
 do
   ln -snfv "$file" "$claude_dir/hooks"
+done
+
+for file in "$dotpath/.claude/rules"/*
+do
+  ln -snfv "$file" "$claude_dir/rules"
 done
 
 # Skills too, one directory per skill. claude-setup itself stays a project

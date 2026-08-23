@@ -23,30 +23,21 @@ fully unattended. The goal is a pull request that is clean by the time the user 
 back to it; the price of running without approval prompts is strict adherence
 to the termination conditions and safety rules below.
 
-Round count is an option: the default is a **single round** (one round,
-including the re-review wait; remaining findings go in the report).
-`-r` / `--recursive` loops until convergence, capped at 3 rounds by
-default; `-n <N>` / `--max-rounds <N>` (positive integer, implies
-recursive) changes the cap. An unlimited cap cannot be requested — the
-finite round cap is how this skill implements its no-infinite-loop rule,
-so it always holds a concrete number.
+Round count is an option, detailed under Arguments: single round by
+default, `-r` to loop until convergence, `-n` to change the cap. An
+unlimited cap cannot be requested — the finite round cap is how this
+skill implements its no-infinite-loop rule, so it always holds a
+concrete number.
 
 ## Concept — why a detached reviewer
 
-This skill delegates review to an external review agent detached from our
-context for the same reason developers review each other's code. The person
-who wrote the change (and the AI that drove it) is biased by their own
-context: knowing the intent, they fill the gaps between the lines without
-noticing, and excuse crooked designs because "there were reasons". A reviewer
-who shares none of that context reads only the diff — code that survives
-that reading is code a third party can understand, and its findings check
-the design and implementation with the context bias removed.
-
-The same principle grounds two rules of this skill: verify findings
-independently instead of taking them on faith (a detached reviewer, not
-knowing our situation, sometimes misses), and never substitute your own
-review for the external one (you are the side that produced the diff; the
-detached perspective can only come from outside).
+Like third-party human review, a reviewer that shares none of the author's
+context reads only the diff, so its findings test whether the change is
+correct and comprehensible without the author's context bias (the full
+rationale is in the `reviewer` agent definition). The principle grounds two
+rules here: verify findings independently — detached also means it can miss
+our constraints — and never substitute your own review for the external
+one, because you are the side that produced the diff.
 
 This skill is managed in dotfiles (`~/.dotfiles/.claude/skills/review-autofix/`,
 linked into `~/.claude/skills/` by `claude-setup`). The learning log
@@ -478,14 +469,14 @@ approval. Two tiers:
   Rewriting the body on a single occurrence overfits the skill to one case
 
 Always edit `~/.dotfiles/.claude/skills/review-autofix/SKILL.md` (the link's
-target), and:
+target; the skills-and-agents rule in `.claude/rules/` loads with the edit
+and carries the editing boundaries — rewrite, never append; the commit is
+the user's), and:
 
 - Delete promoted lessons from learnings.md (no double bookkeeping)
 - Put where / why / how into the final report's "Skill improvement" line as
   a diff summary. Skipping approval is paid for by keeping the user able to
   inspect and revert after the fact
-- Never commit the change — committing to the dotfiles repo is the user's
-  act
 
 ### 3. Off-limits for self-editing
 

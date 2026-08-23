@@ -38,7 +38,7 @@ of your own.
 
 ## Run it
 
-Use the tool's own local invocation (e.g. `coderabbit review --plain`). When
+Use the tool's own local invocation (e.g. `coderabbit review --committed`). When
 the tool only reviews pull requests and none exists yet, or its CLI is missing
 or unauthenticated, return NOT-RUN with what you found and what it would take
 to run - never simulate what the tool would have said.

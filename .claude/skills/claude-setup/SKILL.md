@@ -38,8 +38,8 @@ sh "$HOME/.dotfiles/.claude/skills/claude-setup/install.sh"
 ```
 
 Report what it printed. Re-running after a rename leaves the old link behind - list
-`~/.claude/agents`, `~/.claude/hooks` and `~/.claude/skills` and remove any symlink
-(or skill directory) whose target no longer exists.
+`~/.claude/agents`, `~/.claude/hooks`, `~/.claude/rules` and `~/.claude/skills` and
+remove any symlink (or skill directory) whose target no longer exists.
 
 ## 2. Register the hook in settings.json
 

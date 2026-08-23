@@ -28,6 +28,8 @@ done
 
 for file in "$dotpath/.claude/rules"/*
 do
+  # /bin/sh has no nullglob: an empty dir leaves the '*' literal.
+  [ -e "$file" ] || continue
   ln -snfv "$file" "$claude_dir/rules"
 done
 

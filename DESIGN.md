@@ -82,7 +82,10 @@ experiment on the skill's own instructions, so each one ends with a
 retrospective: friction is logged the moment it occurs - a rule that
 misled, a command that failed as written, a situation no rule covered -
 and before the final report is delivered, the lessons are folded back into
-the skill's own `SKILL.md`. Three boundaries keep this safe:
+the skill's own `SKILL.md`. Folding in means rewriting, not appending:
+instructions are context spent on every load, so a lesson is merged into
+the text it refines and deletes what it supersedes - stacking clauses
+breeds duplication and token bloat. Three boundaries keep this safe:
 
 - A lesson observed once is only recorded; it is promoted into the skill
   after it recurs, so one incident cannot overfit the instructions.

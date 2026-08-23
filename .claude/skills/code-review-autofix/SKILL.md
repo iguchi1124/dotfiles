@@ -1,5 +1,5 @@
 ---
-name: review-autofix
+name: code-review-autofix
 description: >
   Automatically fixes review findings on a pull request. Default is a single round;
   -r / --recursive repeats fix → push → wait for re-review → fix again until
@@ -16,47 +16,38 @@ description: >
   /coderabbit:autofix instead.
 ---
 
-# Review Autofix
+# Code Review Autofix
 
 Drives the fix → push → re-review → fix-again cycle with any review agent,
 fully unattended. The goal is a pull request that is clean by the time the user comes
 back to it; the price of running without approval prompts is strict adherence
 to the termination conditions and safety rules below.
 
-Round count is an option: the default is a **single round** (one round,
-including the re-review wait; remaining findings go in the report).
-`-r` / `--recursive` loops until convergence, capped at 3 rounds by
-default; `-n <N>` / `--max-rounds <N>` (positive integer, implies
-recursive) changes the cap. An unlimited cap cannot be requested — the
-finite round cap is how this skill implements its no-infinite-loop rule,
-so it always holds a concrete number.
+Round count is an option, detailed under Arguments: single round by
+default, `-r` to loop until convergence, `-n` to change the cap. An
+unlimited cap cannot be requested — the finite round cap is how this
+skill implements its no-infinite-loop rule, so it always holds a
+concrete number.
 
 ## Concept — why a detached reviewer
 
-This skill delegates review to an external review agent detached from our
-context for the same reason developers review each other's code. The person
-who wrote the change (and the AI that drove it) is biased by their own
-context: knowing the intent, they fill the gaps between the lines without
-noticing, and excuse crooked designs because "there were reasons". A reviewer
-who shares none of that context reads only the diff — code that survives
-that reading is code a third party can understand, and its findings check
-the design and implementation with the context bias removed.
+Like third-party human review, a reviewer that shares none of the author's
+context reads only the diff, so its findings test whether the change is
+correct and comprehensible without the author's context bias (the full
+rationale is in the `reviewer` agent definition). The principle grounds two
+rules here: verify findings independently — detached also means it can miss
+our constraints — and never substitute your own review for the external
+one, because you are the side that produced the diff.
 
-The same principle grounds two rules of this skill: verify findings
-independently instead of taking them on faith (a detached reviewer, not
-knowing our situation, sometimes misses), and never substitute your own
-review for the external one (you are the side that produced the diff; the
-detached perspective can only come from outside).
-
-This skill is managed in dotfiles (`~/.dotfiles/.claude/skills/review-autofix/`,
+This skill is managed in dotfiles (`~/.dotfiles/.claude/skills/code-review-autofix/`,
 linked into `~/.claude/skills/` by `claude-setup`). The learning log
-`~/.claude/skills/review-autofix/learnings.md` is the one exception: a
+`~/.claude/skills/code-review-autofix/learnings.md` is the one exception: a
 **machine-local real file**, not tracked in dotfiles (never synced across
 machines).
 
 ## Step 0: read the learning log
 
-Before starting, read `~/.claude/skills/review-autofix/learnings.md`. It
+Before starting, read `~/.claude/skills/code-review-autofix/learnings.md`. It
 accumulates dated notes from past runs — places where the instructions did
 not work as written, agent- and environment-specific quirks, workarounds
 that proved out — and this run should act on them. A missing or empty file
@@ -93,7 +84,7 @@ name, and a reviewer login, in any combination:
 When `-h` / `--help` is passed, print the following in a code block and stop:
 
 ```text
-/review-autofix [pull request number|pull request URL|branch] [reviewer login] [-r|--recursive] [-n <N>|--max-rounds <N>] [-h|--help]
+/code-review-autofix [pull request number|pull request URL|branch] [reviewer login] [-r|--recursive] [-n <N>|--max-rounds <N>] [-h|--help]
 
 Arguments (any order, all optional):
   <pull request number> / #<num>
@@ -134,7 +125,7 @@ CLI (CodeRabbit's `coderabbit` / `cr`, or equivalent), without GitHub:
 
 ```text
 for round in 1, 2, ..., cap:   # inclusive; the cap comes from -n / the mode
-  1. review the committed diff vs the base branch with the CLI
+  1. spawn a fresh `reviewer` to run the CLI against the base branch
      → zero findings: success, stop
   2. verify each finding under the same safety rules as Step 2 and apply
      only the valid fixes
@@ -145,6 +136,12 @@ findings remain after the last round → abort and report them
 
 - The target is the **committed diff against the base branch** (the default
   branch, or the one specified)
+- The CLI run belongs to a fresh `reviewer` subagent — its prompt carries
+  the base branch, the invocation example below, the defer criteria of
+  Step 2 as its Review policy, and the fact that the tool is adopted (its
+  own adoption check looks for repo config and would miss a
+  pull-request-only setup). It returns the triaged findings; the raw CLI
+  output stays out of your context
 - This mode requires the local review CLI. Missing, unauthenticated, or
   rate-limited → report and stop (include the wait time the error reports)
 - The CLI shares its review quota with pull-request-side reviews (CodeRabbit free
@@ -216,6 +213,10 @@ When a target review agent has a local review CLI (CodeRabbit's
 **before every push that carries a diff**, to save the GitHub round-trip
 (push → re-review → polling):
 
+- Each local review run is a fresh `reviewer` subagent, prompted as in
+  local mode (base branch, invocation example, Step 2's defer criteria as
+  the Review policy, adoption stated) — the raw CLI output stays out of
+  your context
 - Verify, fix, and defer findings under the same safety rules as Step 2
 - Stop when clean, or after **2 local rounds**, then push. Local rounds do
   not count against the pull request loop's cap
@@ -252,13 +253,20 @@ to inspect.
 Choosing this skill is the user's consent to unattended operation, so there
 are no per-change approval prompts. In exchange, strictly observe:
 
-**Who does what.** You verify findings and decide fix vs defer; the code
-edits themselves are the `generator` subagent's job, checked by the
-`evaluator` subagent (both installed from this repo via `claude-setup`; if
-either is missing from the available agent types, report and stop — never
-improvise the stage inline). If verification leaves no fix items at all,
-the round is complete without touching generator (zero findings → success,
-all deferred → abort, as defined in the loop).
+**Who does what.** Four subagents (installed from this repo via
+`claude-setup`; any of them missing from the available agent types →
+report and stop, never improvise a stage inline) carry the stages, and
+you orchestrate: the `reviewer` subagent runs the local review CLI and
+returns first-pass triaged findings, the `generator` subagent makes the
+code edits, the `evaluator` subagent checks them, and the `reporter`
+subagent assembles the final report. You make the decisions between
+stages — above all the **independent validity check**: reviewer's `fix`
+triage is a classification against the policy you gave it, not
+verification, so before an item reaches generator you still read the
+target code and confirm the finding yourself (defer on doubt). If
+verification leaves no fix items at all, the round is complete without
+touching generator (zero findings → success, all deferred → abort, as
+defined in the loop).
 
 Process the fix items one at a time:
 
@@ -402,10 +410,17 @@ Every run ends by exactly one of these (no infinite loops):
   keep failing even after reverting / uncommitted changes block checkout /
   no local clone of the target repository
 
+The final report is assembled by a fresh `reporter` subagent in report
+mode: hand it the run's facts (mode, rounds, commits, fixes, defers with
+reasons, remaining findings, the skill-improvement summary) and relay its
+deliverable verbatim. It packages faithfully and applies its redaction
+sweep; it posts nothing — every GitHub write (summary comments, in-thread
+replies, description edits) stays yours, per Step 4.
+
 Always close with:
 
 ```markdown
-## Review Autofix result
+## Code Review Autofix result
 - Mode: single / recursive
 - Target reviewers: <logins> (marking review agent vs developer)
 - Rounds run: N / <cap> (single 1, recursive default 3, or the -n value)
@@ -432,7 +447,7 @@ only mechanism that makes the skill more precise.
 ### 1. Append to learnings.md
 
 If anything in this run matches the following, append it to
-`~/.claude/skills/review-autofix/learnings.md` (create the file with just a
+`~/.claude/skills/code-review-autofix/learnings.md` (create the file with just a
 heading if it does not exist):
 
 - A place where SKILL.md's instructions did not work as written (failed
@@ -477,15 +492,15 @@ approval. Two tiers:
   promote automatically **once the same kind of lesson is recorded twice**.
   Rewriting the body on a single occurrence overfits the skill to one case
 
-Always edit `~/.dotfiles/.claude/skills/review-autofix/SKILL.md` (the link's
-target), and:
+Always edit `~/.dotfiles/.claude/skills/code-review-autofix/SKILL.md` (the link's
+target; the skills-and-agents rule in `.claude/rules/` loads with the edit
+and carries the editing boundaries — rewrite, never append; the commit is
+the user's), and:
 
 - Delete promoted lessons from learnings.md (no double bookkeeping)
 - Put where / why / how into the final report's "Skill improvement" line as
   a diff summary. Skipping approval is paid for by keeping the user able to
   inspect and revert after the fact
-- Never commit the change — committing to the dotfiles repo is the user's
-  act
 
 ### 3. Off-limits for self-editing
 

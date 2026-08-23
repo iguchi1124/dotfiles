@@ -175,22 +175,21 @@ only lessons that would change how the *next* run behaves qualify.
 If `retro.md` is missing or empty (a friction-free run never creates it) or
 nothing qualifies, skip silently - no forced findings. Otherwise:
 
-- Edit the source file `~/.dotfiles/.claude/skills/harness/SKILL.md` directly
-  for **behavior-preserving** edits only: wording fixes, missing gotchas,
-  and clarified rules that change how the text reads, not what the harness
-  does. The skill is symlinked into `~/.claude`, so the edit takes effect
-  next run. This edit targets the skill's canonical source, not the task's
-  code, so it is the one deliberate exception to the worktree rule in
-  Gotchas - never route it through a task worktree. Leave the change
-  uncommitted and summarize it to the user after the harness's final
-  message - the commit is theirs.
-- A **semantic** change - anything that alters behavior: adding/removing a
-  stage, changing loop caps, agent responsibilities, worktree handling, or
-  any safety rule - or any edit to a subagent under
-  `~/.dotfiles/.claude/agents/` is proposed to the user first with the
-  exact diff, never applied on your own. When unsure which kind an edit is,
-  treat it as semantic. Read the `claude-setup` skill before touching
-  anything under `.claude/`, per the repo's CLAUDE.md.
+- Edit the source file `~/.dotfiles/.claude/skills/harness/SKILL.md`
+  directly for **behavior-preserving** edits only; the editing boundaries
+  and the rewrite-never-append rule load with `.claude/rules/`'s
+  skills-and-agents rule the moment you touch the file. The skill is
+  symlinked into `~/.claude`, so the edit takes effect next run; it targets
+  the skill's canonical source, not the task's code - the one deliberate
+  exception to the worktree rule in Gotchas. Leave the change uncommitted
+  and summarize it to the user after the harness's final message - the
+  commit is theirs.
+- A **semantic** change (anything that alters what the harness does) or
+  any edit to a subagent under `~/.dotfiles/.claude/agents/` is proposed
+  to the user first with the exact diff, never applied on your own; when
+  unsure which kind an edit is, treat it as semantic. Read the
+  `claude-setup` skill before touching anything under `.claude/`, per the
+  repo's CLAUDE.md.
 
 ## Gotchas
 

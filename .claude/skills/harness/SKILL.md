@@ -176,17 +176,21 @@ If `retro.md` is missing or empty (a friction-free run never creates it) or
 nothing qualifies, skip silently - no forced findings. Otherwise:
 
 - Edit the source file `~/.dotfiles/.claude/skills/harness/SKILL.md` directly
-  for wording fixes, missing gotchas, and clarified rules. The skill is
-  symlinked into `~/.claude`, so the edit takes effect next run. This edit
-  targets the skill's canonical source, not the task's code, so it is the
-  one deliberate exception to the worktree rule in Gotchas - never route it
-  through a task worktree. Leave the change uncommitted and summarize it to
-  the user after the harness's final message - the commit is theirs.
-- A **structural** change (adding/removing a stage, changing loop caps or
-  agent responsibilities) or any edit to a subagent under
-  `~/.dotfiles/.claude/agents/` is proposed to the user first, never applied
-  on your own - and read the `claude-setup` skill before touching anything
-  under `.claude/`, per the repo's CLAUDE.md.
+  for **behavior-preserving** edits only: wording fixes, missing gotchas,
+  and clarified rules that change how the text reads, not what the harness
+  does. The skill is symlinked into `~/.claude`, so the edit takes effect
+  next run. This edit targets the skill's canonical source, not the task's
+  code, so it is the one deliberate exception to the worktree rule in
+  Gotchas - never route it through a task worktree. Leave the change
+  uncommitted and summarize it to the user after the harness's final
+  message - the commit is theirs.
+- A **semantic** change - anything that alters behavior: adding/removing a
+  stage, changing loop caps, agent responsibilities, worktree handling, or
+  any safety rule - or any edit to a subagent under
+  `~/.dotfiles/.claude/agents/` is proposed to the user first with the
+  exact diff, never applied on your own. When unsure which kind an edit is,
+  treat it as semantic. Read the `claude-setup` skill before touching
+  anything under `.claude/`, per the repo's CLAUDE.md.
 
 ## Gotchas
 

@@ -321,16 +321,21 @@ threads, so wait for that before deciding anything.
 
 Before pushing, if Step 1's local pre-review is available, give this round's
 fixes one pass too. Just before pushing, record each target agent's latest
-review timestamp — the timestamp, the post-push activity observation, and
-the unresolved-thread count below are all tracked **per target review
-agent**, never as one aggregate across agents. `gh`'s `--jq` does not
-accept jq flags (`--arg`, ...), so pipe instead:
-`gh ... --json x | jq --arg ...`.
+review timestamp and, when that agent has a status comment, that comment's
+current `updatedAt`; at push time record the pushed head commit OID — the
+timestamps, the post-push activity observation, and the unresolved-thread
+count below are all tracked **per target review agent**, never as one
+aggregate across agents. `gh`'s `--jq` does not accept jq flags
+(`--arg`, ...), so pipe instead: `gh ... --json x | jq --arg ...`.
 
-After pushing, **poll every 2-3 minutes**, using the change in each target
-agent's unresolved-thread count as the primary signal (requiring "a new
-review exists" misses convergence with agents that submit no review when
-they have nothing to say). When polling in the background, watch one full
+After pushing, **poll every 2-3 minutes**. Two signals matter, per agent:
+the change in that agent's unresolved-thread count, and — for agents that
+edit a status comment in place (CodeRabbit rewrites its first
+walkthrough comment to, e.g., "No actionable comments were generated in
+the recent review.") — the current status text of that comment. Watching
+only for new reviews or new comments misses both: an agent may submit no
+review when it has nothing to say, and an in-place comment edit creates
+no new activity at all. When polling in the background, watch one full
 iteration of output before leaving it alone, to confirm the script actually
 works.
 
@@ -340,13 +345,19 @@ once (`gh pr edit --add-reviewer` / the review re-request API).
 Do not declare completion from the thread count alone: right after a push
 the old threads may merely go outdated, with the review of the new commit
 not yet run. Completion additionally requires **observed post-push review
-activity** from that agent (a review or review comment newer than its
-recorded timestamp, or an in-progress marker appearing and then clearing).
-The wait completes only when **every** target agent has either shown
-post-push review activity or individually hit the 15-minute cap below —
-one agent's re-review plus another agent's old threads going outdated can
-drive an aggregate thread count to zero before that other agent ever
-re-reviews.
+activity** from that agent. For a review or a review comment, a timestamp
+newer than the recorded one is not enough — a review submitted for an
+older commit (a race with a previous push) also looks newer — so require
+its commit association to match the recorded pushed head OID. An
+in-progress marker appearing and then clearing also counts. The in-place
+status-comment edit is a separate signal class: issue comments carry no
+commit association, so for that signal an `updatedAt` on the status
+comment newer than the pre-push recorded one, paired with that agent's
+unresolved-thread check, remains the rule. The wait completes only when
+**every** target agent has either shown post-push review activity or
+individually hit the 15-minute cap below — one agent's re-review plus
+another agent's old threads going outdated can drive an aggregate thread
+count to zero before that other agent ever re-reviews.
 
 **If an agent's re-review does not arrive within 15 minutes**, stop polling
 for that agent and check its unresolved-thread count directly, then finish.

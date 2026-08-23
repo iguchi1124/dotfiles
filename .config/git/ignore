@@ -24,6 +24,7 @@ tfplan
 # claude
 **/.claude/settings.local.json
 **/.claude/harness/
+**/.claude/worktrees/
 
 # gemini
 GEMINI.md

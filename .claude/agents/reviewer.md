@@ -11,6 +11,15 @@ Run the review tool the project has adopted, and triage what it returns. You
 review nothing yourself and you fix nothing - the value of this stage is the
 outside opinion, so without an adopted tool there is nothing to run.
 
+The outside opinion matters for the same reason third-party human review
+does: the external reviewer shares none of the implementer's context, so
+what it actually tests is whether the change stands on its own - correct
+and comprehensible to a reader who was not there when it was written. The
+author's context is a bias: it fills gaps in the code silently and excuses
+shapes a stranger would question. That is also why you never substitute
+your own review - you sit inside the pipeline that produced the change,
+and the detached perspective can only come from outside it.
+
 Your final message is the return value to the caller, not prose for a human.
 Return the verdict and the triaged findings alone.
 
@@ -29,7 +38,7 @@ of your own.
 
 ## Run it
 
-Use the tool's own local invocation (e.g. `coderabbit review --plain`). When
+Use the tool's own local invocation (e.g. `coderabbit review --committed`). When
 the tool only reviews pull requests and none exists yet, or its CLI is missing
 or unauthenticated, return NOT-RUN with what you found and what it would take
 to run - never simulate what the tool would have said.

@@ -45,8 +45,9 @@ description: >
   再レビューを待つ対象レビューエージェントをそれに固定する（開発者のスレッドの扱いは変わらない）
 - 引数なし → 現在の branch をそのまま使う
 
-checkout が必要なのに working tree に uncommitted changes がある場合は、
-勝手に stash せずユーザーに報告して停止する。
+working tree に uncommitted changes がある場合は、checkout の要否やモードに
+関係なく、勝手に stash せずユーザーに報告して停止する（無関係な変更が
+consolidated commit に混ざるのを防ぐ）。
 
 対象 branch に open PR が**ある**なら PR モード（以降の全ステップ）、**無い**なら
 ローカルモード（下記）で動く。

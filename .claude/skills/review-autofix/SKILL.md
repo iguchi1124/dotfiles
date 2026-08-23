@@ -125,7 +125,7 @@ CLI (CodeRabbit's `coderabbit` / `cr`, or equivalent), without GitHub:
 
 ```text
 for round in 1, 2, ..., cap:   # inclusive; the cap comes from -n / the mode
-  1. review the committed diff vs the base branch with the CLI
+  1. spawn a fresh `reviewer` to run the CLI against the base branch
      → zero findings: success, stop
   2. verify each finding under the same safety rules as Step 2 and apply
      only the valid fixes
@@ -136,6 +136,12 @@ findings remain after the last round → abort and report them
 
 - The target is the **committed diff against the base branch** (the default
   branch, or the one specified)
+- The CLI run belongs to a fresh `reviewer` subagent — its prompt carries
+  the base branch, the invocation example below, the defer criteria of
+  Step 2 as its Review policy, and the fact that the tool is adopted (its
+  own adoption check looks for repo config and would miss a
+  pull-request-only setup). It returns the triaged findings; the raw CLI
+  output stays out of your context
 - This mode requires the local review CLI. Missing, unauthenticated, or
   rate-limited → report and stop (include the wait time the error reports)
 - The CLI shares its review quota with pull-request-side reviews (CodeRabbit free
@@ -207,6 +213,10 @@ When a target review agent has a local review CLI (CodeRabbit's
 **before every push that carries a diff**, to save the GitHub round-trip
 (push → re-review → polling):
 
+- Each local review run is a fresh `reviewer` subagent, prompted as in
+  local mode (base branch, invocation example, Step 2's defer criteria as
+  the Review policy, adoption stated) — the raw CLI output stays out of
+  your context
 - Verify, fix, and defer findings under the same safety rules as Step 2
 - Stop when clean, or after **2 local rounds**, then push. Local rounds do
   not count against the pull request loop's cap
@@ -243,13 +253,20 @@ to inspect.
 Choosing this skill is the user's consent to unattended operation, so there
 are no per-change approval prompts. In exchange, strictly observe:
 
-**Who does what.** You verify findings and decide fix vs defer; the code
-edits themselves are the `generator` subagent's job, checked by the
-`evaluator` subagent (both installed from this repo via `claude-setup`; if
-either is missing from the available agent types, report and stop — never
-improvise the stage inline). If verification leaves no fix items at all,
-the round is complete without touching generator (zero findings → success,
-all deferred → abort, as defined in the loop).
+**Who does what.** Four subagents (installed from this repo via
+`claude-setup`; any of them missing from the available agent types →
+report and stop, never improvise a stage inline) carry the stages, and
+you orchestrate: the `reviewer` subagent runs the local review CLI and
+returns first-pass triaged findings, the `generator` subagent makes the
+code edits, the `evaluator` subagent checks them, and the `reporter`
+subagent assembles the final report. You make the decisions between
+stages — above all the **independent validity check**: reviewer's `fix`
+triage is a classification against the policy you gave it, not
+verification, so before an item reaches generator you still read the
+target code and confirm the finding yourself (defer on doubt). If
+verification leaves no fix items at all, the round is complete without
+touching generator (zero findings → success, all deferred → abort, as
+defined in the loop).
 
 Process the fix items one at a time:
 
@@ -392,6 +409,13 @@ Every run ends by exactly one of these (no infinite loops):
 - **Stop**: no re-review within 15 minutes / push failed / lint or tests
   keep failing even after reverting / uncommitted changes block checkout /
   no local clone of the target repository
+
+The final report is assembled by a fresh `reporter` subagent in report
+mode: hand it the run's facts (mode, rounds, commits, fixes, defers with
+reasons, remaining findings, the skill-improvement summary) and relay its
+deliverable verbatim. It packages faithfully and applies its redaction
+sweep; it posts nothing — every GitHub write (summary comments, in-thread
+replies, description edits) stays yours, per Step 4.
 
 Always close with:
 

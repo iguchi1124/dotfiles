@@ -7,8 +7,9 @@ description: >
   結果を返信する（開発者の再レビューは待たない）。承認プロンプトを挟まず全自動で回す。
   PR や branch にレビュー指摘が付いていて
   「全部直して」「指摘がなくなるまで対応して」「レビューと往復して」「recursive autofix」
-  「autofix を回して」「再レビューまで面倒見て」のような依頼が来たら使う。CodeRabbit 専用の
-  対話版が欲しい場合は /coderabbit:autofix を使う。
+  「autofix を回して」「再レビューまで面倒見て」のような依頼が来たら使う。PR が無い branch
+  では、コミット済み差分をローカルレビュー CLI で レビュー → 修正 するループとして動く。
+  CodeRabbit 専用の対話版が欲しい場合は /coderabbit:autofix を使う。
 ---
 
 # Recursive Review Autofix
@@ -46,6 +47,32 @@ description: >
 
 checkout が必要なのに working tree に uncommitted changes がある場合は、
 勝手に stash せずユーザーに報告して停止する。
+
+対象 branch に open PR が**ある**なら PR モード（以降の全ステップ）、**無い**なら
+ローカルモード（下記）で動く。
+
+## ローカルモード（PR が無い場合）
+
+PR がまだ無い branch では、GitHub を介さずローカルレビュー CLI（CodeRabbit の
+`coderabbit` / `cr` など）だけでループを回す:
+
+```
+for round in 1..3:
+  1. base branch とのコミット済み差分を CLI でレビュー → 指摘 0 なら成功終了
+  2. 各指摘を Step 2 と同じ安全ルールで検証し、妥当なものだけ修正を適用
+  3. 1 件も適用しなかった（全件 defer）→ 打ち切り終了
+  4. consolidated commit を作る（push はしない）
+3周終えても指摘が残る → 打ち切り、残指摘を報告して終了
+```
+
+- 対象は **base branch（デフォルト branch、指定があればそれ）とのコミット済み差分**。
+  uncommitted changes が混ざらないよう、開始時に working tree がクリーンであることを
+  確認し、クリーンでなければ報告して停止する
+- このモードはローカルレビュー CLI が必須。無い・認証切れなら報告して停止する
+- push・PR 作成はしない — それはユーザーの仕事。最終報告に「PR を作れば PR モードで
+  続きを回せる」ことを添える
+- 終了条件・最終報告・自己改善ループは PR モードと共通（対象を「ローカル
+  （base..HEAD）」と明記する）
 
 ## 対象レビュアーの決定
 

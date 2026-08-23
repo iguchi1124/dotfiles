@@ -7,10 +7,10 @@ description: >
   (CodeRabbit, Copilot, Gemini Code Assist, or any other) are waited on for
   re-review; developer review comments are also fixed, with the outcome
   replied in-thread (their re-review is never waited on). Runs fully
-  unattended, with no per-change approval prompts. Use when a pull request or branch
-  has review findings and the request sounds like "全部直して",
-  "指摘がなくなるまで対応して", "レビューと往復して", "recursive autofix",
-  "autofix を回して", "再レビューまで面倒見て", or the English equivalents.
+  unattended, with no per-change approval prompts. Use when a pull request
+  or branch has review findings and the request sounds like "fix everything
+  the review found", "keep going until the review comes back clean",
+  "handle the review round-trips", "recursive autofix", or "run autofix".
   On a branch with no pull request it runs the loop against the committed diff via the
   local review CLI. For the interactive CodeRabbit-only flow, use
   /coderabbit:autofix instead.

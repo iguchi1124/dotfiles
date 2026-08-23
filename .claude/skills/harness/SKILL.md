@@ -1,6 +1,6 @@
 ---
 name: harness
-description: Runs a task through the planner → generator → evaluator → reviewer → reporter subagent loop, passing state through files in .claude/harness/<task-dir>/ so long tasks survive context compaction. Use for "run the harness" / "ハーネスで実装して" / "フルループを回して", for a feature or fix worth an independent check, or for vague requests that span several files. Not for a clear one-file fix.
+description: Runs a task through the planner → generator → evaluator → reviewer → reporter subagent loop, passing state through files in .claude/harness/<task-dir>/ so long tasks survive context compaction. Use for "run the harness" / "run the full loop", for a feature or fix worth an independent check, or for vague requests that span several files. Not for a clear one-file fix.
 ---
 
 # harness

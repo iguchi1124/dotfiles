@@ -301,12 +301,15 @@ present, a push triggers its re-review even in a round where it had zero
 threads, so wait for that before deciding anything.
 
 Before pushing, if Step 1's local pre-review is available, give this round's
-fixes one pass too. Just before pushing, record the target agents' latest
-review timestamp. `gh`'s `--jq` does not accept jq flags (`--arg`, ...), so
-pipe instead: `gh ... --json x | jq --arg ...`.
+fixes one pass too. Just before pushing, record each target agent's latest
+review timestamp — the timestamp, the post-push activity observation, and
+the unresolved-thread count below are all tracked **per target review
+agent**, never as one aggregate across agents. `gh`'s `--jq` does not
+accept jq flags (`--arg`, ...), so pipe instead:
+`gh ... --json x | jq --arg ...`.
 
-After pushing, **poll every 2-3 minutes**, using the change in the target
-reviewers' unresolved-thread count as the primary signal (requiring "a new
+After pushing, **poll every 2-3 minutes**, using the change in each target
+agent's unresolved-thread count as the primary signal (requiring "a new
 review exists" misses convergence with agents that submit no review when
 they have nothing to say). When polling in the background, watch one full
 iteration of output before leaving it alone, to confirm the script actually
@@ -318,15 +321,21 @@ once (`gh pr edit --add-reviewer` / the review re-request API).
 Do not declare completion from the thread count alone: right after a push
 the old threads may merely go outdated, with the review of the new commit
 not yet run. Completion additionally requires **observed post-push review
-activity** (a review or review comment newer than the recorded timestamp,
-or an in-progress marker appearing and then clearing).
+activity** from that agent (a review or review comment newer than its
+recorded timestamp, or an in-progress marker appearing and then clearing).
+The wait completes only when **every** target agent has either shown
+post-push review activity or individually hit the 15-minute cap below —
+one agent's re-review plus another agent's old threads going outdated can
+drive an aggregate thread count to zero before that other agent ever
+re-reviews.
 
-**If no re-review arrives within 15 minutes**, stop polling and check the
-unresolved-thread count directly, then finish. If post-push review activity
-was never observed, do not claim success even at zero threads — report the
-final state as "zero findings (post-push re-review unconfirmed — needs
-checking)". If nothing changed at all, report what happened up to that point
-and finish (telling the user the agent may be disabled or having an outage).
+**If an agent's re-review does not arrive within 15 minutes**, stop polling
+for that agent and check its unresolved-thread count directly, then finish.
+For any agent whose post-push review activity was never observed, do not
+claim success even at zero threads — report that agent's final state as
+"zero findings (post-push re-review unconfirmed — needs checking)". If
+nothing changed at all, report what happened up to that point and finish
+(telling the user the agent may be disabled or having an outage).
 
 ## Step 4: per-round summary comment and in-thread replies
 

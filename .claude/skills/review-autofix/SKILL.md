@@ -145,8 +145,12 @@ findings remain after the last round → abort and report them
 - The target is the **committed diff against the base branch** (the default
   branch, or the one specified). To keep uncommitted changes out, confirm
   the working tree is clean at the start; report and stop otherwise
-- This mode requires the local review CLI. Missing or unauthenticated →
-  report and stop
+- This mode requires the local review CLI. Missing, unauthenticated, or
+  rate-limited → report and stop (include the wait time the error reports)
+- The CLI shares its review quota with PR-side reviews (CodeRabbit free
+  tier: 3 included reviews per period). A recursive local run can exhaust
+  it by itself, which then also blocks the pre-review of a following PR
+  run — budget rounds accordingly
 - CodeRabbit CLI invocation (as of 0.7.5):
   `coderabbit review --committed --base <base> --agent`.
   `--agent` emits findings as JSON Lines. There is no `--plain` option

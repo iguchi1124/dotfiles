@@ -63,7 +63,10 @@ description: >
 - PR の URL（`https://github.com/<owner>/<repo>/pull/<num>`）→ owner / repo と PR 番号を
   パースし、そのリポジトリのローカルディレクトリに移動したうえで PR 番号として扱う。
   ローカルに clone が見つからない場合は報告して停止する
-- PR 番号 → `gh pr view <num> --json headRefName` で branch を特定し checkout する
+- PR 番号 → `gh pr view <num> --json headRefName,headRefOid,headRepository` で head を
+  特定して checkout する。fork からの PR や同名 branch の取り違えに備え、checkout 後に
+  ローカル HEAD が `headRefOid` と一致することを確認してから編集・push に進む
+  （不一致なら報告して停止する）
 - branch 名 → その branch を checkout する
 - レビュアー login（`coderabbitai[bot]` / `copilot-pull-request-reviewer[bot]` など）→
   再レビューを待つ対象レビューエージェントをそれに固定する（開発者のスレッドの扱いは変わらない）

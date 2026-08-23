@@ -35,7 +35,7 @@ docs describe is the feature.
 ## XDG first
 
 Config lives under `.config/<app>/` and is installed to `$XDG_CONFIG_HOME`
-whenever the application can find it there (vim 9.1+, tmux 3.1+). Files land
+whenever the application can find it there (vim 9.1+, tmux 3.2+). Files land
 directly in `$HOME` only when the app demands it (`.zshrc`, `.zshenv`,
 `.zprofile`, `.Brewfile`). Preferring XDG keeps `$HOME` small and makes the
 repo's layout mirror the installed layout.

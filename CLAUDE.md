@@ -19,7 +19,7 @@ Two different strategies, and the distinction matters when adding new config:
 - **`.config/<app>/`** — the *directory* is created for real at `$XDG_CONFIG_HOME/<app>/` and each file inside is symlinked individually. Never symlink the directory itself: apps write runtime files (logs, sockets, caches) next to their config, and a symlinked directory would put that state inside this repo.
 - **Top-level files** (`.zshrc`, `.zshenv`, `.zprofile`, `.Brewfile`) — symlinked straight into `$HOME`.
 
-Vim config lives in `.config/vim/` (Vim 9.1.0327+ reads `$XDG_CONFIG_HOME/vim/vimrc` when `~/.vimrc` and `~/.vim/vimrc` are absent), tmux config in `.config/tmux/` (tmux 3.1+ reads `$XDG_CONFIG_HOME/tmux/tmux.conf` when `~/.tmux.conf` is absent). Plugins and netrw state go to `$XDG_DATA_HOME/vim`, vim-plug itself to `$XDG_CONFIG_HOME/vim/autoload/`.
+Vim config lives in `.config/vim/` (Vim 9.1.0327+ reads `$XDG_CONFIG_HOME/vim/vimrc` when `~/.vimrc` and `~/.vim/vimrc` are absent), tmux config in `.config/tmux/` (tmux 3.2+ reads `$XDG_CONFIG_HOME/tmux/tmux.conf` when `~/.tmux.conf` is absent; 3.1 only knows the literal `~/.config/tmux/tmux.conf` path). Plugins and netrw state go to `$XDG_DATA_HOME/vim`, vim-plug itself to `$XDG_CONFIG_HOME/vim/autoload/`.
 
 `setup.sh` also installs vim-plug and Homebrew when missing. Zsh plugins (`zsh-autosuggestions`, `zsh-syntax-highlighting`) and completions are Homebrew packages managed through `.Brewfile`.
 

@@ -1,5 +1,7 @@
 # Dotfiles
 
+Design principles are in [DESIGN.md](DESIGN.md).
+
 ## Install
 
 ```

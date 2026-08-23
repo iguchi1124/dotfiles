@@ -17,6 +17,7 @@ be merged into, never overwritten.
 | `.claude/CLAUDE.md` | `~/.claude/CLAUDE.md` | Loaded in every session, whatever the working directory. |
 | `.claude/agents/*` | `~/.claude/agents/` | Linked file by file, never as a directory. |
 | `.claude/hooks/*` | `~/.claude/hooks/` | Linked file by file. Inert until step 2. |
+| `.claude/rules/*` | `~/.claude/rules/` | Linked file by file. Path-scoped rules (`paths:` frontmatter) load only when Claude touches matching files. |
 | `.claude/skills/*` | `~/.claude/skills/<name>/` | File by file, one directory per skill. `claude-setup` itself is skipped - it stays a project skill of this repo. |
 | - | `~/.claude/settings.json` | Merged, never replaced. |
 
@@ -37,8 +38,8 @@ sh "$HOME/.dotfiles/.claude/skills/claude-setup/install.sh"
 ```
 
 Report what it printed. Re-running after a rename leaves the old link behind - list
-`~/.claude/agents`, `~/.claude/hooks` and `~/.claude/skills` and remove any symlink
-(or skill directory) whose target no longer exists.
+`~/.claude/agents`, `~/.claude/hooks`, `~/.claude/rules` and `~/.claude/skills` and
+remove any symlink (or skill directory) whose target no longer exists.
 
 ## 2. Register the hook in settings.json
 

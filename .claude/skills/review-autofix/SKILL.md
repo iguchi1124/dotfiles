@@ -70,15 +70,16 @@ description: >
 - `-r` / `--recursive` → recursive モード。収束するまで最大 3 周回す（他の引数と併用可）
 - `-n <N>` / `--max-rounds <N>` → 周回上限を N に変更する（正の整数のみ。recursive を
   含意するので `-r` の併記は不要）。不正な値（0、負数、数値以外）は報告して停止する
-- `help` → 下記のヘルプをそのまま表示して**終了する**。レビューも修正も一切実行しない
+- `-h` / `--help` → 下記のヘルプをそのまま表示して**終了する**。レビューも修正も
+  一切実行しない
 - 引数なし → 現在の branch を単発モードで 1 周実行する
 
-### help で表示する内容
+### -h で表示する内容
 
-`help` が渡されたら、以下をコードブロックで表示して終了する:
+`-h` / `--help` が渡されたら、以下をコードブロックで表示して終了する:
 
 ```text
-/review-autofix [PR番号|PR URL|branch名] [レビュアーlogin] [-r|--recursive] [-n <N>|--max-rounds <N>] [help]
+/review-autofix [PR番号|PR URL|branch名] [レビュアーlogin] [-r|--recursive] [-n <N>|--max-rounds <N>] [-h|--help]
 
 引数（順不同・省略可）:
   <PR番号> / #<番号>   その PR の branch を checkout して PR モードで実行
@@ -89,7 +90,7 @@ description: >
   -r, --recursive      指摘ゼロに収束するまで繰り返す（デフォルト上限 3 周）。
                        デフォルトは 1 周だけの単発モード
   -n, --max-rounds <N> 周回上限を N に変更（正の整数。-r を含意）
-  help                 このヘルプを表示して終了
+  -h, --help           このヘルプを表示して終了
 
 引数なし: 現在の branch を単発モードで実行
 

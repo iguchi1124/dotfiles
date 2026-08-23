@@ -1,9 +1,9 @@
 ---
 name: review-autofix
 description: >
-  PR に付いたレビュー指摘を自動で修正するスキル。デフォルトは「ゼロになるまで」
-  修正 → push → 再レビュー待ち → 再修正 を繰り返す recursive モード（最大3周）、
-  引数 `once` で 1 周だけの単発モード。レビューエージェント（CodeRabbit / Copilot / Gemini Code Assist
+  PR に付いたレビュー指摘を自動で修正するスキル。デフォルトは 1 周だけの単発モード、
+  `-r` / `--recursive` で「ゼロになるまで」修正 → push → 再レビュー待ち → 再修正 を
+  繰り返す recursive モード（最大3周）。レビューエージェント（CodeRabbit / Copilot / Gemini Code Assist
   など任意）は再レビューまで待って往復し、開発者のレビュー指摘も修正して in-thread で
   結果を返信する（開発者の再レビューは待たない）。承認プロンプトを挟まず全自動で回す。
   PR や branch にレビュー指摘が付いていて
@@ -20,9 +20,10 @@ description: >
 なっていることが目的。その代わり終了条件と安全ルール（後述）を厳密に守ることが信頼の
 前提になる。
 
-周回数はオプション: デフォルトは **recursive**（収束するまで最大 3 周）、引数に
-`once` があれば **単発**（1 周だけ実行し、再レビュー待ちまで済ませて終了。残指摘は
-報告に載せる）。以降の「最大 3 周」「for round in 1..3」は、once では 1 周と読み替える。
+周回数はオプション: デフォルトは**単発**（1 周だけ実行し、再レビュー待ちまで
+済ませて終了。残指摘は報告に載せる）、引数に `-r` / `--recursive` があれば
+**recursive**（収束するまで最大 3 周）。以降の「最大 3 周」「for round in 1..3」は
+recursive モードの上限で、単発では 1 周と読み替える。
 
 ## コンセプト — なぜ切り離されたレビュアーか
 
@@ -63,16 +64,16 @@ description: >
 - branch 名 → その branch を checkout する
 - レビュアー login（`coderabbitai[bot]` / `copilot-pull-request-reviewer[bot]` など）→
   再レビューを待つ対象レビューエージェントをそれに固定する（開発者のスレッドの扱いは変わらない）
-- `once` → 単発モード。ループを 1 周で打ち切る（他の引数と併用可）
+- `-r` / `--recursive` → recursive モード。収束するまで最大 3 周回す（他の引数と併用可）
 - `help` → 下記のヘルプをそのまま表示して**終了する**。レビューも修正も一切実行しない
-- 引数なし → 現在の branch を recursive モードで回す
+- 引数なし → 現在の branch を単発モードで 1 周実行する
 
 ### help で表示する内容
 
 `help` が渡されたら、以下をコードブロックで表示して終了する:
 
 ```text
-/review-autofix [PR番号|PR URL|branch名] [レビュアーlogin] [once] [help]
+/review-autofix [PR番号|PR URL|branch名] [レビュアーlogin] [-r|--recursive] [help]
 
 引数（順不同・省略可）:
   <PR番号> / #<番号>   その PR の branch を checkout して PR モードで実行
@@ -80,10 +81,11 @@ description: >
   <branch名>           その branch を checkout して実行
   <レビュアーlogin>    再レビューを待つレビューエージェントを固定
                        (例: coderabbitai[bot], copilot-pull-request-reviewer[bot])
-  once                 1 周だけ実行する単発モード（デフォルトは最大 3 周の recursive）
+  -r, --recursive      指摘ゼロに収束するまで繰り返す（最大 3 周）。
+                       デフォルトは 1 周だけの単発モード
   help                 このヘルプを表示して終了
 
-引数なし: 現在の branch を recursive モードで実行
+引数なし: 現在の branch を単発モードで実行
 
 モード（自動判定）:
   PR モード       branch に open PR がある → 修正 → push → 再レビュー待ちを周回
@@ -290,9 +292,9 @@ description が説明している機能・設計・ファイル構成・数値�
 
 ```markdown
 ## Review Autofix 結果
-- モード: recursive / once
+- モード: 単発 / recursive
 - 対象レビュアー: <login...>（レビューエージェント / 開発者の別を明記）
-- 実行周回: N / 3（once は N / 1）
+- 実行周回: N / 3（単発は N / 1）
 - 適用した修正: X 件（commit: <sha>...、うち開発者の指摘 H 件は in-thread 返信済み）
 - defer した指摘: Y 件（それぞれ理由: 妥当でない / CI・インフラ領域 / lint 失敗 ...）
 - 最終状態: 指摘ゼロ ✅ / 残指摘 Z 件（要開発者判断）

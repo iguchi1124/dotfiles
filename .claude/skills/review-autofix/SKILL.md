@@ -64,7 +64,34 @@ description: >
 - レビュアー login（`coderabbitai[bot]` / `copilot-pull-request-reviewer[bot]` など）→
   再レビューを待つ対象レビューエージェントをそれに固定する（開発者のスレッドの扱いは変わらない）
 - `once` → 単発モード。ループを 1 周で打ち切る（他の引数と併用可）
+- `help` → 下記のヘルプをそのまま表示して**終了する**。レビューも修正も一切実行しない
 - 引数なし → 現在の branch を recursive モードで回す
+
+### help で表示する内容
+
+`help` が渡されたら、以下をコードブロックで表示して終了する:
+
+```text
+/review-autofix [PR番号|PR URL|branch名] [レビュアーlogin] [once] [help]
+
+引数（順不同・省略可）:
+  <PR番号> / #<番号>   その PR の branch を checkout して PR モードで実行
+  <PR URL>             owner/repo をパースし、ローカル clone に移動して実行
+  <branch名>           その branch を checkout して実行
+  <レビュアーlogin>    再レビューを待つレビューエージェントを固定
+                       (例: coderabbitai[bot], copilot-pull-request-reviewer[bot])
+  once                 1 周だけ実行する単発モード（デフォルトは最大 3 周の recursive）
+  help                 このヘルプを表示して終了
+
+引数なし: 現在の branch を recursive モードで実行
+
+モード（自動判定）:
+  PR モード       branch に open PR がある → 修正 → push → 再レビュー待ちを周回
+  ローカルモード  open PR が無い → ローカルレビュー CLI で base との差分を周回
+                  （push はしない。CLI 必須）
+
+前提: working tree がクリーンであること
+```
 
 working tree に uncommitted changes がある場合は、checkout の要否やモードに
 関係なく、勝手に stash せずユーザーに報告して停止する（無関係な変更が

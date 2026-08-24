@@ -57,7 +57,7 @@ git_prompt_info() {
   fi
   print -rn -- "%B%F{blue}git:(%F{red}${ref}${suffix}%f%b "
 }
-PROMPT='%(?:%B%F{green}➜%f%b :%B%F{red}➜%f%b ) %F{cyan}%c%f $(git_prompt_info)'
+PROMPT='%(?:%B%F{green}➜%f%b :%B%F{red}➜%f%b )%F{cyan}%c%f $(git_prompt_info)'
 
 # .zshrc_local
 if [[ -f ~/.zshrc_local ]]; then

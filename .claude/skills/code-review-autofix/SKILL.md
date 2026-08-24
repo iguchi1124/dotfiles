@@ -241,6 +241,17 @@ path, and line anchors attached.
 If the latest comment carries an in-progress marker (CodeRabbit's "Come back
 again in a few minutes", ...), wait for completion and fetch again.
 
+If a target review agent instead reports it declined to review at all
+(CodeRabbit's "Draft PR not reviewed" issue comment, marker
+`<!-- ... skip review by coderabbit.ai -->`, typically because the pull
+request is a draft) — zero threads from that agent means "never reviewed,"
+not "reviewed clean." Fall back to that agent's local CLI (Step 1) as the
+review source for the round instead, still pushing any resulting fixes to
+the pull request branch normally; do not wait for that agent's GitHub-side
+re-review while the decline condition holds (Step 3's skip-polling case
+extends to this); and do not change the pull request's draft/ready state
+yourself to unblock it — that is the user's call.
+
 **Comment formats differ per agent.** Use severity headers or a "Prompt for
 AI Agents" section (CodeRabbit) as structure when present; otherwise treat
 the whole body as the issue report. Developer comments get the same
@@ -322,10 +333,11 @@ Also observe:
 ## Step 3: push and wait for re-review (review agents only)
 
 Only **review agents** are waited on (developer threads are complete at
-Step 4's in-thread reply). Skipping the polling is allowed only when
-**no target review agent exists on the pull request** — if an agent is
-present, a push triggers its re-review even in a round where it had zero
-threads, so wait for that before deciding anything.
+Step 4's in-thread reply). Skipping the polling for a given agent is
+allowed only when **no target review agent exists on the pull request, or
+that agent declined to review this round** (the draft-skip case above) —
+if an agent is present and active, a push triggers its re-review even in a
+round where it had zero threads, so wait for that before deciding anything.
 
 Before pushing, if Step 1's local pre-review is available, give this round's
 fixes one pass too. Just before pushing, record each target agent's latest

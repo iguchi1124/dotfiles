@@ -1,3 +1,6 @@
+# keybindings
+bindkey -v
+
 # history
 HISTFILE=~/.zsh_history
 HISTSIZE=50000

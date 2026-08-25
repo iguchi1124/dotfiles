@@ -96,7 +96,7 @@ For each round from 1 through the cap:
 4. If all findings are deferred, post the developer-comment deferral replies required below, then abort without committing or pushing.
 5. When an adopted local reviewer CLI is available, perform the bounded local pre-review below.
 6. Create one consolidated commit and push it.
-7. Post the round summary and finding-author notifications.
+7. Post finding-author notifications.
 8. Wait for each active review agent's re-review, then continue to the next round.
 
 After the cap, abort and report remaining findings. Never report zero fixes as success when findings were merely deferred.
@@ -175,9 +175,8 @@ If an agent reaches 15 minutes without confirmed activity, inspect its final thr
 
 For a round that applies fixes:
 
-- Post one pull-request summary from local facts only: files, counts, and commit SHA.
 - After pushing a fix, notify every author whose finding it addressed, including developers and review agents. Reply to each original review comment or thread that provides a reply target; begin the reply with `@<login>` and state the fix and commit SHA.
-- When a finding has no reply target, mention its `@<login>` in the consolidated pull-request summary with the fix and commit SHA. Mention the same author only once there per round.
+- When a finding has no reply target, post a pull-request notification that mentions its `@<login>` and states the fix and commit SHA. Consolidate these fallback notifications into one comment per round when possible and mention the same author only once there. Do not post a separate round summary.
 
 Before any round exits, give every handled developer comment with a reply target its own in-thread outcome reply. A fixed comment uses the fixed-finding reply above; reply to a deferred comment with `@<login>` and the defer reason, including before an all-deferred abort. Never resolve a thread.
 

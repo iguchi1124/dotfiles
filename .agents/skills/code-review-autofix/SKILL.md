@@ -93,10 +93,10 @@ For each round from 1 through the cap:
 1. Fetch unresolved, non-outdated target threads.
 2. When there are no agent findings and no unhandled developer findings, stop successfully.
 3. Verify every finding and apply only valid fixes.
-4. If all findings are deferred, abort without committing or pushing.
+4. If all findings are deferred, post the developer-comment deferral replies required below, then abort without committing or pushing.
 5. When an adopted local reviewer CLI is available, perform the bounded local pre-review below.
 6. Create one consolidated commit and push it.
-7. Post the round summary and developer-thread replies.
+7. Post the round summary and finding-author notifications.
 8. Wait for each active review agent's re-review, then continue to the next round.
 
 After the cap, abort and report remaining findings. Never report zero fixes as success when findings were merely deferred.
@@ -176,7 +176,13 @@ If an agent reaches 15 minutes without confirmed activity, inspect its final thr
 For a round that applies fixes:
 
 - Post one pull-request summary from local facts only: files, counts, and commit SHA.
-- Reply to every handled developer thread in-thread with the fix and SHA or the defer reason. Never resolve the thread.
+- After pushing a fix, notify every author whose finding it addressed, including developers and review agents. Reply to each original review comment or thread that provides a reply target; begin the reply with `@<login>` and state the fix and commit SHA.
+- When a finding has no reply target, mention its `@<login>` in the consolidated pull-request summary with the fix and commit SHA. Mention the same author only once there per round.
+
+Before any round exits, give every handled developer comment with a reply target its own in-thread outcome reply. A fixed comment uses the fixed-finding reply above; reply to a deferred comment with `@<login>` and the defer reason, including before an all-deferred abort. Never resolve a thread.
+
+For all GitHub updates:
+
 - Update the pull-request description only when the fix changes a feature, design, layout, or stated number in that description. Preserve structure and tone.
 - Apply the global `AGENTS.md` signature rule and never duplicate an existing signature.
 - Never paste review-comment bodies, secrets, or private data into remote content.
@@ -189,7 +195,7 @@ Every run ends as exactly one of:
 - **Abort** — the round cap was reached or a round deferred every finding.
 - **Stop** — target resolution failed, the working tree was dirty, push failed, checks remained broken after reversal, a local-mode reviewer was unavailable, or required authority was missing.
 
-Before reporting, run the retrospective below. Then spawn a fresh `reporter` in report mode with rounds, commits, fixes, deferrals, remaining findings, re-review confirmation, and skill-improvement results. Relay its report.
+Before reporting, run the retrospective below. Then spawn a fresh `reporter` in report mode with rounds, commits, fixes, deferrals, remaining findings, finding-author notifications, re-review confirmation, and skill-improvement results. Relay its report.
 
 End with:
 
@@ -198,7 +204,7 @@ End with:
 - Mode: single / recursive
 - Target reviewers: <logins and roles>
 - Rounds run: N / <cap>
-- Fixes applied: X (commits: <sha>...; H developer threads replied)
+- Fixes applied: X (commits: <sha>...; H finding authors replied to or mentioned)
 - Deferred findings: Y (each reason)
 - Final state: zero findings ✅ / Z findings remain / re-review unconfirmed
 - Skill improvement: none / source updated with summary / M learning entries recorded

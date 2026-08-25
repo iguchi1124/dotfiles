@@ -8,10 +8,10 @@ description: >
   re-review. Every fixed finding author is notified, preferably by replying
   in-thread; developer deferrals are also replied in-thread, but their
   re-review is never waited on. Runs fully
-  unattended, with no per-change approval prompts. Use when a pull request
-  or branch has review findings and the request sounds like "fix everything
-  the review found", "keep going until the review comes back clean",
-  "handle the review round-trips", "recursive autofix", or "run autofix".
+  unattended, with no per-change approval prompts. Use only when the user
+  explicitly asks to fix all review findings, handle review round-trips, run
+  recursive autofix, or run autofix on a branch. Do not use for an ordinary
+  code review.
   On a branch with no pull request it runs the loop against the committed diff via the
   local review CLI. For the interactive CodeRabbit-only flow, use
   /coderabbit:autofix instead.
@@ -20,9 +20,11 @@ description: >
 # Code Review Autofix
 
 Drives the fix → push → re-review → fix-again cycle with any review agent,
-fully unattended. The goal is a pull request that is clean by the time the user comes
-back to it; the price of running without approval prompts is strict adherence
-to the termination conditions and safety rules below.
+fully unattended. Run only after the user explicitly requests autofix; that request
+authorizes the documented operations below on the named or current branch or pull
+request, but not unrelated remote changes. The goal is a pull request that is clean by
+the time the user comes back to it; the price of running without approval prompts is
+strict adherence to the termination conditions and safety rules below.
 
 Round count is an option, detailed under Arguments: single round by
 default, `-r` to loop until convergence, `-n` to change the cap. An
@@ -264,8 +266,9 @@ to inspect.
 
 ## Step 2: verify and fix (safety rules for unattended runs)
 
-Choosing this skill is the user's consent to unattended operation, so there
-are no per-change approval prompts. In exchange, strictly observe:
+The explicit autofix request authorizes unattended operation within the documented
+target and workflow; skill selection alone does not. Within that scope there are no
+per-change approval prompts. In exchange, strictly observe:
 
 **Who does what.** Four subagents (installed from this repo via
 `claude-setup`; any of them missing from the available agent types →

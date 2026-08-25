@@ -52,6 +52,28 @@ do
   done
 done
 
+# Plugins come from marketplaces, not from this repo, so they are installed
+# through the claude CLI rather than linked. Both commands are idempotent.
+# One "<marketplace> <github-repo> <plugin>..." line per marketplace.
+plugins='
+claude-community anthropics/claude-plugins-community eli5
+'
+
+if command -v claude > /dev/null 2>&1; then
+  printf '%s\n' "$plugins" | while read -r marketplace repo names
+  do
+    [ -n "$marketplace" ] || continue
+    claude plugin marketplace add "$repo"
+    for name in $names
+    do
+      claude plugin install "$name@$marketplace"
+    done
+  done
+else
+  echo "claude not found: skipped the plugin install (eli5@claude-community)." >&2
+  echo "Install Claude Code and re-run - see SKILL.md." >&2
+fi
+
 # A linked hook script does nothing until settings.json invokes it. Merge the
 # entry in, preserving every other key; re-running changes nothing.
 settings="$claude_dir/settings.json"

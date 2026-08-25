@@ -1,6 +1,6 @@
 ---
 name: claude-setup
-description: Installs this repo's Claude Code configuration into ~/.claude - links CLAUDE.md, the planner/generator/evaluator/reviewer/reporter subagents, the global skills and the hook scripts, then merges the hook entry into ~/.claude/settings.json. Use when setting up Claude Code on a new machine, after adding or renaming a subagent, a skill or a hook in this repo, or when asked to install, repair or verify the Claude Code setup.
+description: Installs this repo's Claude Code configuration into ~/.claude - links CLAUDE.md, the planner/generator/evaluator/reviewer/reporter subagents, the global skills and the hook scripts, installs the marketplace plugins (eli5@claude-community), then merges the hook entry into ~/.claude/settings.json. Use when setting up Claude Code on a new machine, after adding or renaming a subagent, a skill, a hook or a plugin in this repo, or when asked to install, repair or verify the Claude Code setup.
 ---
 
 # claude-setup
@@ -19,6 +19,7 @@ be merged into, never overwritten.
 | `.claude/hooks/*` | `~/.claude/hooks/` | Linked file by file. Inert until step 2. |
 | `.claude/rules/*` | `~/.claude/rules/` | Linked file by file. Path-scoped rules (`paths:` frontmatter) load only when Claude touches matching files. |
 | `.claude/skills/*` | `~/.claude/skills/<name>/` | File by file, one directory per skill. `claude-setup` itself is skipped - it stays a project skill of this repo. |
+| - | `~/.claude/plugins/` | `eli5@claude-community`, installed through `claude plugin install`, not linked. |
 | - | `~/.claude/settings.json` | Merged, never replaced. |
 
 `~/.claude/skills` used to be a symlink to a separate skills repo; `install.sh` removes
@@ -41,7 +42,22 @@ Report what it printed. Re-running after a rename leaves the old link behind - l
 `~/.claude/agents`, `~/.claude/hooks`, `~/.claude/rules` and `~/.claude/skills` and
 remove any symlink (or skill directory) whose target no longer exists.
 
-## 2. Register the hook in settings.json
+## 2. Install the plugins
+
+Plugins live in marketplaces, not in this repo, so `install.sh` installs them through
+the `claude` CLI instead of linking them - `claude plugin marketplace add` for the
+marketplace, then `claude plugin install` for each plugin, both idempotent. The list
+is the `plugins` variable at the top of the step in `install.sh`; add a plugin there.
+
+If `claude` was not on `PATH`, install Claude Code and re-run step 1, or install by
+hand:
+
+```sh
+claude plugin marketplace add anthropics/claude-plugins-community
+claude plugin install eli5@claude-community
+```
+
+## 3. Register the hook in settings.json
 
 Linking a hook script does nothing on its own: `~/.claude/settings.json` is what invokes
 it. `install.sh` merges the entry when `jq` is available (`jq` is in `.Brewfile`). It
@@ -65,7 +81,7 @@ If `jq` was missing, install it and re-run step 1, or merge this by hand:
 Keep `$HOME` literal in the command - the shell expands it when the hook runs, not when
 it is written.
 
-## 3. Verify
+## 4. Verify
 
 Claude Code only picks up settings changes for directories that already had a settings
 file when the session started, so open `/hooks` once or restart Claude Code first. Then,
@@ -79,7 +95,8 @@ rm env.sh
 
 Also confirm the subagents are visible: `planner`, `generator`, `evaluator`, `reviewer`
 and `reporter` should be listed as available agent types, and `harness` as an
-available skill.
+available skill. `claude plugin list` should show `eli5@claude-community` as enabled,
+and `/eli5` should be available after a restart.
 
 ## What is installed
 

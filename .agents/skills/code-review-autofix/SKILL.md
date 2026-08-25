@@ -107,7 +107,7 @@ Use `gh api graphql` with cursor pagination to fetch all review threads. Keep on
 
 - `isResolved` is false
 - `isOutdated` is false
-- the root author is a target reviewer
+- the root author is either a target review agent or a developer whose latest comment is not already this workflow's outcome reply
 
 Preserve thread ID, path, and line anchors. If the latest status is explicitly in progress, wait for completion with a bounded non-blocking monitor and fetch again.
 

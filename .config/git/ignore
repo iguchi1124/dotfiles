@@ -29,14 +29,8 @@ tfplan
 # Codex
 **/.codex/harness/
 
-# gemini
-GEMINI.md
-
 # MCP
 .mcp.json
-
-# GitHub
-PULL_REQUEST.md
 
 # env
 env.sh

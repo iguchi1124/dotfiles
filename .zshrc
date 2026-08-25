@@ -1,5 +1,5 @@
 # keybindings
-bindkey -v
+bindkey -e
 
 # history
 HISTFILE=~/.zsh_history

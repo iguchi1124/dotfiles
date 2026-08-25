@@ -48,11 +48,12 @@ git submodules. The repo carries configuration, not software.
 
 ## Shared files are merged, never overwritten
 
-`setup.sh` stops short of `~/.claude` because `~/.claude/settings.json`
-also carries machine- and project-specific values. Anything the repo does
-not exclusively own is merged into (the `claude-setup` skill's `jq` merge),
-preserving every key it does not manage. Overwriting is allowed only for
-files this repo is the sole writer of.
+`setup.sh` stops short of `~/.claude`, `~/.codex`, and `~/.agents` because
+those locations also carry machine- and project-specific values. Anything
+the repo does not exclusively own is merged into: `claude-setup` merges
+`settings.json`, and `codex-setup` merges `hooks.json`, preserving every key
+they do not manage. Overwriting is allowed only for files this repo is the
+sole writer of.
 
 ## The AI workflow is configuration too
 
@@ -98,21 +99,24 @@ breeds duplication and token bloat. Three boundaries keep this safe:
 - What a run learns or produces locally (learning logs, task state) stays
   on the machine, per "Machine state stays on the machine" below.
 
-These principles are enforced at editing time by
-`.claude/rules/skills-and-agents.md`, a path-scoped rule that loads whenever a
-skill or subagent file is being changed.
+These principles are enforced for Claude by
+`.claude/rules/skills-and-agents.md`. Codex receives the equivalent scoped
+instructions from the repository's root `AGENTS.md` when editing
+`.agents/skills/**` or `.codex/agents/**`.
 
 ## Machine state stays on the machine
 
-What a run produces or learns locally is not synced: `.claude/harness/`
-task state is globally ignored, per-project `env.sh` is ignored, and a
-skill's machine-local learnings live under `~/.claude/skills/`, not here.
-The repo describes behavior; the machine accumulates history.
+What a run produces or learns locally is not synced: `.claude/harness/` and
+`.codex/harness/` task state are globally ignored, per-project `env.sh` is
+ignored, and skill learnings live under the installed `~/.claude/skills/`
+or `~/.agents/skills/` directory, not here. The repo describes behavior;
+the machine accumulates history.
 
 ## Rationale lives next to the mechanism
 
 Every non-obvious decision is written down where the code is: `setup.sh`
-comments explain the per-file linking, `claude-setup/SKILL.md` explains the
-merge-only install and the `PreToolUse` hook timing, each subagent file
-explains its own prohibitions. This file holds only the principles; the
-details stay with their implementation so they cannot drift apart silently.
+comments explain the per-file linking, the Claude and Codex setup skills
+explain their merge-only installation and `PreToolUse` hook timing, and each
+custom-agent file explains its own prohibitions. This file holds only the
+principles; the details stay with their implementation so they cannot drift
+apart silently.

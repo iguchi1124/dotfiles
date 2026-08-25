@@ -1,0 +1,4 @@
+interface:
+  display_name: "Harness"
+  short_description: "Run a staged implementation and review loop"
+  default_prompt: "Use $harness to run this task through the appropriate staged workflow."

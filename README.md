@@ -18,3 +18,14 @@ sh "$HOME/.dotfiles/.claude/skills/claude-setup/install.sh"
 ```
 
 See [.claude/skills/claude-setup/SKILL.md](.claude/skills/claude-setup/SKILL.md).
+
+## Codex
+
+Codex custom agents, skills, global instructions, and hooks are installed
+separately from `setup.sh` by the repository's `codex-setup` skill:
+
+```sh
+sh "$HOME/.dotfiles/.agents/skills/codex-setup/scripts/install.sh"
+```
+
+See [.agents/skills/codex-setup/SKILL.md](.agents/skills/codex-setup/SKILL.md).

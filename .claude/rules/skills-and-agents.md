@@ -2,6 +2,8 @@
 paths:
   - ".claude/skills/**"
   - ".claude/agents/**"
+  - ".agents/skills/**"
+  - ".codex/agents/**"
 ---
 
 # Skill and agent design rules
@@ -41,5 +43,5 @@ How these files evolve:
   edit that only adds lines needs a reason the existing text could not
   absorb it.
 - **Machine state stays local.** Learning logs and run state live on the
-  machine (`~/.claude/skills/<name>/`, `.claude/harness/`), never in this
-  repo.
+  machine (`~/.claude/skills/<name>/`, `~/.agents/skills/<name>/`,
+  `.claude/harness/`, `.codex/harness/`), never in this repo.

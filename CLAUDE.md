@@ -25,6 +25,9 @@ Vim config lives in `.config/vim/` (Vim 9.1.0327+ reads `$XDG_CONFIG_HOME/vim/vi
 
 It installs nothing under `~/.claude` — that is the `claude-setup` skill's job, see below.
 
+It also installs nothing under `~/.codex` or `~/.agents` — that is the
+`codex-setup` skill's job.
+
 ## Claude Code setup
 
 `.claude/` holds the Claude Code configuration — `CLAUDE.md`, the `planner` / `generator` / `evaluator` / `reviewer` / `reporter` subagents, the `harness` skill that chains them, and the `load-env-sh.sh` hook — but `setup.sh` installs none of it. Installing ends in a merge into `~/.claude/settings.json`, which is what actually invokes a hook and which also carries machine- and project-specific values, so it can only be merged into, never overwritten.
@@ -36,3 +39,19 @@ sh "$HOME/.dotfiles/.claude/skills/claude-setup/install.sh"
 ```
 
 That skill is also where the rationale lives — why files are linked individually, what each subagent is for and why their prohibitions matter, and why the hook runs on `PreToolUse` rather than `SessionStart`. Read it before changing anything under `.claude/`.
+
+## Codex setup
+
+`.codex/` holds Codex's global `AGENTS.md`, custom-agent TOML files, and the
+`load-env-sh.sh` hook. `.agents/skills/` holds the `harness`,
+`code-review-autofix`, and repository-scoped `codex-setup` skills.
+
+Install them with:
+
+```sh
+sh "$HOME/.dotfiles/.agents/skills/codex-setup/scripts/install.sh"
+```
+
+The installer links owned files individually and merges the hook entry into
+`~/.codex/hooks.json`. Read the `codex-setup` skill before changing either
+Codex configuration tree.

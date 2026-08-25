@@ -26,17 +26,11 @@ tfplan
 **/.claude/harness/
 **/.claude/worktrees/
 
-# gemini
-GEMINI.md
+# Codex
+**/.codex/harness/
 
 # MCP
 .mcp.json
-
-# Codex
-AGENTS.md
-
-# GitHub
-PULL_REQUEST.md
 
 # env
 env.sh

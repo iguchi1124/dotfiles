@@ -5,8 +5,9 @@ description: >
   -r / --recursive repeats fix → push → wait for re-review → fix again until
   the findings reach zero (round cap 3, changeable with -n). Review agents
   (CodeRabbit, Copilot, Gemini Code Assist, or any other) are waited on for
-  re-review; developer review comments are also fixed, with the outcome
-  replied in-thread (their re-review is never waited on). Runs fully
+  re-review. Every fixed finding author is notified, preferably by replying
+  in-thread; developer deferrals are also replied in-thread, but their
+  re-review is never waited on. Runs fully
   unattended, with no per-change approval prompts. Use when a pull request
   or branch has review findings and the request sounds like "fix everything
   the review found", "keep going until the review comes back clean",
@@ -173,9 +174,10 @@ differently:
 - **Developers**: unresolved, non-outdated threads are fixed under the same
   safety rules, but their re-review is **never waited on and never counted
   toward convergence** (a developer may reply at any time or never; waiting
-  would always time out). After fixing or deferring, report the outcome as
-  an **in-thread reply** on that thread. Never resolve the thread — that is
-  the author's call. **A thread whose last comment is our own reply, with
+  would always time out). Give every handled developer comment with a reply
+  target its own **in-thread reply** beginning with `@<login>` and stating
+  the fix and commit SHA or the defer reason. Never resolve the thread —
+  that is the author's call. **A thread whose last comment is our own reply, with
   nothing newer, counts as handled** and is skipped — without this check,
   every run and every round would re-process already-answered findings
 
@@ -187,11 +189,12 @@ for round in 1, 2, ..., cap:   # inclusive; the cap comes from -n / the mode
      → zero agent threads and no unhandled developer threads: success, stop
   2. verify every finding (agents + developers) and apply only the valid
      fixes (safety rules below)
-  3. findings existed but none were applied (all deferred) → abort, stop.
-     Do not push; report the remainder as "needs developer judgment"
+  3. findings existed but none were applied (all deferred) → reply to every
+     handled developer comment with its defer reason, then abort. Do not push;
+     report the remainder as "needs developer judgment"
   4. if a local review CLI exists, run a local review → fix pass before
      pushing (Step 1)
-  5. push the consolidated commit. Reply in-thread on developer threads
+  5. push the consolidated commit. Post finding-author notifications
   6. wait for the review agents' re-review (polling, 15 minutes max) → next
      round. If no review agent exists on the pull request (only developer findings
      were handled), stop without waiting
@@ -387,17 +390,20 @@ claim success even at zero threads — report that agent's final state as
 nothing changed at all, report what happened up to that point and finish
 (telling the user the agent may be disabled or having an outage).
 
-## Step 4: per-round summary comment and in-thread replies
+## Step 4: finding-author notifications
 
-In a round that applied fixes, post one summary comment on the pull request (files
-changed, counts, commit SHA). Write the summary from local state only —
-never include review-comment bodies or secrets. Follow the user's
-CLAUDE.md conventions for GitHub posts where they exist.
+After pushing a fix, notify every author whose finding it addressed, including
+developers and review agents. Reply to each original review comment or thread
+that provides a reply target; begin the reply with `@<login>` and state the fix
+and commit SHA. When a finding has no reply target, post a pull request
+notification that mentions its `@<login>` and states the fix and commit SHA.
+Consolidate these fallback notifications into one comment per round when possible
+and mention the same author only once there. Do not post a separate round summary.
 
-**Developer threads** additionally get the outcome as an in-thread reply on
-each thread (never batched into a top-level comment): what was changed and
-the commit SHA for a fix, or the reason for a defer. No resolving — that
-stays with the author.
+Before any round exits, give every handled developer comment with a reply target
+its own in-thread outcome reply. A fixed comment uses the fixed-finding reply
+above; reply to a deferred comment with `@<login>` and the defer reason, including
+before an all-deferred abort. Never resolve a thread — that stays with the author.
 
 **Updating the pull request description**: when an applied fix changes what the pull request
 itself is about — a feature, design, file layout, or number the description
@@ -407,6 +413,9 @@ the description (typos, added guards) leave it alone. Keep the existing
 body's structure and tone, change only what changed, and never paste review
 comment bodies in. Follow the user's signature conventions where they exist
 (no duplicate signature on a body that already carries one).
+
+For every GitHub post, follow the user's `CLAUDE.md` signature conventions and
+never include review-comment bodies, secrets, or private data.
 
 ## Termination and the final report
 
@@ -424,10 +433,11 @@ Every run ends by exactly one of these (no infinite loops):
 
 The final report is assembled by a fresh `reporter` subagent in report
 mode: hand it the run's facts (mode, rounds, commits, fixes, defers with
-reasons, remaining findings, the skill-improvement summary) and relay its
-deliverable verbatim. It packages faithfully and applies its redaction
-sweep; it posts nothing — every GitHub write (summary comments, in-thread
-replies, description edits) stays yours, per Step 4.
+reasons, remaining findings, finding-author notifications, the
+skill-improvement summary) and relay its deliverable verbatim. It packages
+faithfully and applies its redaction sweep; it posts nothing — every GitHub
+write (notification comments, in-thread replies, description edits) stays
+yours, per Step 4.
 
 Always close with:
 
@@ -436,7 +446,7 @@ Always close with:
 - Mode: single / recursive
 - Target reviewers: <logins> (marking review agent vs developer)
 - Rounds run: N / <cap> (single 1, recursive default 3, or the -n value)
-- Fixes applied: X (commits: <sha>...; H developer findings replied in-thread)
+- Fixes applied: X (commits: <sha>...; H finding authors replied to or mentioned)
 - Deferred findings: Y (each with its reason: invalid / CI-infra territory / lint failure ...)
 - Final state: zero findings ✅ / Z findings remain (need developer judgment)
 - Skill improvement: none / SKILL.md updated in N places (diff summary) / M entries added to learnings.md

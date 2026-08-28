@@ -233,8 +233,12 @@ When a target review agent has a local review CLI (CodeRabbit's
 
 ### Fetching the pull request findings
 
-Fetch all reviewThreads via `gh api graphql` with cursor pagination and keep
-only threads where
+Fetch all reviewThreads via `gh api graphql` with cursor pagination, writing
+the response straight to a scratchpad file and running `jq` over that file —
+piping it through `echo` under zsh mangles the `\n` escapes inside comment
+bodies and `jq` then rejects the input. Quote any `?` or `*` in `gh api`
+paths and glob arguments, which zsh would otherwise expand. Keep only threads
+where
 
 - `isResolved == false`
 - `isOutdated == false`
@@ -354,24 +358,32 @@ count below are all tracked **per target review agent**, never as one
 aggregate across agents. `gh`'s `--jq` does not accept jq flags
 (`--arg`, ...), so pipe instead: `gh ... --json x | jq --arg ...`.
 
-After pushing, **poll every 2-3 minutes**. Two signals matter, per agent:
+After pushing, **check at 60-90 seconds, then poll every 2-3 minutes** —
+CodeRabbit has twice finished a small diff's re-review inside two minutes,
+before a first full interval even elapsed. Two signals matter, per agent:
 the change in that agent's unresolved-thread count, and — for agents that
 edit a status comment in place (CodeRabbit rewrites its first
 walkthrough comment to, e.g., "No actionable comments were generated in
 the recent review.") — the current status text of that comment. Watching
 only for new reviews or new comments misses both: an agent may submit no
 review when it has nothing to say, and an in-place comment edit creates
-no new activity at all. When polling in the background, watch one full
-iteration of output before leaving it alone, to confirm the script actually
-works.
+no new activity at all. The interval itself has to live inside the command
+being run — a script with the `sleep` in its loop, or a background command —
+because a foreground `sleep` chained with another command is blocked by the
+harness. When polling in the background, watch one full iteration of output
+before leaving it alone, to confirm the script actually works.
 
 For agents that do not re-review on push (Copilot, ...), try a re-request
 once (`gh pr edit --add-reviewer` / the review re-request API).
 
 Do not declare completion from the thread count alone: right after a push
 the old threads may merely go outdated, with the review of the new commit
-not yet run. Completion additionally requires **observed post-push review
-activity** from that agent. For a review or a review comment, a timestamp
+not yet run, and some agents (CodeRabbit) resolve threads themselves — both
+the ones you fixed and the ones you answered with a defer rationale — so a
+falling count is that agent's verdict, never verification that the fix was
+right or the defer accepted. The independent check stays on our side.
+Completion additionally requires **observed post-push review activity**
+from that agent. For a review or a review comment, a timestamp
 newer than the recorded one is not enough — a review submitted for an
 older commit (a race with a previous push) also looks newer — so require
 its commit association to match the recorded pushed head OID. An

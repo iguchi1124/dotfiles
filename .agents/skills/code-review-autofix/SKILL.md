@@ -125,6 +125,8 @@ Before each push, when a target review agent provides an adopted local CLI:
 
 Local rounds do not count against the pull-request cap. A missing or failing local CLI is not a pull-request-mode blocker; record it and continue to GitHub review. A clean local review never replaces the pull-request round.
 
+For CodeRabbit CLI 0.7.5, treat `Failed to start server. Is port 0 in use?` as a local CLI startup failure. Record the local round as NOT-RUN, continue pull-request mode, and do not retry the same invocation in that round.
+
 ## Verify and fix
 
 Process findings one at a time. The orchestrator, not reviewer, owns the independent validity decision.

@@ -30,7 +30,7 @@ Create `.codex/harness/<YYYYMMDD>-<slug>/` at the project root for every run. Us
 | `plan.md` | planner output and later fix plans |
 | `progress.md` | generator reports, one labeled section per round |
 | `eval-<n>.md` | evaluator verdicts, never overwritten |
-| `review-<n>.md` | reviewer triage, never overwritten |
+| `review-<n>.md` | reviewer triage, never overwritten. A project reviewer definition that names the file itself (e.g. `coderabbit-<n>.md`) wins |
 | `retro.md` | instruction friction observed during the run |
 
 Write `spec.md` even for a mini loop. Save every custom agent's return value verbatim before moving to the next stage. Follow repository policy for task-directory tracking; when unspecified, leave `.codex/harness/` untracked.
@@ -42,7 +42,7 @@ Ground rules:
 - Put the absolute task-directory path in every agent prompt.
 - Treat agent reports as claims until the responsible verification stage confirms them.
 - Send the user a brief status at each stage transition.
-- Do not commit before Report. Reporter may commit only in explicitly authorized pull-request mode.
+- Do not commit before Report, except the pre-Review commit in stage 4. Reporter may commit only in explicitly authorized pull-request mode.
 
 ## 1. Plan (full loop only)
 
@@ -69,7 +69,7 @@ Allow at most three FAIL rounds. Stop earlier when the same blocker returns unfi
 
 ## 4. Review
 
-After evaluator passes, spawn a fresh `reviewer` with the task-directory path and next review number. It must run only the repository's adopted external review tool and triage findings using the plan's Review policy. Save output to `review-<n>.md`.
+After evaluator passes, if the repository's reviewer only reads committed diffs (CodeRabbit's `-t committed`, for instance), commit the working tree to a task branch first (`git switch -c`, never a push); spawning it against an uncommitted tree only yields NOT-RUN. Then spawn a fresh `reviewer` with the task-directory path and next review number. It must run only the repository's adopted external review tool and triage findings using the plan's Review policy. Save output to `review-<n>.md` (or the project's name for it).
 
 - **NO-REVIEWER / NOT-RUN** — record the reason and continue to Report.
 - **CLEAN** — continue to Report.
@@ -100,5 +100,5 @@ After the report, inspect `retro.md`. Record friction when it occurs during the 
 ## Gotchas
 
 - Continue follow-up work on the same feature in its existing task directory; use a new directory for a different feature.
-- When the main worktree contains unrelated in-progress work that blocks the task, create an isolated worktree only if the user's request authorizes that workflow. Record its absolute path and require every stage to operate there.
+- Create an isolated worktree (under the scratchpad) when the main worktree contains unrelated in-progress work, or before any stage that holds the tree for minutes (the external review, a full test run) - the user keeps using the main tree while the harness runs, and a checkout mid-review aborts it. Record its absolute path and require every stage to operate there.
 - At every transition, ensure the facts needed for the next decision are stored in task files, not only in conversation context.

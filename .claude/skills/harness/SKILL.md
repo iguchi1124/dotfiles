@@ -44,7 +44,7 @@ task-dir and continue.
 | `plan.md` | you, from planner's output | the plan, verbatim; fix plans appended below it |
 | `progress.md` | you, from generator's reports | one appended section per round |
 | `eval-<n>.md` | you, from evaluator's output | one verdict per file, numbered by existing files |
-| `review-<n>.md` | you, from reviewer's output | one triage per file, same numbering rule |
+| `review-<n>.md` | you, from reviewer's output | one triage per file, same numbering rule. A project reviewer definition that names the file itself (e.g. `coderabbit-<n>.md`) wins |
 | `retro.md` | you, as friction occurs | notes on where this skill's own instructions failed you - input for Retrospect |
 
 Write `spec.md` yourself even in the mini loop - 2-5 lines summarizing the
@@ -62,8 +62,8 @@ Ground rules for every stage:
 - Take no agent's report on faith. Generator's "tests pass" is a claim until
   evaluator's verdict, and is reported to the user as unconfirmed until then.
 - Post a one-line status to the user at each stage transition.
-- Nothing before the report stage commits. Git stays untouched until
-  reporter, and reporter only writes in `pull-request` mode.
+- Git stays untouched until reporter, and reporter only writes in
+  `pull-request` mode. The one exception is the pre-Review commit in stage 4.
 
 ## 1. Plan (full loop only)
 
@@ -109,12 +109,16 @@ rubber stamp. Save the verdict to `eval-<n>.md`.
 
 ## 4. Review
 
-Spawn a fresh `reviewer` with the task-dir path and the report number (same
-numbering rule, over `review-*.md`). It runs the external review tool the
-project has adopted (CodeRabbit, Copilot, ...) and triages each finding into
-`fix` or `skip` **by the plan's Review policy** (in the mini loop, with no
-plan, it falls back to `spec.md` and the repo's conventions); it never
-reviews by itself. Save the triage to `review-<n>.md`.
+If the project's reviewer only reads committed diffs (CodeRabbit's
+`-t committed`, for instance), commit the working tree to a task branch
+first (`git switch -c`, never a push) - spawning it against an uncommitted
+tree only yields NOT-RUN. Then spawn a fresh `reviewer` with the task-dir
+path and the report number (same numbering rule, over the reviewer's report
+files). It runs the external review tool the project has adopted (CodeRabbit,
+Copilot, ...) and triages each finding into `fix` or `skip` **by the plan's
+Review policy** (in the mini loop, with no plan, it falls back to `spec.md`
+and the repo's conventions); it never reviews by itself. Save the triage to
+`review-<n>.md` (or the project's name for it).
 
 - **NO-REVIEWER / NOT-RUN** - nothing adopted, or nothing runnable. Note the
   reason for reporter and continue to Report.
@@ -195,10 +199,13 @@ nothing qualifies, skip silently - no forced findings. Otherwise:
 
 - **One task-dir per feature.** A follow-up sprint on the same feature
   continues in the same task-dir; a different feature gets a new one.
-- If the main working tree has another branch's work in progress, isolate
-  the task in a `git worktree` (under the scratchpad). Record the worktree's
-  absolute path in `spec.md`, put it in every agent prompt alongside the
-  task-dir, and require every stage - file edits, git, the external review -
-  to run inside that worktree, never the main tree.
+- Isolate the task in a `git worktree` (under the scratchpad) when the main
+  working tree has another branch's work in progress, or before any stage
+  that holds the tree for minutes (the external review, a full test run) -
+  the user keeps using the main tree while the harness runs, and a checkout
+  mid-review aborts it. Record the worktree's absolute path in `spec.md`,
+  put it in every agent prompt alongside the task-dir, and require every
+  stage - file edits, git, the external review - to run inside that
+  worktree, never the main tree.
 - At each stage transition, check that the facts your decisions rest on are
   in the task-dir files, not only in the conversation - add what is missing.

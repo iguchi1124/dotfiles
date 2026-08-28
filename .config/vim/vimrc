@@ -20,9 +20,6 @@ set number
 " netrw
 let g:netrw_home = $XDG_DATA_HOME . '/vim'
 
-"lsp
-let g:lsp_document_code_action_signs_enabled = 0
-
 function! s:LspConfig() abort
   nmap <buffer> gd <plug>(lsp-definition)
   nmap <buffer> <leader>rn <plug>(lsp-rename)

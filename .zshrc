@@ -41,10 +41,6 @@ fi
 # ls
 alias ls='ls -GF'
 
-# go
-export GOPATH=$HOME/go
-export PATH=$GOPATH/bin:$PATH
-
 # prompt
 setopt prompt_subst
 git_prompt_info() {

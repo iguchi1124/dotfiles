@@ -17,9 +17,6 @@ set clipboard=unnamed,unnamedplus
 set completeopt=menuone,noinsert,noselect
 set number
 
-" netrw
-let g:netrw_home = $XDG_DATA_HOME . '/vim'
-
 function! s:LspConfig() abort
   nmap <buffer> gd <plug>(lsp-definition)
   nmap <buffer> <leader>rn <plug>(lsp-rename)

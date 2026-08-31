@@ -33,7 +33,8 @@ spec down, promote to the full loop from there.
 ## Task directory
 
 Every run - mini or full - gets `.claude/harness/<YYYYMMDD>-<slug>/` at the
-project root (today's date, kebab-case slug). State lives in these files, not
+project root (today's date, kebab-case slug; the worktree's root once the
+task is isolated - see Gotchas). State lives in these files, not
 in the conversation: if the context is compacted mid-task, re-read the
 task-dir and continue.
 
@@ -48,8 +49,13 @@ task-dir and continue.
 | `retro.md` | you, as friction occurs | notes on where this skill's own instructions failed you - input for Retrospect |
 
 Write `spec.md` yourself even in the mini loop - 2-5 lines summarizing the
-request - so generator's input never depends on the conversation. Save each
-agent's returned artifact to its file verbatim before moving on. Follow the
+request - so generator's input never depends on the conversation. The same
+goes for any input only your tools can reach (a Figma node over MCP, a
+ticket behind SSO, a screenshot): subagents cannot fetch it, so save it into
+the task-dir (`design.md`, `assets/`) before Plan and name it in every agent
+prompt - and resolve a wrong or partial artifact with the user before Plan,
+not after. Save each agent's returned artifact to its file verbatim before
+moving on. Follow the
 project's own practice on whether `.claude/harness/` is committed; when in
 doubt leave it untracked.
 
@@ -111,8 +117,9 @@ rubber stamp. Save the verdict to `eval-<n>.md`.
 
 If the project's reviewer only reads committed diffs (CodeRabbit's
 `-t committed`, for instance), commit the working tree to a task branch
-first (`git switch -c`, never a push) - spawning it against an uncommitted
-tree only yields NOT-RUN. Then spawn a fresh `reviewer` with the task-dir
+first (`git switch -c`, never a push; each later review round commits its
+fixes on top, so reporter reads `<base>..HEAD`) - spawning it against an
+uncommitted tree only yields NOT-RUN. Then spawn a fresh `reviewer` with the task-dir
 path and the report number (same numbering rule, over the reviewer's report
 files). It runs the external review tool the project has adopted (CodeRabbit,
 Copilot, ...) and triages each finding into `fix` or `skip` **by the plan's
@@ -138,8 +145,10 @@ So the loop on findings is reviewer → generator → evaluator (PASS) →
 reviewer. The exception is a `fix` finding that invalidates the plan itself:
 reviewer flags one with a `Plan impact` line in its triage, and you confirm
 the conflict against `plan.md` yourself - the re-plan call is yours, never
-reviewer's. For those, spawn `planner` with the finding and the task-dir,
-append the returned fix plan to `plan.md`, and only then Generate. Ordinary
+reviewer's. A structural impact goes to `planner` with the finding and the
+task-dir; append the returned fix plan to `plan.md`, and only then Generate.
+A scope-only impact (a "leave X untouched" clause the fix must cross) gets a
+dated Amendment appended to `plan.md` by you, then Generate. Ordinary
 `fix` findings - no plan impact - never wait on a planning round.
 
 At most two review rounds. Whatever `fix` findings remain after the second
@@ -160,8 +169,10 @@ non-blocker findings and the mode:
 
 Relay reporter's deliverable to the user as the harness's final message, add
 the task-dir path so the paper trail is findable, and nothing else beyond a
-closing status line - except a Retrospect note (stage 6), the one thing
-allowed to follow it.
+closing status line - except a Retrospect note (stage 6). A post-review step
+the project's own workflow mandates but the harness has no stage for (a
+behavior-verification skill, say) is named in the report as owed and run by
+you through the project's skill after the report is relayed.
 
 ## 6. Retrospect - improve this skill
 
@@ -185,7 +196,9 @@ nothing qualifies, skip silently - no forced findings. Otherwise:
   skills-and-agents rule the moment you touch the file. The skill is
   symlinked into `~/.claude`, so the edit takes effect next run; it targets
   the skill's canonical source, not the task's code - the one deliberate
-  exception to the worktree rule in Gotchas. Leave the change uncommitted
+  exception to the worktree rule in Gotchas (when the project is this
+  dotfiles repo itself, Claude Code blocks that edit from inside the
+  worktree - `ExitWorktree`, keeping it, first). Leave the change uncommitted
   and summarize it to the user after the harness's final message - the
   commit is theirs.
 - A **semantic** change (anything that alters what the harness does) or
@@ -199,13 +212,28 @@ nothing qualifies, skip silently - no forced findings. Otherwise:
 
 - **One task-dir per feature.** A follow-up sprint on the same feature
   continues in the same task-dir; a different feature gets a new one.
-- Isolate the task in a `git worktree` (under the scratchpad) when the main
-  working tree has another branch's work in progress, or before any stage
-  that holds the tree for minutes (the external review, a full test run) -
-  the user keeps using the main tree while the harness runs, and a checkout
-  mid-review aborts it. Record the worktree's absolute path in `spec.md`,
-  put it in every agent prompt alongside the task-dir, and require every
-  stage - file edits, git, the external review - to run inside that
-  worktree, never the main tree.
+- Isolate the task in a worktree when the main working tree has another
+  branch's work in progress, or before any stage that holds the tree for
+  minutes (the external review, a full test run) - the user keeps using the
+  main tree while the harness runs, and a checkout mid-review aborts it.
+  Decide this before creating the task-dir: inside a worktree Claude Code
+  blocks writes to the main checkout, so the task-dir lives at the
+  worktree's root (a task-dir already in the main tree is copied in right
+  after entering). Record the worktree's absolute path in `spec.md`, put it
+  in every agent prompt alongside the task-dir, and require every stage -
+  file edits, git, the external review - to run inside that worktree, never
+  the main tree.
+- Create the worktree with `EnterWorktree`, never a hand-rolled `git
+  worktree add`: only a worktree Claude Code creates gets the gitignored
+  files listed in the project root's `.worktreeinclude` copied in. So
+  before calling it, make sure that file exists and names every gitignored
+  file the stages need - `.env`-style secrets, `.claude/settings.local.json`,
+  tool-local config; find candidates with `git status --ignored --porcelain`,
+  never caches or build output. Write it, or add the missing lines, in
+  `.gitignore` syntax and leave it untracked - committing it is the
+  project's call, so say so in the final status. To start from a specific
+  existing branch instead, `git worktree add` under `.claude/worktrees/`,
+  enter it with `EnterWorktree`'s `path`, and copy the `.worktreeinclude`
+  files in yourself.
 - At each stage transition, check that the facts your decisions rest on are
   in the task-dir files, not only in the conversation - add what is missing.

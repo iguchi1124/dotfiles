@@ -6,6 +6,7 @@
 	d = diff
 	c = commit
 	co = checkout
+	cp = cherry-pick
 	b = branch
 	m = merge
 	l = log
@@ -13,7 +14,5 @@
 	sw = switch
 [core]
 	editor = vim
-[pull]
-	rebase = true
 [init]
 	defaultBranch = main

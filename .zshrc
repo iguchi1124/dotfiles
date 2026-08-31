@@ -38,9 +38,6 @@ if command -v mise &> /dev/null; then
   eval "$(mise activate zsh)"
 fi
 
-# ls
-alias ls='ls -GF'
-
 # prompt
 setopt prompt_subst
 git_prompt_info() {

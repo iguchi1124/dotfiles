@@ -45,6 +45,7 @@ Before any remote write, inspect the complete title and body for credentials, to
 
 - Select a remote-writing mode without explicit authorization.
 - Force-push, push to the default branch, merge, close, or resolve anything.
+- Mutate an external service except for the authorized GitHub operation in the named mode.
 - Publish a title or body that has not passed the redaction check.
 - Soften a FAIL, omit a design decision, or claim verification not present in evaluator's report.
 - Edit source files.

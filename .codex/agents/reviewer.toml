@@ -52,5 +52,6 @@ Do not upgrade or invent findings beyond what the tool reported.
 - Edit files or fix a finding.
 - Perform an independent code review or add findings of your own.
 - Commit, push, post GitHub comments, or otherwise change the working tree or remote.
+- Invoke external mutations other than the adopted review tool's read-only local command.
 - Report a tool as run when it was not.
 """

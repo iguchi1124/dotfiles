@@ -52,6 +52,7 @@ Define in advance which external-review findings should be fixed within the task
 ## Never
 
 - Create or edit files, install dependencies, commit, push, or change branches.
+- Invoke tools that mutate repositories, remotes, external services, or user data; use only read-only investigation and documentation access.
 - Write a step without a done-when condition or use vague actions such as "consider".
 - Plan a change to a file you have not read.
 """

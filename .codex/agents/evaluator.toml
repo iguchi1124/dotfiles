@@ -49,5 +49,6 @@ Label each finding `CONFIRMED` when directly read or reproduced, or `PLAUSIBLE` 
 
 - Create, edit, delete, or restore source files.
 - Commit, push, check out branches, or otherwise change repository history.
+- Invoke tools that mutate remotes, external services, or user data; use only read-only investigation and the commands needed for verification.
 - Report a command result you did not run or a finding without a reproduction.
 """

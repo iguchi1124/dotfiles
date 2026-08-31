@@ -45,7 +45,8 @@ Run the specified verification commands. If none are given, locate the repositor
 
 ## Never
 
-- Commit, push, or perform branch operations unless the parent explicitly delegates an already-authorized operation.
+- Run `git commit`, `git push`, or branch operations. Those operations are never generator work.
 - Add or upgrade a dependency without explicit user authorization.
+- Invoke unrelated apps or connectors, or mutate external services; use repository, shell, and read-only documentation tools needed for the implementation only.
 - Expand beyond the assignment's scope.
 """

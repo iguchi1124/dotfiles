@@ -21,11 +21,11 @@ When uncertain, begin with the mini loop and promote to the full loop only if th
 
 ## Durable task directory
 
-Create `.codex/harness/<YYYYMMDD>-<slug>/` at the project root for every run. Use today's date and a short kebab-case slug. Store state in files so compaction or agent turnover does not lose it.
+Create `.codex/harness/<YYYYMMDD>-<slug>/` at the active project or worktree root for every run. Use today's date and a short kebab-case slug. Decide whether the task needs an isolated worktree before creating this directory; if isolation happens later, copy the directory into the worktree and continue from that copy. Store state in files so compaction or agent turnover does not lose it.
 
 | File | Contents |
 | --- | --- |
-| `spec.md` | concise user request and stated constraints |
+| `spec.md` | the user's request verbatim, plus stated constraints and resolved assumptions |
 | `initial-status.txt` | `git status --porcelain` before any stage |
 | `plan.md` | planner output and later fix plans |
 | `progress.md` | generator reports, one labeled section per round |
@@ -33,7 +33,7 @@ Create `.codex/harness/<YYYYMMDD>-<slug>/` at the project root for every run. Us
 | `review-<n>.md` | reviewer triage, never overwritten. A project reviewer definition that names the file itself (e.g. `coderabbit-<n>.md`) wins |
 | `retro.md` | instruction friction observed during the run |
 
-Write `spec.md` even for a mini loop. Save every custom agent's return value verbatim before moving to the next stage. Follow repository policy for task-directory tracking; when unspecified, leave `.codex/harness/` untracked.
+Write `spec.md` even for a mini loop so generator input never depends on conversation history. Preserve the exact request and constraints rather than replacing them with a lossy summary. Persist any input available only to the parent agent, such as an MCP-fetched design, an SSO-protected ticket, or a screenshot, in the task directory before Plan; name the saved artifact in every agent prompt and resolve a wrong or incomplete artifact with the user before continuing. Save every custom agent's return value verbatim before moving to the next stage. Follow repository policy for task-directory tracking; when unspecified, leave `.codex/harness/` untracked.
 
 Ground rules:
 
@@ -69,24 +69,24 @@ Allow at most three FAIL rounds. Stop earlier when the same blocker returns unfi
 
 ## 4. Review
 
-After evaluator passes, if the repository's reviewer only reads committed diffs (CodeRabbit's `-t committed`, for instance), commit the working tree to a task branch first (`git switch -c`, never a push); spawning it against an uncommitted tree only yields NOT-RUN. Then spawn a fresh `reviewer` with the task-directory path and next review number. It must run only the repository's adopted external review tool and triage findings using the plan's Review policy. Save output to `review-<n>.md` (or the project's name for it).
+After evaluator passes, if the repository's reviewer only reads committed diffs (CodeRabbit's `-t committed`, for instance), commit the working tree to a task branch first (`git switch -c`, never a push). Commit each later review-fix round on top before re-running that reviewer so it sees the new diff and reporter can read `<base>..HEAD`; spawning it against uncommitted fixes only reviews stale state or yields NOT-RUN. Then spawn a fresh `reviewer` with the task-directory path and next review number. It must run only the repository's adopted external review tool and triage findings using the plan's Review policy. Save output to `review-<n>.md` (or the project's name for it).
 
 - **NO-REVIEWER / NOT-RUN** — record the reason and continue to Report.
 - **CLEAN** — continue to Report.
 - **FINDINGS** — retain `skip` items as design decisions; send `fix` items to a fresh generator, then evaluate and review again.
 
-Do not re-plan ordinary fix findings. If reviewer includes `Plan impact`, verify the conflict against `plan.md`, then spawn planner and append a fix plan before Generate.
+Do not re-plan ordinary fix findings. If reviewer includes `Plan impact`, verify the conflict against `plan.md`. For a structural conflict, spawn planner and append its fix plan before Generate. For a scope-only conflict, append a dated Amendment that records the required scope change, then Generate.
 
 Allow at most two review rounds. After the cap, move remaining fix findings to design decisions labeled `loop cap reached` for the user to decide.
 
 ## 5. Report
 
-Spawn a fresh `reporter` with the task-directory path, accumulated non-blockers, and the authorized mode:
+Spawn a fresh `reporter` with the task-directory path, accumulated non-blockers, and the authorized mode. Tell it to read `spec.md`, `plan.md`, `progress.md`, every `eval-*.md`, and every `review-*.md` or project-named review artifact itself:
 
 - `report` unless the user explicitly requested a remote artifact
 - `pull-request` or `issue` only when explicitly requested
 
-Relay reporter's deliverable and include the task-directory path so the paper trail is discoverable.
+Relay reporter's deliverable and include the task-directory path so the paper trail is discoverable. If repository policy mandates a post-review workflow that the harness has no stage for, name it as owed in the report and run the applicable project skill after relaying the report.
 
 ## 6. Retrospect
 
@@ -100,5 +100,5 @@ After the report, inspect `retro.md`. Record friction when it occurs during the 
 ## Gotchas
 
 - Continue follow-up work on the same feature in its existing task directory; use a new directory for a different feature.
-- Create an isolated `git worktree` (under the scratchpad) when the main worktree contains unrelated in-progress work, or before any stage that holds the tree for minutes (the external review, a full test run) - the user keeps using the main tree while the harness runs, and a checkout mid-review aborts it. Before `git worktree add`, make sure the project root has a `.worktreeinclude` (`.gitignore` syntax) naming every gitignored file the stages need - `.env`-style secrets, tool-local config; find candidates with `git status --ignored --porcelain`, never caches or build output. Write it, or add the missing lines, leave it untracked, and copy the listed files into the new worktree yourself: git does not read the file, but Claude Code does, so one list serves both harnesses. Record the worktree's absolute path and require every stage to operate there.
+- Create an isolated `git worktree` (under the scratchpad) when the main worktree contains unrelated in-progress work, or before any stage that holds the tree for minutes (the external review, a full test run) - the user keeps using the main tree while the harness runs, and a checkout mid-review aborts it. Decide this before creating the task directory so state lives at the worktree root. Before `git worktree add`, make sure the project root has a `.worktreeinclude` (`.gitignore` syntax) naming every gitignored file the stages need - `.env`-style secrets, tool-local config; find candidates with `git status --ignored --porcelain`, never caches or build output. Write it, or add the missing lines, leave it untracked, and copy the listed files into the new worktree yourself: git does not read the file, but Claude Code does, so one list serves both harnesses. Record the worktree and task-directory absolute paths in `spec.md`, put both in every agent prompt, and require every stage to operate there.
 - At every transition, ensure the facts needed for the next decision are stored in task files, not only in conversation context.

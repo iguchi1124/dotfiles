@@ -324,7 +324,12 @@ Process the fix items one at a time:
 Also observe:
 
 - Always read the target code yourself before deciding and **independently
-  judge** whether the finding is valid. A finding that is wrong, or that you
+  judge** whether the finding is valid. When the finding rests on a claim
+  about a library's behavior (load order, timezone handling, ...), verify it
+  against that library's source at the version in the lockfile — the
+  installed copy, or `gh api repos/<org>/<lib>/contents/<path>?ref=v<ver>`
+  — never against the agent's citations; twice CodeRabbit's web-sourced
+  claim contradicted the locked gem. A finding that is wrong, or that you
   are not confident about, is **deferred, not fixed**, and reported with the
   reason. Unattended, "never apply a wrong fix" outranks "consume the
   findings"
@@ -386,12 +391,20 @@ Completion additionally requires **observed post-push review activity**
 from that agent. For a review or a review comment, a timestamp
 newer than the recorded one is not enough — a review submitted for an
 older commit (a race with a previous push) also looks newer — so require
-its commit association to match the recorded pushed head OID. An
-in-progress marker appearing and then clearing also counts. The in-place
-status-comment edit is a separate signal class: issue comments carry no
-commit association, so for that signal an `updatedAt` on the status
-comment newer than the pre-push recorded one, paired with that agent's
-unresolved-thread check, remains the rule. The wait completes only when
+its commit association to match the recorded pushed head OID, **and** a
+non-empty review body or a new top-level review comment: a review with an
+empty body whose comments are all replies (`in_reply_to_id` set) is the
+agent answering a Step 4 `@<login>` mention (CodeRabbit does so within
+~30 s), not a re-review. An in-progress marker appearing and then clearing
+also counts. The in-place status-comment edit is a separate signal class:
+issue comments carry no commit association, so judge it by its **text**,
+not by `updatedAt` alone — CodeRabbit refreshes the walkthrough within
+~30 s of a push while its "up to `<sha>`" fragment still names the
+previous head, and "Reviewing files that changed ... between A and B" is
+the in-progress marker. The status signal is complete when the text has
+reached a terminal form ("No actionable comments were generated ..." /
+"Actionable comments posted: N") and its "up to `<sha>`" names the pushed
+head, paired with that agent's unresolved-thread check. The wait completes only when
 **every** target agent has either shown post-push review activity or
 individually hit the 15-minute cap below — one agent's re-review plus
 another agent's old threads going outdated can drive an aggregate thread

@@ -21,13 +21,9 @@ set clipboard=unnamed,unnamedplus
 set completeopt=menuone,noinsert,noselect
 set number
 
-" Distinguish Ctrl+Shift+<key> from Ctrl+<key> inside tmux (needs extended-keys on)
-set keyprotocol+=tmux:mok2
-
 " fzf
-nnoremap <C-t> :Files<CR>
-nnoremap <C-f> :Buffers<CR>
-nnoremap <C-S-f> :Rg<CR>
+nnoremap <leader>f :Files<CR>
+nnoremap <leader>g :Rg<CR>
 
 " vim-lsp
 function! s:on_lsp_buffer_enabled() abort

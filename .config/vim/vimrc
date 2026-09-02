@@ -21,6 +21,10 @@ set clipboard=unnamed,unnamedplus
 set completeopt=menuone,noinsert,noselect
 set number
 
+" fzf
+nnoremap <leader>f :Files<CR>
+nnoremap <leader>g :Rg<CR>
+
 " asyncomplete
 inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"

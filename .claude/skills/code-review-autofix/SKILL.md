@@ -400,11 +400,13 @@ also counts. The in-place status-comment edit is a separate signal class:
 issue comments carry no commit association, so judge it by its **text**,
 not by `updatedAt` alone — CodeRabbit refreshes the walkthrough within
 ~30 s of a push while its "up to `<sha>`" fragment still names the
-previous head, and "Reviewing files that changed ... between A and B" is
-the in-progress marker. The status signal is complete when the text has
-reached a terminal form ("No actionable comments were generated ..." /
-"Actionable comments posted: N") and its "up to `<sha>`" names the pushed
-head, paired with that agent's unresolved-thread check. The wait completes only when
+previous head. "Reviewing files that changed ... between A and B" marks
+in-progress only while no terminal line is present — the same sentence
+stays inside the finished comment's `<details>` block, so a poll keyed on
+that phrase alone never terminates. The status signal is complete when
+the text leads with a terminal form ("No actionable comments were
+generated ..." / "Actionable comments posted: N") and its "up to `<sha>`"
+names the pushed head, paired with that agent's unresolved-thread check. The wait completes only when
 **every** target agent has either shown post-push review activity or
 individually hit the 15-minute cap below — one agent's re-review plus
 another agent's old threads going outdated can drive an aggregate thread

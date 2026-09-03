@@ -52,28 +52,6 @@ do
   done
 done
 
-# Plugins come from marketplaces, not from this repo, so they are installed
-# through the claude CLI rather than linked. Both commands are idempotent.
-# One "<marketplace> <github-repo> <plugin>..." line per marketplace.
-plugins='
-claude-community anthropics/claude-plugins-community eli5
-'
-
-if command -v claude > /dev/null 2>&1; then
-  printf '%s\n' "$plugins" | while read -r marketplace repo names
-  do
-    [ -n "$marketplace" ] || continue
-    claude plugin marketplace add "$repo"
-    for name in $names
-    do
-      claude plugin install "$name@$marketplace"
-    done
-  done
-else
-  echo "claude not found: skipped the plugin install (eli5@claude-community)." >&2
-  echo "Install Claude Code and re-run - see SKILL.md." >&2
-fi
-
 # A linked hook script does nothing until settings.json invokes it. Merge the
 # entry in, preserving every other key; re-running changes nothing.
 settings="$claude_dir/settings.json"
@@ -101,3 +79,11 @@ merged="$(jq --arg cmd 'sh "$HOME/.claude/hooks/load-env-sh.sh"' '
 ' "$settings")" && printf '%s\n' "$merged" > "$settings"
 
 echo "merged the PreToolUse(Bash) hook entry into $settings"
+
+# Keep the claude.ai session link out of commits and pull requests: the
+# Co-Authored-By trailer and the generated-with signature are attribution
+# enough, and the link leaks a private conversation into a public repo.
+merged="$(jq '.attribution //= {} | .attribution.sessionUrl = false' "$settings")" \
+  && printf '%s\n' "$merged" > "$settings"
+
+echo "set attribution.sessionUrl=false in $settings"

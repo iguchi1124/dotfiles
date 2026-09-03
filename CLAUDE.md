@@ -32,7 +32,7 @@ It also installs nothing under `~/.codex` or `~/.agents` — that is the
 
 `.claude/` holds the Claude Code configuration — `CLAUDE.md`, the `planner` / `generator` / `evaluator` / `reviewer` / `reporter` subagents, the `harness` skill that chains them, and the `load-env-sh.sh` hook — but `setup.sh` installs none of it. Installing ends in a merge into `~/.claude/settings.json`, which is what actually invokes a hook and which also carries machine- and project-specific values, so it can only be merged into, never overwritten.
 
-`.claude/skills/claude-setup/` is the skill that does it: it links the files into `~/.claude`, installs the marketplace plugins, merges the hook entry into `settings.json`, and documents how to verify the result. It is a project skill of this repo, so it loads whenever Claude Code runs here. To install by hand, run its script directly:
+`.claude/skills/claude-setup/` is the skill that does it: it links the files into `~/.claude`, merges the hook entry and attribution settings into `settings.json`, and documents how to verify the result. It is a project skill of this repo, so it loads whenever Claude Code runs here. To install by hand, run its script directly:
 
 ```sh
 sh "$HOME/.dotfiles/.claude/skills/claude-setup/install.sh"

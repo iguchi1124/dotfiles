@@ -38,7 +38,7 @@ The main installer deliberately leaves these user-owned locations alone. Install
 sh "$HOME/.dotfiles/.agents/skills/codex-setup/scripts/install.sh"
 ```
 
-Read `.agents/skills/codex-setup/SKILL.md` before changing the installation layout. It explains why files are linked individually and why `~/.codex/hooks.json` is merged rather than replaced.
+Read `.agents/skills/codex-setup/SKILL.md` before changing the installation layout. It explains how files are copied individually from dotfiles, overwriting installed copies, and why `~/.codex/hooks.json` is merged rather than replaced.
 
 ## Skill and custom-agent design
 

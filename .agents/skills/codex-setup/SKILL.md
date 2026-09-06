@@ -1,6 +1,6 @@
 ---
 name: codex-setup
-description: Install, repair, or verify this dotfiles repository's Codex configuration. Links the global AGENTS.md, custom agents, hook scripts, and personal skills into their user locations, then merges the env hook into hooks.json. Use on a new machine or after adding, renaming, or changing Codex configuration in this repository.
+description: Install, repair, or verify this dotfiles repository's Codex configuration. Copies the global AGENTS.md, custom agents, hook scripts, and personal skills into their user locations, overwriting installed files, then merges the env hook into hooks.json. Use on a new machine or after adding, renaming, or changing Codex configuration in this repository.
 ---
 
 # Codex Setup
@@ -11,13 +11,13 @@ description: Install, repair, or verify this dotfiles repository's Codex configu
 
 | Repository source | User target | Behavior |
 | --- | --- | --- |
-| `.codex/AGENTS.md` | `${CODEX_HOME:-$HOME/.codex}/AGENTS.md` | linked as the global instruction file |
-| `.codex/agents/*.toml` | `${CODEX_HOME:-$HOME/.codex}/agents/` | linked file by file |
-| `.codex/hooks/*` | `${CODEX_HOME:-$HOME/.codex}/hooks/` | linked file by file; inert until registered |
-| `.agents/skills/<name>/` | `$HOME/.agents/skills/<name>/` | linked file by file; `codex-setup` itself is skipped |
+| `.codex/AGENTS.md` | `${CODEX_HOME:-$HOME/.codex}/AGENTS.md` | copied as the global instruction file |
+| `.codex/agents/*.toml` | `${CODEX_HOME:-$HOME/.codex}/agents/` | copied file by file |
+| `.codex/hooks/*` | `${CODEX_HOME:-$HOME/.codex}/hooks/` | copied file by file; inert until registered |
+| `.agents/skills/<name>/` | `$HOME/.agents/skills/<name>/` | copied file by file; `codex-setup` itself is skipped |
 | hook entry | `${CODEX_HOME:-$HOME/.codex}/hooks.json` | merged with `jq`, never replaced |
 
-Targets are real directories. Linking whole directories would allow Codex runtime files, histories, caches, and machine-local learning logs to enter this repository.
+Targets are real directories containing independent file copies. Existing target files are overwritten from dotfiles; legacy file symlinks are removed before copying so their referents are not modified. Symlinked destination directories are refused. Files absent from the source, including machine-local learning logs, are preserved.
 
 ## Install
 
@@ -27,9 +27,9 @@ Run:
 sh "$HOME/.dotfiles/.agents/skills/codex-setup/scripts/install.sh"
 ```
 
-Report the script's output. The operation is idempotent. It refuses to replace a real target file managed elsewhere and preserves every unrelated key in `hooks.json`.
+Report the script's output. The operation is idempotent. Re-run it after changing dotfiles to refresh installed copies. It preserves every unrelated key in `hooks.json`.
 
-After a source rename, the installer cannot know whether an old target symlink is still wanted. List the target `agents`, `hooks`, and skill directories, then remove only broken or confirmed-stale symlinks after resolving their targets. Never delete a real machine-local file such as `learnings.md`.
+After a source rename, the installer leaves the old target in place. List the target `agents`, `hooks`, and skill directories, then remove only confirmed-stale installed copies or broken or confirmed-stale symlinks after resolving their targets. Never delete a machine-local file such as `learnings.md`.
 
 ## What is installed
 

@@ -185,7 +185,6 @@ Before any round exits, give every handled developer comment with a reply target
 For all GitHub updates:
 
 - Update the pull-request description only when the fix changes a feature, design, layout, or stated number in that description. Preserve structure and tone.
-- Apply the global `AGENTS.md` signature rule and never duplicate an existing signature.
 - Never paste review-comment bodies, secrets, or private data into remote content.
 
 ## Termination and final report

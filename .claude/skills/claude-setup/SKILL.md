@@ -37,10 +37,13 @@ sh "$HOME/.dotfiles/.claude/skills/claude-setup/install.sh"
 ```
 
 Report what it printed. Re-run it after changing dotfiles to refresh installed
-copies, then compare each changed managed source with its installed file using
-`cmp`. Report changes as reflected only after installation and every comparison
-succeed; otherwise report the source update and the refresh failure separately.
-Existing settings and machine-local learning logs remain local.
+copies, then use `cmp` to compare each changed source refreshed by the installer
+with its installed file. Compare `.claude/settings.json.template` with
+`settings.json` only when this run created the previously absent destination;
+existing settings files and symlinks are preserved and need not match the template.
+Report refreshed changes as reflected only after installation and every applicable
+comparison succeed; otherwise report the source update and the refresh failure
+separately. Machine-local learning logs remain local.
 
 A source removal or rename leaves the old target behind.
 List `~/.claude/agents`, `~/.claude/rules`, and `~/.claude/skills`; remove only

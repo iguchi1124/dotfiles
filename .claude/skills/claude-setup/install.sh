@@ -38,11 +38,20 @@ copy_file() {
   fi
 
   mkdir -p "$(dirname "$target_file")"
-  # Remove legacy links first so copying never writes through to their sources.
+  # Prepare copies before removing legacy links; never write through to sources.
   if [ -L "$target_file" ]; then
-    rm "$target_file"
+    (
+      copy_temp=$(mktemp "$(dirname "$target_file")/.claude-setup.XXXXXXXXXX")
+      trap 'rm -f "$copy_temp"' 0
+      trap 'exit 1' HUP INT TERM
+      cp -pv "$source_file" "$copy_temp"
+      # Unlink explicitly: mv can follow a destination link to a directory.
+      rm "$target_file"
+      mv "$copy_temp" "$target_file"
+    )
+  else
+    cp -pv "$source_file" "$target_file"
   fi
-  cp -pv "$source_file" "$target_file"
 }
 
 copy_file "$dotpath/.claude/CLAUDE.md" "$claude_dir/CLAUDE.md"
@@ -63,6 +72,9 @@ done
 
 # Skills too, one directory per skill. claude-setup itself stays a project
 # skill of this repo - installed globally it would load everywhere for nothing.
+skill_files=$(mktemp "${TMPDIR:-/tmp}/claude-setup.XXXXXXXXXX")
+trap 'rm -f "$skill_files"' 0
+trap 'exit 1' HUP INT TERM
 for skill in "$dotpath/.claude/skills"/*
 do
   [ -d "$skill" ] || continue
@@ -72,11 +84,13 @@ do
     echo "refusing symlinked runtime directory: $claude_dir/skills/$name" >&2
     exit 1
   fi
-  find "$skill" -type f | while IFS= read -r file
+  # Check traversal separately: a pipeline would hide find failures in /bin/sh.
+  find "$skill" -type f > "$skill_files"
+  while IFS= read -r file
   do
     relative=${file#"$skill"/}
     copy_file "$file" "$claude_dir/skills/$name/$relative"
-  done
+  done < "$skill_files"
 done
 
 # Seed settings only when absent; later setup runs preserve user edits.

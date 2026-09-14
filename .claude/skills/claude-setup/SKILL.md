@@ -23,7 +23,8 @@ unchanged.
 
 Targets are real directories containing independent file copies. Installed
 instructions, custom agents, rules, and skills are overwritten from dotfiles;
-legacy file symlinks are removed before copying so their referents are not modified.
+legacy file symlinks are replaced only after a copy is prepared, leaving their
+referents unchanged and preserving the links if copying fails.
 Symlinked destination directories, including a legacy `~/.claude/skills` link,
 are refused. Files absent from the source, including machine-local learning logs,
 are preserved.

@@ -30,7 +30,7 @@ It also installs nothing under `~/.codex` or `~/.agents` — that is the
 
 ## Claude Code setup
 
-`.claude/` holds the Claude Code configuration — `CLAUDE.md`, the `planner` / `generator` / `evaluator` / `reviewer` / `reporter` subagents, and the `harness` skill that chains them — but `setup.sh` installs none of it. The installer initializes `~/.claude/settings.json` from the template only when it is absent; existing machine- and project-specific settings remain unchanged.
+`.claude/` holds the Claude Code configuration — `CLAUDE.md`, the `planner` / `generator` / `evaluator` custom subagents, and the `harness` skill that uses them plus built-in `general-purpose` agents for review and reporting — but `setup.sh` installs none of it. The installer initializes `~/.claude/settings.json` from the template only when it is absent; existing machine- and project-specific settings remain unchanged.
 
 `.claude/skills/claude-setup/` is the skill that does it: it links the files into `~/.claude`, copies the settings template only when `settings.json` is absent, and documents how to verify the result. It is a project skill of this repo, so it loads whenever Claude Code runs here. To install by hand, run its script directly:
 
@@ -38,7 +38,7 @@ It also installs nothing under `~/.codex` or `~/.agents` — that is the
 sh "$HOME/.dotfiles/.claude/skills/claude-setup/install.sh"
 ```
 
-That skill is also where the rationale lives — why files are linked individually, what each subagent is for and why their prohibitions matter. Read it before changing anything under `.claude/`.
+That skill is also where the rationale lives — why files are linked individually, what each stage is for and how custom definitions or explicit caller prompts preserve its boundaries. Read it before changing anything under `.claude/`.
 
 ## Codex setup
 

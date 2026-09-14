@@ -63,9 +63,11 @@ Overwriting is allowed only for files this repo is the sole writer of;
 Subagents and skills are versioned here like shell config, because
 they shape how work happens on every machine. Two principles govern them:
 
-- **Separation of roles.** The planner / generator / evaluator / reviewer /
-  reporter subagents each carry prohibitions that keep one stage from
-  absorbing another. In particular, review comes from a reviewer detached
+- **Separation of roles.** Planning, generation, evaluation, external review,
+  and reporting remain separate stages. Custom planner / generator / evaluator
+  definitions and explicit caller prompts for built-in review / report agents
+  carry the prohibitions that keep one stage from absorbing another.
+  In particular, review comes from a reviewer detached
   from the author's context - like third-party human review, it tests
   whether a change is correct and comprehensible *without* the context
   bias of whoever wrote it. The implementer never reviews itself.
@@ -120,6 +122,6 @@ the machine accumulates history.
 Every non-obvious decision is written down where the code is: `setup.sh`
 comments explain the per-file linking, the Claude and Codex setup skills
 explain their installation strategies, and each
-custom-agent file explains its own prohibitions. This file holds only the
+custom-agent definition or caller's stage contract explains its prohibitions. This file holds only the
 principles; the details stay with their implementation so they cannot drift
 apart silently.

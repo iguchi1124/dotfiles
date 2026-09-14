@@ -1,6 +1,6 @@
 ---
 name: claude-setup
-description: Installs this repo's Claude Code configuration into ~/.claude - links CLAUDE.md, the planner/generator/evaluator/reviewer/reporter subagents and the global skills, then copies the settings.json template only if ~/.claude/settings.json does not exist. Use when setting up Claude Code on a new machine, after adding or renaming a subagent or a skill in this repo, or when asked to install, repair or verify the Claude Code setup.
+description: Installs this repo's Claude Code configuration into ~/.claude - links CLAUDE.md, the planner/generator/evaluator subagents and the global skills, then copies the settings.json template only if ~/.claude/settings.json does not exist. Use when setting up Claude Code on a new machine, after adding, removing, renaming, or changing a subagent or a skill in this repo, or when asked to install, repair or verify the Claude Code setup.
 ---
 
 # claude-setup
@@ -37,9 +37,13 @@ Idempotent, and safe to re-run after adding an agent or a skill:
 sh "$HOME/.dotfiles/.claude/skills/claude-setup/install.sh"
 ```
 
-Report what it printed. Re-running after a rename leaves the old link behind - list
-`~/.claude/agents`, `~/.claude/rules` and `~/.claude/skills` and
-remove any symlink (or skill directory) whose target no longer exists.
+Report what it printed. A source removal or rename leaves the old target behind.
+List `~/.claude/agents`, `~/.claude/rules`, and `~/.claude/skills`; remove only
+confirmed repository-owned stale files or links. Resolve symlink targets to the
+removed repository source, or compare copies with the prior source or a pre-change
+hash. Recheck that identity immediately before removal; preserve and report
+mismatches. Never delete machine-local files such as `learnings.md` or whole
+directories containing them.
 
 ## 2. Initialize settings.json once
 
@@ -58,9 +62,11 @@ installation, manage settings in `~/.claude/settings.json`.
 
 ## 3. Verify
 
-Restart Claude Code after installation. Confirm that `planner`, `generator`,
-`evaluator`, `reviewer`, and `reporter` are available agent types, and `harness` is an
-available skill. A newly created `settings.json` should match the template; an
+Restart Claude Code after installation. Confirm that the repository-managed
+custom agents are `planner`, `generator`, and `evaluator`, confirmed stale
+`reviewer` and `reporter` definitions are absent, and `harness` is available.
+Review and Report use the built-in `general-purpose` type.
+A newly created `settings.json` should match the template; an
 existing settings file should remain unchanged.
 
 ## What is installed
@@ -72,24 +78,21 @@ Project level `CLAUDE.md` files are read in addition to it, and win where they c
 
 ### Subagents
 
-Available from any project, and built to chain - the planner's plan feeds the generator,
-the evaluator's findings hand straight back to the generator, its PASS hands to the
-reviewer, and the reporter packages the outcome:
+Three custom agents are available from any project:
 
 - **planner** - breaks a task into verifiable steps; writes no code
 - **generator** - implements a plan and gets lint and tests passing
 - **evaluator** - checks the result and returns PASS/FAIL with reproducible findings
-- **reviewer** - runs the project's adopted external review tool (CodeRabbit, Copilot,
-  ...) and triages each finding into fix or skip; reviews nothing itself
-- **reporter** - delivers the outcome as a report, or a GitHub Pull Request/issue when
-  asked; the only one allowed to commit, and only in pull-request mode
 
-Each one's prohibitions are what keep that separation intact, so read the whole file
-before trimming one.
+Review and Report use fresh built-in `general-purpose` agents: Review runs the
+adopted external tool and triages its findings; Report packages the outcome and
+performs only explicitly authorized publication. Their contracts live in the
+calling skills. Custom definitions and explicit caller prompts preserve role
+separation; read the complete contract before reducing or moving an instruction.
 
 ### harness
 
-The skill that chains all five: plan, implement, check, external review, report -
+The skill that chains all five stages: plan, implement, check, external review, report -
 looping evaluator findings back into generator, and reviewer findings back into
 generator too, triaged by the Review policy the plan sets in advance - then delivering
 the outcome as a report or a GitHub Pull Request/Issue. State passes

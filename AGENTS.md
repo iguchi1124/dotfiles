@@ -25,6 +25,16 @@ Vim config lives in `.config/vim/`, and tmux config lives in `.config/tmux/`. Pl
 
 It installs nothing under `~/.claude`, `~/.codex`, or `~/.agents`; the corresponding setup skills own those shared locations.
 
+## Claude Code setup
+
+`.claude/` contains the global `CLAUDE.md`, custom agents, rules, skills, and the initial `settings.json.template`. Install or refresh them with:
+
+```sh
+sh "$HOME/.dotfiles/.claude/skills/claude-setup/install.sh"
+```
+
+Read `.claude/skills/claude-setup/SKILL.md` before changing this layout. Like Codex setup, it copies owned files individually into real directories, overwriting installed copies while preserving machine-local files. Legacy file symlinks are replaced with copies; directory symlinks are refused. Existing `settings.json` files and symlinks remain unchanged. Re-run the installer after source changes and compare changed managed files with their installed copies.
+
 ## Codex setup
 
 Codex configuration is versioned in two trees:
@@ -38,7 +48,7 @@ The main installer deliberately leaves these user-owned locations alone. Install
 sh "$HOME/.dotfiles/.agents/skills/codex-setup/scripts/install.sh"
 ```
 
-Read `.agents/skills/codex-setup/SKILL.md` before changing the installation layout. It explains how files are copied individually from dotfiles, overwriting installed copies while preserving machine-local files.
+Read `.agents/skills/codex-setup/SKILL.md` before changing the installation layout. It explains how files are copied individually from dotfiles, overwriting installed copies while preserving machine-local files. Re-run the installer after source changes and compare changed managed files with their installed copies.
 
 ## Skill and custom-agent design
 

@@ -42,9 +42,9 @@ our constraints — and never substitute your own review for the external
 one, because you are the side that produced the diff.
 
 This skill is managed in dotfiles (`~/.dotfiles/.claude/skills/code-review-autofix/`,
-linked into `~/.claude/skills/` by `claude-setup`). The learning log
-`~/.claude/skills/code-review-autofix/learnings.md` is the one exception: a
-**machine-local real file**, not tracked in dotfiles (never synced across
+copied into `~/.claude/skills/` by `claude-setup`). The learning log
+`~/.claude/skills/code-review-autofix/learnings.md` remains a
+**machine-local file**, not tracked in dotfiles (never synced across
 machines).
 
 ## Step 0: read the learning log
@@ -578,12 +578,20 @@ approval. Two tiers:
   promote automatically **once the same kind of lesson is recorded twice**.
   Rewriting the body on a single occurrence overfits the skill to one case
 
-Always edit `~/.dotfiles/.claude/skills/code-review-autofix/SKILL.md` (the link's
-target; the skills-and-agents rule in `.claude/rules/` loads with the edit
+Always edit `~/.dotfiles/.claude/skills/code-review-autofix/SKILL.md` (the canonical
+source; the skills-and-agents rule in `.claude/rules/` loads with the edit
 and carries the editing boundaries — rewrite, never append; the commit is
 the user's), and:
 
-- Delete promoted lessons from learnings.md (no double bookkeeping)
+- Read the repository's `claude-setup` skill and run
+  `sh "$HOME/.dotfiles/.claude/skills/claude-setup/install.sh"` to refresh
+  installed copies under its managed-file policy; preserve local settings
+  and learning logs. Compare every changed managed source with its installed
+  file using `cmp` (this skill targets
+  `~/.claude/skills/code-review-autofix/SKILL.md`). Only after installation
+  and all comparisons succeed, delete promoted lessons from learnings.md
+  and report the change as reflected. On failure, retain the lessons and
+  report the source update, pending refresh, and reason separately
 - Put where / why / how into the final report's "Skill improvement" line as
   a diff summary. Skipping approval is paid for by keeping the user able to
   inspect and revert after the fact

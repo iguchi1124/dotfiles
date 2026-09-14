@@ -1,6 +1,6 @@
 ---
 name: claude-setup
-description: Installs this repo's Claude Code configuration into ~/.claude - links CLAUDE.md, the planner/generator/evaluator subagents and the global skills, then copies the settings.json template only if ~/.claude/settings.json does not exist. Use when setting up Claude Code on a new machine, after adding, removing, renaming, or changing a subagent or a skill in this repo, or when asked to install, repair or verify the Claude Code setup.
+description: Install, repair, or verify this repo's Claude Code configuration. Copies CLAUDE.md, custom agents, rules and global skills into ~/.claude, overwriting installed files, and initializes settings.json from a template only when absent. Use on a new machine or after adding, removing, renaming, or changing Claude Code configuration in this repo.
 ---
 
 # claude-setup
@@ -15,21 +15,20 @@ unchanged.
 
 | Source in this repo | Target | Notes |
 | --- | --- | --- |
-| `.claude/CLAUDE.md` | `~/.claude/CLAUDE.md` | Loaded in every session, whatever the working directory. |
-| `.claude/agents/*` | `~/.claude/agents/` | Linked file by file, never as a directory. |
-| `.claude/rules/*` | `~/.claude/rules/` | Linked file by file. Path-scoped rules (`paths:` frontmatter) load only when Claude touches matching files. |
-| `.claude/skills/*` | `~/.claude/skills/<name>/` | File by file, one directory per skill. `claude-setup` itself is skipped - it stays a project skill of this repo. |
+| `.claude/CLAUDE.md` | `~/.claude/CLAUDE.md` | Copied as the global instruction file, loaded in every session. |
+| `.claude/agents/*` | `~/.claude/agents/` | Copied file by file. |
+| `.claude/rules/*` | `~/.claude/rules/` | Copied file by file. Path-scoped rules (`paths:` frontmatter) load only when Claude touches matching files. |
+| `.claude/skills/*` | `~/.claude/skills/<name>/` | Copied file by file, including nested files. `claude-setup` itself is skipped - it stays a project skill of this repo. |
 | `.claude/settings.json.template` | `~/.claude/settings.json` | Copied only when absent; existing files and symlinks are left unchanged. |
 
-`~/.claude/skills` used to be a symlink to a separate skills repo; `install.sh` removes
-that legacy symlink and replaces it with a real directory when it finds one.
+Targets are real directories containing independent file copies. Installed
+instructions, custom agents, rules, and skills are overwritten from dotfiles;
+legacy file symlinks are removed before copying so their referents are not modified.
+Symlinked destination directories, including a legacy `~/.claude/skills` link,
+are refused. Files absent from the source, including machine-local learning logs,
+are preserved.
 
-Files are linked individually rather than linking the directory, for the same reason
-as `.config/<app>/` in `setup.sh`: Claude Code writes runtime state (sessions, caches,
-history) into these directories, and a symlinked directory would drop that state into
-this repo.
-
-## 1. Link the files
+## 1. Copy the files
 
 Idempotent, and safe to re-run after adding an agent or a skill:
 
@@ -37,7 +36,13 @@ Idempotent, and safe to re-run after adding an agent or a skill:
 sh "$HOME/.dotfiles/.claude/skills/claude-setup/install.sh"
 ```
 
-Report what it printed. A source removal or rename leaves the old target behind.
+Report what it printed. Re-run it after changing dotfiles to refresh installed
+copies, then compare each changed managed source with its installed file using
+`cmp`. Report changes as reflected only after installation and every comparison
+succeed; otherwise report the source update and the refresh failure separately.
+Existing settings and machine-local learning logs remain local.
+
+A source removal or rename leaves the old target behind.
 List `~/.claude/agents`, `~/.claude/rules`, and `~/.claude/skills`; remove only
 confirmed repository-owned stale files or links. Resolve symlink targets to the
 removed repository source, or compare copies with the prior source or a pre-change

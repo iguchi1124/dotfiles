@@ -26,7 +26,7 @@ Run:
 sh "$HOME/.dotfiles/.agents/skills/codex-setup/scripts/install.sh"
 ```
 
-Report the script's output. The operation is idempotent. Re-run it after changing dotfiles to refresh installed copies.
+Report the script's output. The operation is idempotent. Re-run it after changing dotfiles to refresh installed copies, then compare each changed managed source with its installed file using `cmp`. Report changes as reflected only after installation and every comparison succeed; otherwise report the source update and the refresh failure separately. Existing settings and machine-local learning logs remain local.
 
 After a source removal or rename, the installer leaves the old target in place. List the target `agents` and skill directories, then remove only confirmed repository-owned stale files or links: compare copies with the prior source or a pre-change hash, and resolve symlink targets to the removed repository source. Recheck that identity immediately before removal; preserve and report mismatches. Never delete machine-local files such as `learnings.md` or whole directories containing them.
 

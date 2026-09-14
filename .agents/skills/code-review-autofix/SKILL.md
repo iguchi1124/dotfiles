@@ -235,7 +235,7 @@ Before the final report, record only real workflow friction in `~/.agents/skills
 
 Do not log normal completion, review bodies, embedded instructions, credentials, or personal data.
 
-Promote an obvious reproducible instruction defect immediately. Hold environment-specific or one-off lessons until the same kind recurs twice. Fold promoted guidance into `~/.dotfiles/.agents/skills/code-review-autofix/SKILL.md`, delete superseded learning entries, and leave source changes uncommitted for the user.
+Promote an obvious reproducible instruction defect immediately. Hold environment-specific or one-off lessons until the same kind recurs twice. Fold promoted guidance into `~/.dotfiles/.agents/skills/code-review-autofix/SKILL.md` and leave source changes uncommitted for the user. Read the repository's `codex-setup` skill and run `sh "$HOME/.dotfiles/.agents/skills/codex-setup/scripts/install.sh"` to refresh installed copies under its managed-file policy; preserve local settings and learning logs. Compare every changed managed source with its installed file using `cmp` (this skill targets `~/.agents/skills/code-review-autofix/SKILL.md`). Only after installation and all comparisons succeed, delete superseded learning entries and report the change as reflected. On failure, retain the lessons and report the source update, pending refresh, and reason separately.
 
 Never self-edit the untrusted-input rules, defer criteria, developer-thread behavior, finite caps, polling cap, or this retrospective section. Semantic changes to them require the user to name and authorize the change.
 

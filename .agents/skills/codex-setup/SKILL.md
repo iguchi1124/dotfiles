@@ -1,6 +1,6 @@
 ---
 name: codex-setup
-description: Install, repair, or verify this dotfiles repository's Codex configuration. Copies the global AGENTS.md, custom agents and personal skills into their user locations, overwriting installed files, and initializes config.toml from a template only when absent. Use on a new machine or after adding, renaming, or changing Codex configuration in this repository.
+description: Install, repair, or verify this dotfiles repository's Codex configuration. Copies the global AGENTS.md, custom agents and personal skills into their user locations, overwriting installed files, and initializes config.toml from a template only when absent. Use on a new machine or after adding, removing, renaming, or changing Codex configuration in this repository.
 ---
 
 # Codex Setup
@@ -28,7 +28,7 @@ sh "$HOME/.dotfiles/.agents/skills/codex-setup/scripts/install.sh"
 
 Report the script's output. The operation is idempotent. Re-run it after changing dotfiles to refresh installed copies.
 
-After a source rename, the installer leaves the old target in place. List the target `agents` and skill directories, then remove only confirmed-stale installed copies or broken or confirmed-stale symlinks after resolving their targets. Never delete a machine-local file such as `learnings.md`.
+After a source removal or rename, the installer leaves the old target in place. List the target `agents` and skill directories, then remove only confirmed repository-owned stale files or links: compare copies with the prior source or a pre-change hash, and resolve symlink targets to the removed repository source. Recheck that identity immediately before removal; preserve and report mismatches. Never delete machine-local files such as `learnings.md` or whole directories containing them.
 
 ## What is installed
 
@@ -50,19 +50,17 @@ to change preferences.
 
 ### Custom agents
 
-The five custom agents form a staged workflow:
+Three custom agents handle the first stages:
 
 - `planner` — returns a grounded, verifiable plan without editing
 - `generator` — implements the assigned plan or verified finding
 - `evaluator` — independently checks the result and returns PASS or FAIL
-- `reviewer` — runs only an adopted external reviewer and triages its findings
-- `reporter` — packages the outcome and performs explicitly authorized publication
 
-Their prohibitions preserve role separation. Read an entire agent file before reducing or moving an instruction.
+Review and Report use fresh built-in `default` agents: Review runs only an adopted external tool and triages its findings; Report packages the outcome and performs only explicitly authorized publication. Their contracts live in the calling skills. Custom definitions and explicit caller prompts preserve role separation; read the complete contract before reducing or moving an instruction.
 
 ### Skills
 
-- `$harness` coordinates the five custom agents with durable project state.
+- `$harness` coordinates all five stages with durable project state.
 - `$code-review-autofix` handles bounded review, fix, push, and re-review cycles.
 - `$codex-setup` remains repository-scoped so it does not appear in unrelated projects.
 
@@ -70,6 +68,6 @@ Their prohibitions preserve role separation. Read an entire agent file before re
 
 Restart Codex after installation, then confirm:
 
-1. Custom agent selection includes `planner`, `generator`, `evaluator`, `reviewer`, and `reporter`.
+1. Repository-managed custom agents are `planner`, `generator`, and `evaluator`; confirmed stale `reviewer` and `reporter` definitions are absent. Review and Report use the built-in `default` type.
 2. Skill selection includes `harness` and `code-review-autofix`.
 3. A newly created `config.toml` matches the template; an existing configuration remains unchanged.

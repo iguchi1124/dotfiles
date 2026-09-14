@@ -1,36 +1,25 @@
 # macOS
 .DS_Store
 
-# ruby
-vendor/bundle
-
-# vim
-.netrwhist
+# Vim
 *~
-*.un~
 *.swp
+*.swo
 
 # JetBrains IDE
 .idea/
 
-# vscode
+# Visual Studio Code
 .vscode/
 
-# terraform
-.terraform.lock.hcl
-*.tfplan
-tfplan
-
-# claude
-**/.claude/settings.local.json
+# Claude Code
 **/.claude/harness/
-**/.claude/worktrees/
 
 # Codex
 **/.codex/harness/
 
+# Local worktree file-copy configuration
+.worktreeinclude
+
 # MCP
 .mcp.json
-
-# env
-env.sh

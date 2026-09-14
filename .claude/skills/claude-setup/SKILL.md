@@ -1,14 +1,15 @@
 ---
 name: claude-setup
-description: Installs this repo's Claude Code configuration into ~/.claude - links CLAUDE.md, the planner/generator/evaluator/reviewer/reporter subagents, the global skills, then merges the attribution settings into ~/.claude/settings.json. Use when setting up Claude Code on a new machine, after adding or renaming a subagent or a skill in this repo, or when asked to install, repair or verify the Claude Code setup.
+description: Installs this repo's Claude Code configuration into ~/.claude - links CLAUDE.md, the planner/generator/evaluator/reviewer/reporter subagents and the global skills, then copies the settings.json template only if ~/.claude/settings.json does not exist. Use when setting up Claude Code on a new machine, after adding or renaming a subagent or a skill in this repo, or when asked to install, repair or verify the Claude Code setup.
 ---
 
 # claude-setup
 
 `setup.sh` links the shell, vim and tmux config, and stops there. Everything under
 `~/.claude` is installed by this skill instead, because one part of it -
-`~/.claude/settings.json` - carries machine- and project-specific values and can only
-be merged into, never overwritten.
+`~/.claude/settings.json` - carries machine- and project-specific values. The
+installer creates it from the template only when absent and leaves existing settings
+unchanged.
 
 ## What gets installed
 
@@ -18,7 +19,7 @@ be merged into, never overwritten.
 | `.claude/agents/*` | `~/.claude/agents/` | Linked file by file, never as a directory. |
 | `.claude/rules/*` | `~/.claude/rules/` | Linked file by file. Path-scoped rules (`paths:` frontmatter) load only when Claude touches matching files. |
 | `.claude/skills/*` | `~/.claude/skills/<name>/` | File by file, one directory per skill. `claude-setup` itself is skipped - it stays a project skill of this repo. |
-| - | `~/.claude/settings.json` | Merged, never replaced. |
+| `.claude/settings.json.template` | `~/.claude/settings.json` | Copied only when absent; existing files and symlinks are left unchanged. |
 
 `~/.claude/skills` used to be a symlink to a separate skills repo; `install.sh` removes
 that legacy symlink and replaces it with a real directory when it finds one.
@@ -40,19 +41,27 @@ Report what it printed. Re-running after a rename leaves the old link behind - l
 `~/.claude/agents`, `~/.claude/rules` and `~/.claude/skills` and
 remove any symlink (or skill directory) whose target no longer exists.
 
-## 2. Set attribution preferences
+## 2. Initialize settings.json once
 
-`install.sh` sets `attribution.sessionUrl` to `false` in `~/.claude/settings.json`
-with `jq` (`jq` is in `.Brewfile`), preserving unrelated settings. If `jq` is
-missing, install it and re-run step 1. This keeps private conversation links out
-of commits and pull requests.
+`install.sh` copies `.claude/settings.json.template` to `~/.claude/settings.json`
+only when the destination is absent. Existing files and symlinks, including broken
+symlinks, are left unchanged. Re-running setup or editing the template does not
+update installed settings. This happens during setup, not on each application launch.
+
+Edit the template to change defaults for new installations. It supplies the
+permission mode, following the documented
+[permission modes](https://code.claude.com/docs/en/permissions#permission-modes).
+The `attribution.sessionUrl: false` default keeps private conversation links out of
+commits and pull requests. Machine-specific paths, credentials, plugin state, and
+individual permission rules are configured in the installed environment. After
+installation, manage settings in `~/.claude/settings.json`.
 
 ## 3. Verify
 
 Restart Claude Code after installation. Confirm that `planner`, `generator`,
 `evaluator`, `reviewer`, and `reporter` are available agent types, and `harness` is an
-available skill. `jq .attribution.sessionUrl ~/.claude/settings.json` should print
-`false`.
+available skill. A newly created `settings.json` should match the template; an
+existing settings file should remain unchanged.
 
 ## What is installed
 

@@ -1,8 +1,8 @@
 #!/bin/sh
 # Installs this repo's Claude Code configuration into ~/.claude.
 #
-# Kept out of setup.sh because the last step edits ~/.claude/settings.json, which
-# also holds machine- and project-specific values and so can only be merged into.
+# Kept out of setup.sh so this skill owns the initial Claude Code setup.
+# Existing settings.json belongs to the user and is left unchanged.
 # See SKILL.md next to this script.
 set -eu
 
@@ -47,14 +47,11 @@ do
   done
 done
 
-# Keep private session URLs out of GitHub attribution.
+# Seed settings only when absent; later setup runs preserve user edits.
 settings="$claude_dir/settings.json"
-if ! command -v jq > /dev/null 2>&1; then
-  echo "jq not found: skipped attribution settings (jq is in .Brewfile)." >&2
-  echo "Install jq and re-run." >&2
-  exit 0
+if [ -e "$settings" ] || [ -L "$settings" ]; then
+  echo "kept existing $settings"
+else
+  cp -n "$dotpath/.claude/settings.json.template" "$settings"
+  echo "initialized $settings from .claude/settings.json.template"
 fi
-[ -f "$settings" ] || echo '{}' > "$settings"
-merged="$(jq '.attribution //= {} | .attribution.sessionUrl = false' "$settings")" \
-  && printf '%s\n' "$merged" > "$settings"
-echo "set attribution.sessionUrl=false in $settings"

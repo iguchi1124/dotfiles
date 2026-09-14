@@ -1,6 +1,6 @@
 ---
 name: codex-setup
-description: Install, repair, or verify this dotfiles repository's Codex configuration. Copies the global AGENTS.md, custom agents and personal skills into their user locations, overwriting installed files. Use on a new machine or after adding, renaming, or changing Codex configuration in this repository.
+description: Install, repair, or verify this dotfiles repository's Codex configuration. Copies the global AGENTS.md, custom agents and personal skills into their user locations, overwriting installed files, and initializes config.toml from a template only when absent. Use on a new machine or after adding, renaming, or changing Codex configuration in this repository.
 ---
 
 # Codex Setup
@@ -11,11 +11,12 @@ description: Install, repair, or verify this dotfiles repository's Codex configu
 
 | Repository source | User target | Behavior |
 | --- | --- | --- |
+| `.codex/config.toml.template` | `${CODEX_HOME:-$HOME/.codex}/config.toml` | copied only when absent; existing files and symlinks are left unchanged |
 | `.codex/AGENTS.md` | `${CODEX_HOME:-$HOME/.codex}/AGENTS.md` | copied as the global instruction file |
 | `.codex/agents/*.toml` | `${CODEX_HOME:-$HOME/.codex}/agents/` | copied file by file |
 | `.agents/skills/<name>/` | `$HOME/.agents/skills/<name>/` | copied file by file; `codex-setup` itself is skipped |
 
-Targets are real directories containing independent file copies. Existing target files are overwritten from dotfiles; legacy file symlinks are removed before copying so their referents are not modified. Symlinked destination directories are refused. Files absent from the source, including machine-local learning logs, are preserved.
+Targets are real directories containing independent file copies. Installed instructions, custom agents, and skills are overwritten from dotfiles; legacy file symlinks are removed before copying so their referents are not modified. Symlinked destination directories are refused. Files absent from the source, including machine-local learning logs, are preserved.
 
 ## Install
 
@@ -30,6 +31,18 @@ Report the script's output. The operation is idempotent. Re-run it after changin
 After a source rename, the installer leaves the old target in place. List the target `agents` and skill directories, then remove only confirmed-stale installed copies or broken or confirmed-stale symlinks after resolving their targets. Never delete a machine-local file such as `learnings.md`.
 
 ## What is installed
+
+### Initial config.toml
+
+The installer copies `.codex/config.toml.template` only when
+`${CODEX_HOME:-$HOME/.codex}/config.toml` is absent. Existing files and symlinks,
+including broken symlinks, are left unchanged. Re-running setup or editing the
+template does not merge or update installed configuration.
+
+The template supplies the initial approval reviewer.
+Machine-specific paths, project trust, authentication, and application state belong
+in the installed environment. After initialization, edit the installed `config.toml`
+to change preferences.
 
 ### Global AGENTS.md
 
@@ -59,3 +72,4 @@ Restart Codex after installation, then confirm:
 
 1. Custom agent selection includes `planner`, `generator`, `evaluator`, `reviewer`, and `reporter`.
 2. Skill selection includes `harness` and `code-review-autofix`.
+3. A newly created `config.toml` matches the template; an existing configuration remains unchanged.

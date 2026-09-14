@@ -30,9 +30,9 @@ It also installs nothing under `~/.codex` or `~/.agents` — that is the
 
 ## Claude Code setup
 
-`.claude/` holds the Claude Code configuration — `CLAUDE.md`, the `planner` / `generator` / `evaluator` / `reviewer` / `reporter` subagents, and the `harness` skill that chains them — but `setup.sh` installs none of it. Installing ends in a merge into `~/.claude/settings.json`, which carries machine- and project-specific values, so it can only be merged into, never overwritten.
+`.claude/` holds the Claude Code configuration — `CLAUDE.md`, the `planner` / `generator` / `evaluator` / `reviewer` / `reporter` subagents, and the `harness` skill that chains them — but `setup.sh` installs none of it. The installer initializes `~/.claude/settings.json` from the template only when it is absent; existing machine- and project-specific settings remain unchanged.
 
-`.claude/skills/claude-setup/` is the skill that does it: it links the files into `~/.claude`, merges the attribution settings into `settings.json`, and documents how to verify the result. It is a project skill of this repo, so it loads whenever Claude Code runs here. To install by hand, run its script directly:
+`.claude/skills/claude-setup/` is the skill that does it: it links the files into `~/.claude`, copies the settings template only when `settings.json` is absent, and documents how to verify the result. It is a project skill of this repo, so it loads whenever Claude Code runs here. To install by hand, run its script directly:
 
 ```sh
 sh "$HOME/.dotfiles/.claude/skills/claude-setup/install.sh"
@@ -42,7 +42,7 @@ That skill is also where the rationale lives — why files are linked individual
 
 ## Codex setup
 
-`.codex/` holds Codex's global `AGENTS.md` and custom-agent TOML files. `.agents/skills/` holds the `harness`,
+`.codex/` holds Codex's global `AGENTS.md`, custom-agent TOML files, and the initial `config.toml.template`. `.agents/skills/` holds the `harness`,
 `code-review-autofix`, and repository-scoped `codex-setup` skills.
 
 Install them with:
@@ -51,5 +51,5 @@ Install them with:
 sh "$HOME/.dotfiles/.agents/skills/codex-setup/scripts/install.sh"
 ```
 
-The installer copies owned files individually, preserving machine-local files. Read the `codex-setup` skill before changing either
+The installer copies owned files individually, preserving machine-local files, and copies the config template only when `config.toml` is absent. Read the `codex-setup` skill before changing either
 Codex configuration tree.

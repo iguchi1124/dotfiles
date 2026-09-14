@@ -64,3 +64,12 @@ do
     copy_file "$file" "$personal_skills_dir/$name/$relative"
   done
 done
+
+# Seed user configuration only when absent; later setup runs preserve user edits.
+config_file="$codex_dir/config.toml"
+if [ -e "$config_file" ] || [ -L "$config_file" ]; then
+  echo "kept existing $config_file"
+else
+  cp -n "$dotpath/.codex/config.toml.template" "$config_file"
+  echo "initialized $config_file from .codex/config.toml.template"
+fi

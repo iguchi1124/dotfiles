@@ -9,7 +9,7 @@ current layout.
 
 A new machine is set up with a single `curl | bash` of `setup.sh`, and the
 same command is the upgrade path: it is safe to re-run after adding files,
-and every step either converges (`ln -snfv`, `mkdir -p`, merge) or skips
+and every step either converges (`ln -snfv`, `mkdir -p`) or skips
 what already exists. There is no separate "update" procedure to remember.
 
 ## Link files, never directories
@@ -46,13 +46,17 @@ Tools and even shell plugins (`zsh-autosuggestions`, `zsh-syntax-highlighting`)
 are Homebrew packages declared in `.Brewfile`, not vendored clones or
 git submodules. The repo carries configuration, not software.
 
-## Shared files are merged, never overwritten
+## User settings are initialized once
 
 `setup.sh` stops short of `~/.claude`, `~/.codex`, and `~/.agents` because
-those locations also carry machine- and project-specific values. Anything
-the repo does not exclusively own is merged into: `claude-setup` merges
-`settings.json`, preserving every key it does not manage. Overwriting is allowed only for files this repo is the
-sole writer of.
+those locations also carry machine- and project-specific values. `claude-setup`
+copies `.claude/settings.json.template` to `~/.claude/settings.json`, and
+`codex-setup` copies `.codex/config.toml.template` to
+`${CODEX_HOME:-$HOME/.codex}/config.toml`, only when the destination is absent. Existing files and symlinks are left unchanged: subsequent
+setup runs do not merge, overwrite, or synchronize user settings. The `.template`
+suffix prevents either application from treating the source file as project settings.
+Overwriting is allowed only for files this repo is the sole writer of;
+`codex-setup` copies those files individually.
 
 ## The AI workflow is configuration too
 

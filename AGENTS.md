@@ -29,7 +29,7 @@ It installs nothing under `~/.claude`, `~/.codex`, or `~/.agents`; the correspon
 
 Codex configuration is versioned in two trees:
 
-- `.codex/` contains the global `AGENTS.md` and custom-agent TOML files.
+- `.codex/` contains the global `AGENTS.md`, custom-agent TOML files, and the initial `config.toml.template`.
 - `.agents/skills/` contains Codex skills. `harness` chains the custom agents, `code-review-autofix` handles review round-trips, and `codex-setup` installs everything.
 
 The main installer deliberately leaves these user-owned locations alone. Install or refresh Codex configuration with:

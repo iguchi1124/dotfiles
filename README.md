@@ -21,7 +21,7 @@ See [.claude/skills/claude-setup/SKILL.md](.claude/skills/claude-setup/SKILL.md)
 
 ## Codex
 
-Codex custom agents, skills, global instructions, and hooks are installed
+Codex custom agents, skills, and global instructions are installed
 separately from `setup.sh` by the repository's `codex-setup` skill:
 
 ```sh

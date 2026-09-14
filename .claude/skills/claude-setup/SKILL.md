@@ -1,6 +1,6 @@
 ---
 name: claude-setup
-description: Installs this repo's Claude Code configuration into ~/.claude - links CLAUDE.md, the planner/generator/evaluator/reviewer/reporter subagents, the global skills and the hook scripts, then merges the hook entry and the attribution settings into ~/.claude/settings.json. Use when setting up Claude Code on a new machine, after adding or renaming a subagent, a skill or a hook in this repo, or when asked to install, repair or verify the Claude Code setup.
+description: Installs this repo's Claude Code configuration into ~/.claude - links CLAUDE.md, the planner/generator/evaluator/reviewer/reporter subagents, the global skills, then merges the attribution settings into ~/.claude/settings.json. Use when setting up Claude Code on a new machine, after adding or renaming a subagent or a skill in this repo, or when asked to install, repair or verify the Claude Code setup.
 ---
 
 # claude-setup
@@ -16,7 +16,6 @@ be merged into, never overwritten.
 | --- | --- | --- |
 | `.claude/CLAUDE.md` | `~/.claude/CLAUDE.md` | Loaded in every session, whatever the working directory. |
 | `.claude/agents/*` | `~/.claude/agents/` | Linked file by file, never as a directory. |
-| `.claude/hooks/*` | `~/.claude/hooks/` | Linked file by file. Inert until step 2. |
 | `.claude/rules/*` | `~/.claude/rules/` | Linked file by file. Path-scoped rules (`paths:` frontmatter) load only when Claude touches matching files. |
 | `.claude/skills/*` | `~/.claude/skills/<name>/` | File by file, one directory per skill. `claude-setup` itself is skipped - it stays a project skill of this repo. |
 | - | `~/.claude/settings.json` | Merged, never replaced. |
@@ -31,65 +30,29 @@ this repo.
 
 ## 1. Link the files
 
-Idempotent, and safe to re-run after adding an agent or a hook:
+Idempotent, and safe to re-run after adding an agent or a skill:
 
 ```sh
 sh "$HOME/.dotfiles/.claude/skills/claude-setup/install.sh"
 ```
 
 Report what it printed. Re-running after a rename leaves the old link behind - list
-`~/.claude/agents`, `~/.claude/hooks`, `~/.claude/rules` and `~/.claude/skills` and
+`~/.claude/agents`, `~/.claude/rules` and `~/.claude/skills` and
 remove any symlink (or skill directory) whose target no longer exists.
 
-## 2. Register the hook in settings.json
+## 2. Set attribution preferences
 
-Linking a hook script does nothing on its own: `~/.claude/settings.json` is what invokes
-it. `install.sh` merges the entry when `jq` is available (`jq` is in `.Brewfile`). It
-preserves every other key, and re-running changes nothing.
-
-If `jq` was missing, install it and re-run step 1, or merge this by hand:
-
-```json
-"hooks": {
-  "PreToolUse": [
-    {
-      "matcher": "Bash",
-      "hooks": [
-        { "type": "command", "command": "sh \"$HOME/.claude/hooks/load-env-sh.sh\"", "timeout": 10 }
-      ]
-    }
-  ]
-}
-```
-
-Keep `$HOME` literal in the command - the shell expands it when the hook runs, not when
-it is written.
-
-The same step also sets `attribution.sessionUrl` to `false`, so commits and pull
-requests carry the `Co-Authored-By` trailer and the generated-with signature but not
-the `claude.ai/code/session_...` link - that link points at a private conversation and
-has no place in a repository. By hand:
-
-```json
-"attribution": { "sessionUrl": false }
-```
+`install.sh` sets `attribution.sessionUrl` to `false` in `~/.claude/settings.json`
+with `jq` (`jq` is in `.Brewfile`), preserving unrelated settings. If `jq` is
+missing, install it and re-run step 1. This keeps private conversation links out
+of commits and pull requests.
 
 ## 3. Verify
 
-Claude Code only picks up settings changes for directories that already had a settings
-file when the session started, so open `/hooks` once or restart Claude Code first. Then,
-from any project:
-
-```sh
-printf 'export DOTFILES_HOOK_CHECK=ok\n' > env.sh
-echo $DOTFILES_HOOK_CHECK   # through the Bash tool - must print: ok
-rm env.sh
-```
-
-Also confirm the subagents are visible: `planner`, `generator`, `evaluator`, `reviewer`
-and `reporter` should be listed as available agent types, and `harness` as an
-available skill. Finally, `jq .attribution ~/.claude/settings.json` should print
-`{"sessionUrl": false}`.
+Restart Claude Code after installation. Confirm that `planner`, `generator`,
+`evaluator`, `reviewer`, and `reporter` are available agent types, and `harness` is an
+available skill. `jq .attribution.sessionUrl ~/.claude/settings.json` should print
+`false`.
 
 ## What is installed
 
@@ -124,18 +87,3 @@ the outcome as a report or a GitHub Pull Request/Issue. State passes
 through files in the project's `.claude/harness/<task-dir>/`, so long tasks survive
 context compaction and every agent is spawned fresh. Installed globally so it is one
 `/harness` away in any project.
-
-### load-env-sh.sh
-
-Sources `./env.sh` from the working directory root, if present, before every Bash
-command. `env.sh` is in the global gitignore (`.config/git/ignore`), so it is the
-per-project spot for local environment variables.
-
-It runs on `PreToolUse`, not `SessionStart`, because Claude Code starts a fresh shell for
-every Bash command and carries no environment variables over - sourcing once at session
-start would have no effect. The hook instead rewrites each command to source `env.sh`
-first. The working directory is reset to the project root after every command, so the
-check always applies to the project root.
-
-A broken hook can never block a command: the script exits 0 without rewriting anything if
-`env.sh` is absent, if `jq` is missing, or if the payload is unexpected.

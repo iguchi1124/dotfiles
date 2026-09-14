@@ -29,7 +29,7 @@ It installs nothing under `~/.claude`, `~/.codex`, or `~/.agents`; the correspon
 
 Codex configuration is versioned in two trees:
 
-- `.codex/` contains the global `AGENTS.md`, custom-agent TOML files, and hook scripts.
+- `.codex/` contains the global `AGENTS.md` and custom-agent TOML files.
 - `.agents/skills/` contains Codex skills. `harness` chains the custom agents, `code-review-autofix` handles review round-trips, and `codex-setup` installs everything.
 
 The main installer deliberately leaves these user-owned locations alone. Install or refresh Codex configuration with:
@@ -38,7 +38,7 @@ The main installer deliberately leaves these user-owned locations alone. Install
 sh "$HOME/.dotfiles/.agents/skills/codex-setup/scripts/install.sh"
 ```
 
-Read `.agents/skills/codex-setup/SKILL.md` before changing the installation layout. It explains how files are copied individually from dotfiles, overwriting installed copies, and why `~/.codex/hooks.json` is merged rather than replaced.
+Read `.agents/skills/codex-setup/SKILL.md` before changing the installation layout. It explains how files are copied individually from dotfiles, overwriting installed copies while preserving machine-local files.
 
 ## Skill and custom-agent design
 

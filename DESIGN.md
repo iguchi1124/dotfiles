@@ -51,13 +51,12 @@ git submodules. The repo carries configuration, not software.
 `setup.sh` stops short of `~/.claude`, `~/.codex`, and `~/.agents` because
 those locations also carry machine- and project-specific values. Anything
 the repo does not exclusively own is merged into: `claude-setup` merges
-`settings.json`, and `codex-setup` merges `hooks.json`, preserving every key
-they do not manage. Overwriting is allowed only for files this repo is the
+`settings.json`, preserving every key it does not manage. Overwriting is allowed only for files this repo is the
 sole writer of.
 
 ## The AI workflow is configuration too
 
-Subagents, skills and hooks are versioned here like shell config, because
+Subagents and skills are versioned here like shell config, because
 they shape how work happens on every machine. Two principles govern them:
 
 - **Separation of roles.** The planner / generator / evaluator / reviewer /
@@ -116,7 +115,7 @@ the machine accumulates history.
 
 Every non-obvious decision is written down where the code is: `setup.sh`
 comments explain the per-file linking, the Claude and Codex setup skills
-explain their merge-only installation and `PreToolUse` hook timing, and each
+explain their installation strategies, and each
 custom-agent file explains its own prohibitions. This file holds only the
 principles; the details stay with their implementation so they cannot drift
 apart silently.

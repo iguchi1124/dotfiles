@@ -13,9 +13,13 @@
 .vscode/
 
 # Claude Code
+**/.claude/orchestrator/
+# Legacy orchestrator state
 **/.claude/harness/
 
 # Codex
+**/.codex/orchestrator/
+# Legacy orchestrator state
 **/.codex/harness/
 
 # Local worktree file-copy configuration

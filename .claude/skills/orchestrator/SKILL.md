@@ -1,12 +1,12 @@
 ---
-name: harness
-description: Runs a task through planning, generation, evaluation, external review, and reporting, passing state through files in .claude/harness so long tasks survive context compaction. Use for "run the harness" / "run the full loop", for a feature or fix worth an independent check, or for vague requests that span several files. Not for a clear one-file fix.
+name: orchestrator
+description: Runs a task through planning, generation, evaluation, external review, and reporting, passing state through files in .claude/orchestrator so long tasks survive context compaction. Use for "run the orchestrator" / "run the full loop", for a feature or fix worth an independent check, or for vague requests that span several files. Not for a clear one-file fix.
 ---
 
-# harness
+# orchestrator
 
 Drive the task through five stages in order, each with a fresh agent. You are the orchestrator:
-you delegate, relay, and decide. While the harness runs you never plan, code,
+you delegate, relay, and decide. While the orchestrator runs you never plan, code,
 review, or report the work yourself - each of those belongs to its subagent,
 and doing it inline defeats the separation the subagents exist for.
 
@@ -25,16 +25,16 @@ The loop pays for itself only when the task strains a single context:
 
 | Task | Shape |
 | --- | --- |
-| Clear one-file fix, typo, copy of an existing pattern | **No harness** - one generator, or just do it |
-| Anything else - a well-specified medium implementation as much as a vague, multi-file, long-running one | **Harness** - start at Plan |
+| Clear one-file fix, typo, copy of an existing pattern | **Direct execution** - one generator, or just do it |
+| Anything else - a well-specified medium implementation as much as a vague, multi-file, long-running one | **Orchestrator** - start at Plan |
 
-Every harness run plans first; there is no shape that starts at Generate.
+Every orchestrator run plans first; there is no shape that starts at Generate.
 Generator runs on a lighter model than the orchestrator and relies on the
 plan's done-when conditions to stay on course, so it never gets a bare spec.
 
 ## Task directory
 
-Every run gets `.claude/harness/<YYYYMMDD>-<slug>/` at the
+Every new run gets `.claude/orchestrator/<YYYYMMDD>-<slug>/` at the
 project root (today's date, kebab-case slug; the worktree's root once the
 task is isolated - see Gotchas). State lives in these files, not
 in the conversation: if the context is compacted mid-task, re-read the
@@ -57,7 +57,7 @@ so save it into the task-dir (`design.md`, `assets/`) before Plan and name it
 in every agent prompt - and resolve a wrong or partial artifact with the user
 before Plan, not after. Save each agent's returned artifact to its file
 verbatim before moving on. Follow the project's own practice on whether
-`.claude/harness/` is committed; when in doubt leave it untracked.
+`.claude/orchestrator/` is committed; when in doubt leave it untracked.
 
 Ground rules for every stage:
 
@@ -176,7 +176,7 @@ dated Amendment appended to `plan.md` by you, then Generate. Ordinary
 `fix` findings - no plan impact - never wait on a planning round.
 
 At most two review rounds. Whatever `fix` findings remain after the second
-round are demoted to design decisions ("loop cap reached") and the harness
+round are demoted to design decisions ("loop cap reached") and the orchestrator
 moves on - the user decides their fate from the report.
 
 ## 5. Report
@@ -208,7 +208,7 @@ Include this reporting contract in its prompt:
 - Before a PR commit, build a named-file manifest from generator's Changes
   in `progress.md` and compare `git status` with `initial-status.txt`.
   Stage only manifest files by name, never `git add -A`;
-  `.claude/harness/` stays unstaged and exempt. Stop if a manifest file was
+  `.claude/orchestrator/` stays unstaged and exempt. Stop if a manifest file was
   initially dirty or a new non-manifest change appeared; without a baseline
   every non-manifest change is unexpected. Create a task branch when
   needed; never commit or push to the default branch, force-push, merge,
@@ -219,10 +219,10 @@ Include this reporting contract in its prompt:
   and ask with a redacted draft naming only the category and redacted
   location, never the sensitive value. Publish only after this check passes.
 
-Relay reporter's deliverable to the user as the harness's final message, add
+Relay reporter's deliverable to the user as the orchestrator's final message, add
 the task-dir path so the paper trail is findable, and nothing else beyond a
 closing status line - except a Retrospect note (stage 6). A post-review step
-the project's own workflow mandates but the harness has no stage for (a
+the project's own workflow mandates but the orchestrator has no stage for (a
 behavior-verification skill, say) is named in the report as owed and run by
 you through the project's skill after the report is relayed.
 
@@ -242,7 +242,7 @@ only lessons that would change how the *next* run behaves qualify.
 If `retro.md` is missing or empty (a friction-free run never creates it) or
 nothing qualifies, skip silently - no forced findings. Otherwise:
 
-- Edit the source file `~/.dotfiles/.claude/skills/harness/SKILL.md`
+- Edit the source file `~/.dotfiles/.claude/skills/orchestrator/SKILL.md`
   directly for **behavior-preserving** edits only; the editing boundaries
   and the rewrite-never-append rule load with `.claude/rules/`'s
   skills-and-agents rule the moment you touch the file. The edit targets
@@ -254,11 +254,11 @@ nothing qualifies, skip silently - no forced findings. Otherwise:
   `sh "$HOME/.dotfiles/.claude/skills/claude-setup/install.sh"` to refresh
   installed copies; preserve local settings and learning logs. Compare
   every changed managed source with its installed file using `cmp` (this
-  skill targets `~/.claude/skills/harness/SKILL.md`). Summarize the source
-  change and refresh result after the harness's final message; claim it is
+  skill targets `~/.claude/skills/orchestrator/SKILL.md`). Summarize the source
+  change and refresh result after the orchestrator's final message; claim it is
   reflected only after installation and all comparisons succeed, otherwise
   record the pending refresh and reason. The commit is the user's.
-- A **semantic** change (anything that alters what the harness does) or
+- A **semantic** change (anything that alters what the orchestrator does) or
   any edit to a subagent under `~/.dotfiles/.claude/agents/` is proposed
   to the user first with the exact diff, never applied on your own; when
   unsure which kind an edit is, treat it as semantic. Read the
@@ -268,11 +268,13 @@ nothing qualifies, skip silently - no forced findings. Otherwise:
 ## Gotchas
 
 - **One task-dir per feature.** A follow-up sprint on the same feature
-  continues in the same task-dir; a different feature gets a new one.
+  continues in the same task-dir, including a legacy `.claude/harness/`
+  task-dir; new runs use `.claude/orchestrator/`, and a different feature gets
+  a new one.
 - Isolate the task in a worktree when the main working tree has another
   branch's work in progress, or before any stage that holds the tree for
   minutes (the external review, a full test run) - the user keeps using the
-  main tree while the harness runs, and a checkout mid-review aborts it.
+  main tree while the orchestrator runs, and a checkout mid-review aborts it.
   Decide this before creating the task-dir: inside a worktree Claude Code
   blocks writes to the main checkout, so the task-dir lives at the
   worktree's root (a task-dir already in the main tree is copied in right

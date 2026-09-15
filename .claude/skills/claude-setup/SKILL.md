@@ -73,7 +73,7 @@ installation, manage settings in `~/.claude/settings.json`.
 
 Restart Claude Code after installation. Confirm that the repository-managed
 custom agents are `planner`, `generator`, and `evaluator`, confirmed stale
-`reviewer` and `reporter` definitions are absent, and `harness` is available.
+`reviewer` and `reporter` definitions are absent, and `orchestrator` is available.
 Review and Report use the built-in `general-purpose` type.
 A newly created `settings.json` should match the template; an
 existing settings file should remain unchanged.
@@ -105,12 +105,13 @@ performs only explicitly authorized publication. Their contracts live in the
 calling skills. Custom definitions and explicit caller prompts preserve role
 separation; read the complete contract before reducing or moving an instruction.
 
-### harness
+### orchestrator
 
 The skill that chains all five stages: plan, implement, check, external review, report -
 looping evaluator findings back into generator, and reviewer findings back into
 generator too, triaged by the Review policy the plan sets in advance - then delivering
 the outcome as a report or a GitHub Pull Request/Issue. State passes
-through files in the project's `.claude/harness/<task-dir>/`, so long tasks survive
+through files in the project's `.claude/orchestrator/<task-dir>/`, so long tasks survive
 context compaction and every agent is spawned fresh. Installed globally so it is one
-`/harness` away in any project.
+`/orchestrator` away in any project. Existing runs under `.claude/harness/` remain
+resumable from their original directory.

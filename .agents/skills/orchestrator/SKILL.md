@@ -1,9 +1,9 @@
 ---
-name: harness
-description: Run an implementation task through planning, generation, evaluation, external review, and reporting with durable state under .codex/harness. Use for a requested full loop, a feature or fix needing an independent check, or vague multi-file work. Do not use for a clear one-file edit.
+name: orchestrator
+description: Run an implementation task through planning, generation, evaluation, external review, and reporting with durable state under .codex/orchestrator. Use for a requested orchestration or full loop, a feature or fix needing an independent check, or vague multi-file work. Do not use for a clear one-file edit.
 ---
 
-# Harness
+# Orchestrator
 
 Delegate each stage to a fresh agent and make only orchestration decisions; do not plan, implement, review, or report inline.
 
@@ -13,14 +13,14 @@ The `planner`, `generator`, and `evaluator` custom agents are installed by `$cod
 
 | Task | Workflow |
 | --- | --- |
-| Clear one-file fix, typo, or exact copy of an existing pattern | No harness; handle directly or use one generator |
-| Anything else, from a well-specified medium implementation to vague multi-file or long-running work | Harness; start at Plan |
+| Clear one-file fix, typo, or exact copy of an existing pattern | Direct execution; handle directly or use one generator |
+| Anything else, from a well-specified medium implementation to vague multi-file or long-running work | Orchestrator; start at Plan |
 
-Every harness run plans first; no workflow starts at Generate. Generator runs on a lighter model than the orchestrator and relies on the plan's done-when conditions, so it never receives a bare specification.
+Every orchestrator run plans first; no workflow starts at Generate. Generator runs on a lighter model than the orchestrator and relies on the plan's done-when conditions, so it never receives a bare specification.
 
 ## Durable task directory
 
-Create `.codex/harness/<YYYYMMDD>-<slug>/` at the active project or worktree root for every run. Use today's date and a short kebab-case slug. Decide whether the task needs an isolated worktree before creating this directory; if isolation happens later, copy the directory into the worktree and continue from that copy. Store state in files so compaction or agent turnover does not lose it.
+Create `.codex/orchestrator/<YYYYMMDD>-<slug>/` at the active project or worktree root for every new run. Use today's date and a short kebab-case slug. Decide whether the task needs an isolated worktree before creating this directory; if isolation happens later, copy the directory into the worktree and continue from that copy. Store state in files so compaction or agent turnover does not lose it.
 
 | File | Contents |
 | --- | --- |
@@ -32,7 +32,7 @@ Create `.codex/harness/<YYYYMMDD>-<slug>/` at the active project or worktree roo
 | `review-<n>.md` | reviewer triage, never overwritten. A project reviewer definition that names the file itself (e.g. `coderabbit-<n>.md`) wins |
 | `retro.md` | instruction friction observed during the run |
 
-Write `spec.md` before Plan so no agent's input depends on conversation history. Preserve the exact request and constraints rather than replacing them with a lossy summary. Persist any input available only to the parent agent, such as an MCP-fetched design, an SSO-protected ticket, or a screenshot, in the task directory before Plan; name the saved artifact in every agent prompt and resolve a wrong or incomplete artifact with the user before continuing. Save every agent's return value verbatim before moving to the next stage. Follow repository policy for task-directory tracking; when unspecified, leave `.codex/harness/` untracked.
+Write `spec.md` before Plan so no agent's input depends on conversation history. Preserve the exact request and constraints rather than replacing them with a lossy summary. Persist any input available only to the parent agent, such as an MCP-fetched design, an SSO-protected ticket, or a screenshot, in the task directory before Plan; name the saved artifact in every agent prompt and resolve a wrong or incomplete artifact with the user before continuing. Save every agent's return value verbatim before moving to the next stage. Follow repository policy for task-directory tracking; when unspecified, leave `.codex/orchestrator/` untracked.
 
 Ground rules:
 
@@ -96,22 +96,22 @@ Include this reporting contract in its prompt:
 
 - Return only the deliverable or its URL. Lead with the outcome, then generator's changes, evaluator's exact verification results, external-review verdict and tool (or why none ran), every skipped finding and its reason as a design decision, and open deviations, incomplete steps, and findings surviving a cap. Add no code or findings; never edit source, rerun or invent verification, soften FAIL, or omit a design decision.
 - `report` performs no Git or GitHub writes. Only an explicitly user-authorized `pull-request` mode may branch, commit, push, and create a PR; `issue` may create an explicitly authorized issue with the outcome as title and the same content as body, without commits. Never select a remote mode yourself or mutate other external services.
-- Before a PR commit, build a named-file manifest from generator reports and compare `git status` with `initial-status.txt`. Stage only manifest files by name, never `git add -A`; `.codex/harness/` remains unstaged and exempt. Stop if a manifest file was initially dirty or a new non-manifest change appeared; without a baseline treat every non-manifest change as unexpected. Create a task branch when needed; never commit or push to the default branch, force-push, merge, close, or resolve anything.
+- Before a PR commit, build a named-file manifest from generator reports and compare `git status` with `initial-status.txt`. Stage only manifest files by name, never `git add -A`; `.codex/orchestrator/` remains unstaged and exempt. Stop if a manifest file was initially dirty or a new non-manifest change appeared; without a baseline treat every non-manifest change as unexpected. Create a task branch when needed; never commit or push to the default branch, force-push, merge, close, or resolve anything.
 - Follow the user's global `AGENTS.md` GitHub-writing rules. Before any remote write, inspect the complete title and body for credentials, tokens, private paths, or personal data. If found, stop and ask with a redacted draft naming only the category and redacted location, never the sensitive value. Publish only after this check passes.
 
-Relay reporter's deliverable and include the task-directory path so the paper trail is discoverable. If repository policy mandates a post-review workflow that the harness has no stage for, name it as owed in the report and run the applicable project skill after relaying the report.
+Relay reporter's deliverable and include the task-directory path so the paper trail is discoverable. If repository policy mandates a post-review workflow that the orchestrator has no stage for, name it as owed in the report and run the applicable project skill after relaying the report.
 
 ## 6. Retrospect
 
 After the report, inspect `retro.md`. Record friction when it occurs during the run; do not invent retrospective findings for a clean run. Only instruction defects in this skill qualify, not task-specific code, flaky tests, or agent judgment.
 
-- A behavior-preserving clarification may be folded into `~/.dotfiles/.agents/skills/harness/SKILL.md`, leaving the edit uncommitted. Read the repository's `codex-setup` skill and run `sh "$HOME/.dotfiles/.agents/skills/codex-setup/scripts/install.sh"` to refresh installed copies under its managed-file policy; preserve local settings and learning logs. Compare every changed managed source with its installed file using `cmp` (this skill targets `~/.agents/skills/harness/SKILL.md`). Report the source change and refresh result to the user; claim it is reflected only after installation and all comparisons succeed, otherwise record the pending refresh and reason.
+- A behavior-preserving clarification may be folded into `~/.dotfiles/.agents/skills/orchestrator/SKILL.md`, leaving the edit uncommitted. Read the repository's `codex-setup` skill and run `sh "$HOME/.dotfiles/.agents/skills/codex-setup/scripts/install.sh"` to refresh installed copies under its managed-file policy; preserve local settings and learning logs. Compare every changed managed source with its installed file using `cmp` (this skill targets `~/.agents/skills/orchestrator/SKILL.md`). Report the source change and refresh result to the user; claim it is reflected only after installation and all comparisons succeed, otherwise record the pending refresh and reason.
 - Propose semantic changes to safety rules, caps, or stage structure before applying them.
 - Record a one-off lesson without promotion. Promote recurring lessons after the same issue is observed twice; an obvious reproducible instruction defect may be corrected immediately.
 - Rewrite the relevant existing passage; do not append duplicate rules.
 
 ## Gotchas
 
-- Continue follow-up work on the same feature in its existing task directory; use a new directory for a different feature.
-- Create an isolated `git worktree` (under the scratchpad) when the main worktree contains unrelated in-progress work, or before any stage that holds the tree for minutes (the external review, a full test run) - the user keeps using the main tree while the harness runs, and a checkout mid-review aborts it. Decide this before creating the task directory so state lives at the worktree root. Before `git worktree add`, make sure the project root has a `.worktreeinclude` (`.gitignore` syntax) naming every gitignored file the stages need - `.env`-style secrets, tool-local config; find candidates with `git status --ignored --porcelain`, never caches or build output. Write it, or add the missing lines, leave it untracked, and copy the listed files into the new worktree yourself: git does not read the file, but Claude Code does, so one list serves both harnesses. Record the worktree and task-directory absolute paths in `spec.md`, put both in every agent prompt, and require every stage to operate there.
+- Continue follow-up work on the same feature in its existing task directory, including a legacy `.codex/harness/` directory; use `.codex/orchestrator/` for new runs and a new directory for a different feature.
+- Create an isolated `git worktree` (under the scratchpad) when the main worktree contains unrelated in-progress work, or before any stage that holds the tree for minutes (the external review, a full test run) - the user keeps using the main tree while the orchestrator runs, and a checkout mid-review aborts it. Decide this before creating the task directory so state lives at the worktree root. Before `git worktree add`, make sure the project root has a `.worktreeinclude` (`.gitignore` syntax) naming every gitignored file the stages need - `.env`-style secrets, tool-local config; find candidates with `git status --ignored --porcelain`, never caches or build output. Write it, or add the missing lines, leave it untracked, and copy the listed files into the new worktree yourself: git does not read the file, but Claude Code does, so one list serves both orchestrators. Record the worktree and task-directory absolute paths in `spec.md`, put both in every agent prompt, and require every stage to operate there.
 - At every transition, ensure the facts needed for the next decision are stored in task files, not only in conversation context.

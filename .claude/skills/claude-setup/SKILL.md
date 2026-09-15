@@ -82,12 +82,14 @@ Three custom agents are available from any project:
 
 - **planner** - breaks a task into verifiable steps; writes no code
 - **generator** - implements a plan and gets lint and tests passing. It is
-  pinned to `opus`, one tier below the conversation's model: with a plan in
-  hand its work is bounded, and it is the stage that reads and runs the most
+  pinned to `opus` at `high` effort, one tier below the conversation's model:
+  with a plan in hand its work is bounded, and it is the stage that reads and
+  runs the most
 - **evaluator** - checks the result and returns PASS/FAIL with reproducible findings
 
-planner and evaluator inherit the conversation's model, so the stages that
-shape the work and check it stay at least as capable as the one that does it.
+planner and evaluator inherit the conversation's model and effort, so the
+stages that shape the work and check it stay at least as capable as the one
+that does it.
 
 Review and Report use fresh built-in `general-purpose` agents: Review runs the
 adopted external tool and triages its findings; Report packages the outcome and

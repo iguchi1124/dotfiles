@@ -45,5 +45,4 @@ How these files evolve:
   absorb it.
 - **Machine state stays local.** Learning logs and run state live on the
   machine (`~/.claude/skills/<name>/`, `~/.agents/skills/<name>/`,
-  `.claude/orchestrator/`, `.codex/orchestrator/`; legacy runs may remain in
-  `.claude/harness/` or `.codex/harness/`), never in this repo.
+  `.claude/orchestrator/`, `.codex/orchestrator/`), never in this repo.

@@ -1,9 +1,20 @@
 ---
 name: orchestrator
-description: Runs a task through planning, generation, evaluation, external review, and reporting, passing state through files in .claude/orchestrator so long tasks survive context compaction. Use for "run the orchestrator" / "run the full loop", for a feature or fix worth an independent check, or for vague requests that span several files. Not for a clear one-file fix.
+description: Coordinate implementation through planning, generation, independent evaluation, external review, and reporting. Use when the user explicitly requests this workflow, or an implementation needs unresolved design decisions, coordinated changes across components, or independent verification of high-impact behavior. Do not auto-start for questions, review-only or diagnosis-only requests, routine edits, mechanical multi-file changes, or standalone Git/PR operations. File count alone is not a trigger.
 ---
 
 # orchestrator
+
+## When to run
+
+First determine whether the user wants implementation or continuation of an implementation run. Questions about this skill and requests to edit its instructions are not invocations of the workflow.
+
+- **Explicit execution:** Use the workflow when the user asks to run orchestrator or the full implementation loop, even for a small change. Honor a request for direct work or a limited stage instead of expanding it into the full loop.
+- **Automatic selection:** For an implementation request, use the workflow when at least one concrete need is present: unresolved design choices that affect the implementation; coordinated changes across components or interfaces that require integration checks; or high-impact behavior whose failure warrants independent verification (for example authorization, data integrity, or a migration).
+- **Direct handling:** Handle routine edits with a clear approach and local verification directly, including mechanical changes across many files. Questions, investigation without a requested fix, review-only work, and standalone commits or PR creation do not start an implementation loop. Use a focused skill when it covers the requested work.
+- **Uncertain scope:** Inspect enough context to identify one of the needs above; do not start merely because the request is short, vague, or mentions several files. Resolve a missing user decision when necessary.
+
+Once selected, briefly state why the workflow applies and start at Plan. For follow-up work in an existing run, resume its recorded stage rather than opening a new run. Apply the role boundaries below only after selecting the workflow. Generator runs on a lighter model than the orchestrator and relies on the plan's done-when conditions.
 
 Drive the task through five stages in order, each with a fresh agent. You are the orchestrator:
 you delegate, relay, and decide. While the orchestrator runs you never plan, code,
@@ -18,19 +29,6 @@ inline.
 
 Review and Report use the built-in `general-purpose` agent; include the
 stage contracts below in their prompts.
-
-## 0. Gauge the task first
-
-The loop pays for itself only when the task strains a single context:
-
-| Task | Shape |
-| --- | --- |
-| Clear one-file fix, typo, copy of an existing pattern | **Direct execution** - one generator, or just do it |
-| Anything else - a well-specified medium implementation as much as a vague, multi-file, long-running one | **Orchestrator** - start at Plan |
-
-Every orchestrator run plans first; there is no shape that starts at Generate.
-Generator runs on a lighter model than the orchestrator and relies on the
-plan's done-when conditions to stay on course, so it never gets a bare spec.
 
 ## Task directory
 

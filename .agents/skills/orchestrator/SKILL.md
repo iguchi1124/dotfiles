@@ -1,22 +1,24 @@
 ---
 name: orchestrator
-description: Run an implementation task through planning, generation, evaluation, external review, and reporting with durable state under .codex/orchestrator. Use for a requested orchestration or full loop, a feature or fix needing an independent check, or vague multi-file work. Do not use for a clear one-file edit.
+description: Coordinate implementation through planning, generation, independent evaluation, external review, and reporting. Use when the user explicitly requests this workflow, or an implementation needs unresolved design decisions, coordinated changes across components, or independent verification of high-impact behavior. Do not auto-start for questions, review-only or diagnosis-only requests, routine edits, mechanical multi-file changes, or standalone Git/PR operations. File count alone is not a trigger.
 ---
 
 # Orchestrator
 
+## When to run
+
+First determine whether the user wants implementation or continuation of an implementation run. Questions about this skill and requests to edit its instructions are not invocations of the workflow.
+
+- **Explicit execution:** Use the workflow when the user asks to run orchestrator or the full implementation loop, even for a small change. Honor a request for direct work or a limited stage instead of expanding it into the full loop.
+- **Automatic selection:** For an implementation request, use the workflow when at least one concrete need is present: unresolved design choices that affect the implementation; coordinated changes across components or interfaces that require integration checks; or high-impact behavior whose failure warrants independent verification (for example authorization, data integrity, or a migration).
+- **Direct handling:** Handle routine edits with a clear approach and local verification directly, including mechanical changes across many files. Questions, investigation without a requested fix, review-only work, and standalone commits or PR creation do not start an implementation loop. Use a focused skill when it covers the requested work.
+- **Uncertain scope:** Inspect enough context to identify one of the needs above; do not start merely because the request is short, vague, or mentions several files. Resolve a missing user decision when necessary.
+
+Once selected, briefly state why the workflow applies and start at Plan. For follow-up work in an existing run, resume its recorded stage rather than opening a new run. Apply the role boundaries below only after selecting the workflow. Generator runs on a lighter model than the orchestrator and relies on the plan's done-when conditions.
+
 Delegate each stage to a fresh agent and make only orchestration decisions; do not plan, implement, review, or report inline.
 
 The `planner`, `generator`, and `evaluator` custom agents are installed by `$codex-setup`. If one is unavailable, stop and direct the user to that skill instead of replacing the missing role yourself. Review and Report use the built-in `default` agent with the stage contracts below included in their prompts.
-
-## Choose the workflow size
-
-| Task | Workflow |
-| --- | --- |
-| Clear one-file fix, typo, or exact copy of an existing pattern | Direct execution; handle directly or use one generator |
-| Anything else, from a well-specified medium implementation to vague multi-file or long-running work | Orchestrator; start at Plan |
-
-Every orchestrator run plans first; no workflow starts at Generate. Generator runs on a lighter model than the orchestrator and relies on the plan's done-when conditions, so it never receives a bare specification.
 
 ## Durable task directory
 

@@ -105,7 +105,7 @@ Relay reporter's deliverable and include the task-directory path so the paper tr
 
 After the report, inspect `retro.md`. Record friction when it occurs during the run; do not invent retrospective findings for a clean run. Only instruction defects in this skill qualify, not task-specific code, flaky tests, or agent judgment.
 
-- A behavior-preserving clarification may be folded into `~/.dotfiles/.agents/skills/harness/SKILL.md`, leaving the edit uncommitted and reporting it to the user.
+- A behavior-preserving clarification may be folded into `~/.dotfiles/.agents/skills/harness/SKILL.md`, leaving the edit uncommitted. Read the repository's `codex-setup` skill and run `sh "$HOME/.dotfiles/.agents/skills/codex-setup/scripts/install.sh"` to refresh installed copies under its managed-file policy; preserve local settings and learning logs. Compare every changed managed source with its installed file using `cmp` (this skill targets `~/.agents/skills/harness/SKILL.md`). Report the source change and refresh result to the user; claim it is reflected only after installation and all comparisons succeed, otherwise record the pending refresh and reason.
 - Propose semantic changes to safety rules, caps, or stage structure before applying them.
 - Record a one-off lesson without promotion. Promote recurring lessons after the same issue is observed twice; an obvious reproducible instruction defect may be corrected immediately.
 - Rewrite the relevant existing passage; do not append duplicate rules.

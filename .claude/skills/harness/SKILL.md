@@ -21,21 +21,20 @@ stage contracts below in their prompts.
 
 ## 0. Gauge the task first
 
-The loop pays for itself only when the task strains a single context. Pick
-the smallest shape that fits:
+The loop pays for itself only when the task strains a single context:
 
 | Task | Shape |
 | --- | --- |
 | Clear one-file fix, typo, copy of an existing pattern | **No harness** - one generator, or just do it |
-| Well-specified, medium-sized implementation | **Mini loop** - skip planner, start at Generate |
-| Vague spec, several files or repos, long-running | **Full loop** - start at Plan |
+| Anything else - a well-specified medium implementation as much as a vague, multi-file, long-running one | **Harness** - start at Plan |
 
-When unsure, start with the mini loop; if generator reports it cannot pin the
-spec down, promote to the full loop from there.
+Every harness run plans first; there is no shape that starts at Generate.
+Generator runs on a lighter model than the orchestrator and relies on the
+plan's done-when conditions to stay on course, so it never gets a bare spec.
 
 ## Task directory
 
-Every run - mini or full - gets `.claude/harness/<YYYYMMDD>-<slug>/` at the
+Every run gets `.claude/harness/<YYYYMMDD>-<slug>/` at the
 project root (today's date, kebab-case slug; the worktree's root once the
 task is isolated - see Gotchas). State lives in these files, not
 in the conversation: if the context is compacted mid-task, re-read the
@@ -51,16 +50,14 @@ task-dir and continue.
 | `review-<n>.md` | you, from reviewer's output | one triage per file, same numbering rule. A project reviewer definition that names the file itself (e.g. `coderabbit-<n>.md`) wins |
 | `retro.md` | you, as friction occurs | notes on where this skill's own instructions failed you - input for Retrospect |
 
-Write `spec.md` yourself even in the mini loop - 2-5 lines summarizing the
-request - so generator's input never depends on the conversation. The same
-goes for any input only your tools can reach (a Figma node over MCP, a
-ticket behind SSO, a screenshot): subagents cannot fetch it, so save it into
-the task-dir (`design.md`, `assets/`) before Plan and name it in every agent
-prompt - and resolve a wrong or partial artifact with the user before Plan,
-not after. Save each agent's returned artifact to its file verbatim before
-moving on. Follow the
-project's own practice on whether `.claude/harness/` is committed; when in
-doubt leave it untracked.
+Write `spec.md` yourself before Plan so no agent's input depends on the
+conversation. The same goes for any input only your tools can reach (a Figma
+node over MCP, a ticket behind SSO, a screenshot): subagents cannot fetch it,
+so save it into the task-dir (`design.md`, `assets/`) before Plan and name it
+in every agent prompt - and resolve a wrong or partial artifact with the user
+before Plan, not after. Save each agent's returned artifact to its file
+verbatim before moving on. Follow the project's own practice on whether
+`.claude/harness/` is committed; when in doubt leave it untracked.
 
 Ground rules for every stage:
 
@@ -74,7 +71,7 @@ Ground rules for every stage:
 - Git stays untouched until reporter, and reporter only writes in
   `pull-request` mode. The one exception is the pre-Review commit in stage 4.
 
-## 1. Plan (full loop only)
+## 1. Plan
 
 Spawn `planner` with the user's request verbatim (no rewording), the
 task-dir path, and any constraints already stated in the conversation. Save
@@ -92,7 +89,7 @@ a live fork in it.
 ## 2. Generate
 
 Spawn a fresh `generator`. The prompt names: the task-dir path and that it
-must read `spec.md`, `plan.md` (if present), `progress.md` and every
+must read `spec.md`, `plan.md`, `progress.md` and every
 `eval-*.md`; on retry rounds, that fixing the latest `eval-<n>.md` blockers
 comes first; and any environment traps you already know (how tests actually
 run here, required wrappers). Append its report to `progress.md`.
@@ -126,8 +123,7 @@ uncommitted tree only yields NOT-RUN. Then spawn a fresh `general-purpose` agent
 path and the report number (same numbering rule, over the reviewer's report
 files). It runs the external review tool the project has adopted (CodeRabbit,
 Copilot, ...) and triages each finding into `fix` or `skip` **by the plan's
-Review policy** (in the mini loop, with no plan, it falls back to `spec.md`
-and the repo's conventions). Include this contract in its prompt:
+Review policy**. Include this contract in its prompt:
 
 - Read the task artifacts and conventions independently. Require adoption
   evidence in repository config, CI, or documentation, not merely an

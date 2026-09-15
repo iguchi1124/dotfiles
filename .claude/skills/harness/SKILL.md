@@ -245,14 +245,19 @@ nothing qualifies, skip silently - no forced findings. Otherwise:
 - Edit the source file `~/.dotfiles/.claude/skills/harness/SKILL.md`
   directly for **behavior-preserving** edits only; the editing boundaries
   and the rewrite-never-append rule load with `.claude/rules/`'s
-  skills-and-agents rule the moment you touch the file. The skill is
-  symlinked into `~/.claude`, so the edit takes effect next run; it targets
+  skills-and-agents rule the moment you touch the file. The edit targets
   the skill's canonical source, not the task's code - the one deliberate
   exception to the worktree rule in Gotchas (when the project is this
   dotfiles repo itself, Claude Code blocks that edit from inside the
-  worktree - `ExitWorktree`, keeping it, first). Leave the change uncommitted
-  and summarize it to the user after the harness's final message - the
-  commit is theirs.
+  worktree - `ExitWorktree`, keeping it, first). Leave the change uncommitted.
+  Following the `claude-setup` skill's managed-file policy, run
+  `sh "$HOME/.dotfiles/.claude/skills/claude-setup/install.sh"` to refresh
+  installed copies; preserve local settings and learning logs. Compare
+  every changed managed source with its installed file using `cmp` (this
+  skill targets `~/.claude/skills/harness/SKILL.md`). Summarize the source
+  change and refresh result after the harness's final message; claim it is
+  reflected only after installation and all comparisons succeed, otherwise
+  record the pending refresh and reason. The commit is the user's.
 - A **semantic** change (anything that alters what the harness does) or
   any edit to a subagent under `~/.dotfiles/.claude/agents/` is proposed
   to the user first with the exact diff, never applied on your own; when

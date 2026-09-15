@@ -10,41 +10,87 @@ skill_dir=$(cd "$(dirname "$0")" && pwd)
 dotpath=$(cd "$skill_dir/../../.." && pwd)
 claude_dir="$HOME/.claude"
 
-# Link file by file, never the directory: Claude Code writes runtime state next
-# to these files, and a symlinked directory would put that state in this repo.
-mkdir -p "$claude_dir/agents" "$claude_dir/rules"
+# Copy file by file into real directories so runtime state stays on this machine.
+for dir in "$claude_dir" "$claude_dir/agents" "$claude_dir/rules" "$claude_dir/skills"
+do
+  if [ -L "$dir" ]; then
+    echo "refusing symlinked runtime directory: $dir" >&2
+    exit 1
+  fi
+done
 
-ln -snfv "$dotpath/.claude/CLAUDE.md" "$claude_dir/CLAUDE.md"
+copy_file() {
+  source_file=$1
+  target_file=$2
+
+  target_parent=$(dirname "$target_file")
+  while [ "$target_parent" != / ] && [ "$target_parent" != . ]; do
+    if [ -L "$target_parent" ]; then
+      echo "refusing symlinked runtime directory: $target_parent" >&2
+      exit 1
+    fi
+    target_parent=$(dirname "$target_parent")
+  done
+
+  if [ -d "$target_file" ] && [ ! -L "$target_file" ]; then
+    echo "refusing to replace existing directory: $target_file" >&2
+    exit 1
+  fi
+
+  mkdir -p "$(dirname "$target_file")"
+  # Prepare copies before removing legacy links; never write through to sources.
+  if [ -L "$target_file" ]; then
+    (
+      copy_temp=$(mktemp "$(dirname "$target_file")/.claude-setup.XXXXXXXXXX")
+      trap 'rm -f "$copy_temp"' 0
+      trap 'exit 1' HUP INT TERM
+      cp -pv "$source_file" "$copy_temp"
+      # Unlink explicitly: mv can follow a destination link to a directory.
+      rm "$target_file"
+      mv "$copy_temp" "$target_file"
+    )
+  else
+    cp -pv "$source_file" "$target_file"
+  fi
+}
+
+copy_file "$dotpath/.claude/CLAUDE.md" "$claude_dir/CLAUDE.md"
+mkdir -p "$claude_dir/agents" "$claude_dir/rules" "$claude_dir/skills"
 
 for file in "$dotpath/.claude/agents"/*
 do
-  ln -snfv "$file" "$claude_dir/agents"
+  [ -f "$file" ] || continue
+  copy_file "$file" "$claude_dir/agents/$(basename "$file")"
 done
 
 for file in "$dotpath/.claude/rules"/*
 do
   # /bin/sh has no nullglob: an empty dir leaves the '*' literal.
-  [ -e "$file" ] || continue
-  ln -snfv "$file" "$claude_dir/rules"
+  [ -f "$file" ] || continue
+  copy_file "$file" "$claude_dir/rules/$(basename "$file")"
 done
 
 # Skills too, one directory per skill. claude-setup itself stays a project
 # skill of this repo - installed globally it would load everywhere for nothing.
-if [ -L "$claude_dir/skills" ]; then
-  # Legacy layout: ~/.claude/skills was a symlink to a separate skills repo.
-  rm "$claude_dir/skills"
-  echo "removed legacy symlink $claude_dir/skills"
-fi
-
+skill_files=$(mktemp "${TMPDIR:-/tmp}/claude-setup.XXXXXXXXXX")
+trap 'rm -f "$skill_files"' 0
+trap 'exit 1' HUP INT TERM
 for skill in "$dotpath/.claude/skills"/*
 do
+  [ -d "$skill" ] || continue
   name=$(basename "$skill")
   [ "$name" = "claude-setup" ] && continue
-  mkdir -p "$claude_dir/skills/$name"
-  for file in "$skill"/*
+  if [ -L "$claude_dir/skills/$name" ]; then
+    echo "refusing symlinked runtime directory: $claude_dir/skills/$name" >&2
+    exit 1
+  fi
+  # Check traversal separately: a pipeline would hide find failures in /bin/sh.
+  find "$skill" -type f > "$skill_files"
+  while IFS= read -r file
   do
-    ln -snfv "$file" "$claude_dir/skills/$name"
-  done
+    relative=${file#"$skill"/}
+    copy_file "$file" "$claude_dir/skills/$name/$relative"
+  done < "$skill_files"
 done
 
 # Seed settings only when absent; later setup runs preserve user edits.

@@ -12,14 +12,16 @@ same command is the upgrade path: it is safe to re-run after adding files,
 and every step either converges (`ln -snfv`, `mkdir -p`) or skips
 what already exists. There is no separate "update" procedure to remember.
 
-## Link files, never directories
+## Real directories separate configuration from runtime state
 
-Both installers create real directories and symlink the files inside them
-one by one. A symlinked directory would make the target and the repo the
+`setup.sh` creates real application directories and symlinks the files inside
+them one by one. Claude and Codex setup instead copy their managed files
+individually into real directories, replacing legacy file links and refusing
+directory links. A symlinked directory would make the target and the repo the
 same place, and applications write runtime state - logs, sockets, caches,
-sessions - next to their config. Per-file links keep the boundary: the repo
-owns the config, the machine owns the state. The cost is that new files
-need a re-run of the installer, which idempotency makes free.
+sessions - next to their config. The repo owns the configuration sources;
+the machine owns the state. New app files and any Claude or Codex source
+changes need a re-run of the corresponding installer.
 
 ## Defaults first, configuration minimal
 
@@ -56,7 +58,7 @@ copies `.claude/settings.json.template` to `~/.claude/settings.json`, and
 setup runs do not merge, overwrite, or synchronize user settings. The `.template`
 suffix prevents either application from treating the source file as project settings.
 Overwriting is allowed only for files this repo is the sole writer of;
-`codex-setup` copies those files individually.
+both `claude-setup` and `codex-setup` copy those files individually.
 
 ## The AI workflow is configuration too
 
@@ -91,7 +93,11 @@ and before the final report is delivered, the lessons are folded back into
 the skill's own `SKILL.md`. Folding in means rewriting, not appending:
 instructions are context spent on every load, so a lesson is merged into
 the text it refines and deletes what it supersedes - stacking clauses
-breeds duplication and token bloat. Three boundaries keep this safe:
+breeds duplication and token bloat. After an authorized source improvement,
+run the corresponding setup installer and byte-compare changed managed files
+with their installed copies before reporting it as reflected. A failed refresh
+is reported separately from the source edit, and local logs and settings stay
+local. Three boundaries keep this safe:
 
 - A lesson observed once is only recorded; it is promoted into the skill
   after it recurs, so one incident cannot overfit the instructions.

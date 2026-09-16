@@ -40,7 +40,7 @@ Read `.claude/skills/claude-setup/SKILL.md` before changing this layout. Like Co
 Codex configuration is versioned in two trees:
 
 - `.codex/` contains the global `AGENTS.md`, custom-agent TOML files, and the initial `config.toml.template`.
-- `.agents/skills/` contains Codex skills. `orchestrator` uses custom `planner` / `generator` / `evaluator` agents and built-in `default` agents for review and reporting, `code-review-autofix` handles review round-trips, `start-project` initializes project documentation from bundled templates, and `codex-setup` installs everything.
+- `.agents/skills/` contains Codex skills. `orchestrator` uses custom `planner` / `generator` / `evaluator` agents and built-in `default` agents for review and reporting, `coordinator` manages durable specifications and parallel task ownership, `code-review-autofix` handles review round-trips, and `codex-setup` installs everything.
 
 The main installer deliberately leaves these user-owned locations alone. Install or refresh Codex configuration with:
 

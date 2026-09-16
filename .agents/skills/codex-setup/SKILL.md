@@ -64,7 +64,7 @@ Review and Report use fresh built-in `default` agents: Review runs only an adopt
 
 - `$orchestrator` coordinates all five stages with durable project state.
 - `$code-review-autofix` handles bounded review, fix, push, and re-review cycles.
-- `$start-project` initializes English planning and specification documents from templates and a generator bundled with the skill.
+- `$coordinator` manages durable specifications, task dependencies, ownership, decisions, and progress for parallel or long-running work.
 - `$codex-setup` remains repository-scoped so it does not appear in unrelated projects.
 
 ## Verify
@@ -72,5 +72,5 @@ Review and Report use fresh built-in `default` agents: Review runs only an adopt
 Restart Codex after installation, then confirm:
 
 1. Repository-managed custom agents are `planner`, `generator`, and `evaluator`; confirmed stale `reviewer` and `reporter` definitions are absent. Review and Report use the built-in `default` type.
-2. Skill selection includes `orchestrator`, `code-review-autofix`, and `start-project`.
+2. Skill selection includes `orchestrator`, `coordinator`, and `code-review-autofix`.
 3. A newly created `config.toml` matches the template; an existing configuration remains unchanged.

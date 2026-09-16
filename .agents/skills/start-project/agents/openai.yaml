@@ -1,4 +1,0 @@
-interface:
-  display_name: "Start Project"
-  short_description: "Scaffold English project docs from bundled templates"
-  default_prompt: "Use $start-project to initialize English planning documents from its bundled templates."

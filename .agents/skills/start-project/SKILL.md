@@ -1,6 +1,6 @@
 ---
 name: start-project
-description: Initialize project planning and specification documents from English or Japanese templates bundled with this skill. Use when asked to start a documented project, create a project-spec draft, or scaffold planning docs. Do not use for codebase scaffolding when no planning-document workflow is requested.
+description: Initialize English project planning and specification documents from templates bundled with this skill. Use when asked to start a documented project, create a project-spec draft, or scaffold planning docs. Do not use for codebase scaffolding when no planning-document workflow is requested.
 ---
 
 # Start a documented project
@@ -16,7 +16,6 @@ Resolve the workspace root and read the applicable `AGENTS.md` files and relevan
 
 - a kebab-case project slug;
 - a display name;
-- an output language, `ja` or `en`;
 - the participating components, if the work has separately owned areas; and
 - an optional source document or parent issue URL.
 
@@ -33,18 +32,14 @@ Run the bundled generator from the workspace root:
 python3 <skill-directory>/scripts/new_project.py \
   --slug <project-slug> \
   --name '<display name>' \
-  --language ja \
   --components backend,web \
   --source '<optional URL or document reference>'
 ```
 
-`--language` accepts `ja` or `en` and defaults to `ja`. Match an explicitly requested
-document language; otherwise use the language of the user's project request.
 `--components` and `--source` are optional. `--docs-dir` defaults to `docs` relative
-to the current directory. The generator reads only the selected language under
-`assets/project-template/` from this skill, creates `docs/<slug>/` atomically, and
-refuses an existing destination. Do not copy templates by hand or substitute a
-repository-local template.
+to the current directory. The generator reads the English templates under
+`assets/project-template/`, creates `docs/<slug>/` atomically, and refuses an existing
+destination. Do not copy templates by hand or substitute a repository-local template.
 
 Never overwrite, delete, or recreate an existing project directory without explicit
 user authorization. A failed run may be retried only after inspecting its output and
@@ -73,5 +68,5 @@ Before reporting completion, verify:
 - remaining `TBD` values are intentional; and
 - version-control status, where applicable, contains no unintended changes.
 
-Report the created paths, output language, selected components, source reference, and
-remaining decisions.
+Report the created paths, selected components, source reference, and remaining
+decisions.

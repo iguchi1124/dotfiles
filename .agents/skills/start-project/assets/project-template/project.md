@@ -5,7 +5,7 @@ scope: "Background, goals, requirements, scope, and open questions"
 source: {{SOURCE_YAML}}
 ---
 
-# {{PROJECT_NAME}} Project Specification
+# {{PROJECT_NAME}} Specification
 
 ## Summary
 

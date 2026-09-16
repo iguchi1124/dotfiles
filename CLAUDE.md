@@ -30,7 +30,7 @@ It also installs nothing under `~/.codex` or `~/.agents` — that is the
 
 ## Claude Code setup
 
-`.claude/` holds the Claude Code configuration — `CLAUDE.md`, the `planner` / `generator` / `evaluator` custom subagents, and the `orchestrator` skill that uses them plus built-in `general-purpose` agents for review and reporting — but `setup.sh` installs none of it. The installer initializes `~/.claude/settings.json` from the template only when it is absent; existing machine- and project-specific settings remain unchanged.
+`.claude/` holds the Claude Code configuration — `CLAUDE.md`, the `planner` / `generator` / `evaluator` custom subagents, the `orchestrator` skill that uses them plus built-in `general-purpose` agents for review and reporting, and the `coordinator` skill for durable multi-task and multi-agent project state — but `setup.sh` installs none of it. The installer initializes `~/.claude/settings.json` from the template only when it is absent; existing machine- and project-specific settings remain unchanged.
 
 `.claude/skills/claude-setup/` is the skill that does it: it copies owned files individually into `~/.claude`, overwriting installed copies while preserving machine-local files, copies the settings template only when `settings.json` is absent, and documents how to verify the result. It is a project skill of this repo, so it loads whenever Claude Code runs here. To install or refresh by hand, run its script directly:
 

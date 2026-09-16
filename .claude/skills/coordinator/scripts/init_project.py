@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Initialize durable coordinator state from templates bundled with this skill."""
+"""Initialize durable Claude Code coordinator state from bundled templates."""
 
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ TEMPLATE_FILES = (
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Create .codex/coordinator/<date>-<slug> from bundled templates."
+        description="Create .claude/coordinator/<date>-<slug> from bundled templates."
     )
     parser.add_argument("--slug", required=True, help="short kebab-case project slug")
     parser.add_argument("--name", required=True, help="project display name")
@@ -110,7 +110,7 @@ def main() -> int:
         raise SystemExit(f"error: project root not found: {root}")
     status = initial_status(root)
     run_name = f"{args.date}-{args.slug}"
-    parent = root / ".codex" / "coordinator"
+    parent = root / ".claude" / "coordinator"
     target = parent / run_name
     if target.exists():
         raise SystemExit(f"error: destination already exists: {target}")

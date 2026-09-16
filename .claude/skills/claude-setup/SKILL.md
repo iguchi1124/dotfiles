@@ -73,7 +73,8 @@ installation, manage settings in `~/.claude/settings.json`.
 
 Restart Claude Code after installation. Confirm that the repository-managed
 custom agents are `planner`, `generator`, and `evaluator`, confirmed stale
-`reviewer` and `reporter` definitions are absent, and `orchestrator` is available.
+`reviewer` and `reporter` definitions are absent, and `orchestrator` and `coordinator`
+are available.
 Review and Report use the built-in `general-purpose` type.
 A newly created `settings.json` should match the template; an
 existing settings file should remain unchanged.
@@ -114,3 +115,12 @@ through files in the project's `.claude/orchestrator/<task-dir>/`, so long tasks
 context compaction and every agent is spawned fresh. Installed globally so it is one
 `/orchestrator` away in any project. Existing runs under `.claude/harness/` remain
 resumable from their original directory.
+
+### coordinator
+
+The skill that maintains durable specifications, task dependencies, ownership,
+decisions, progress, and retrospectives for multi-task or multi-agent projects. Its
+state lives in the active project's `.claude/coordinator/<project-dir>/`, allowing
+independent subagents and later sessions to share a precise source of truth without
+overlapping work. It may delegate a bounded task to `orchestrator` when that task
+independently needs the orchestrated workflow.

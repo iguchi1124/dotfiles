@@ -11,7 +11,7 @@ about this skill and requests to edit its instructions are not workflow invocati
 ## Boundary with orchestrator
 
 - Use `coordinator` to maintain the shared project specification, task graph,
-  assignments, dependencies, decisions, and handoffs across agents or sessions.
+  assignments, dependencies, decisions, and handoffs across subagents or sessions.
 - Use `orchestrator` for a bounded implementation task that needs its sequential Plan,
   Generate, Evaluate, Review, and Report stages.
 - A coordinator task may use `orchestrator` when that task independently meets its
@@ -29,14 +29,14 @@ python3 <skill-directory>/scripts/init_project.py \
   --request-file <file-containing-the-user-request>
 ```
 
-The initializer creates `.codex/coordinator/<YYYYMMDD>-<slug>/` atomically. Omit
+The initializer creates `.claude/coordinator/<YYYYMMDD>-<slug>/` atomically. Omit
 `--request-file` only when the exact request will be inserted into `project.md`
 immediately afterward. `--root` may select another active worktree. Never overwrite,
 delete, or recreate an existing project directory without explicit authorization.
 
-Before creating a directory, search `.codex/coordinator/` for the same project. Resume
-the existing directory when the requested work is a continuation, even across agent
-or conversation turnover.
+Before creating a directory, search `.claude/coordinator/` for the same project.
+Resume the existing directory when the requested work is a continuation, even across
+subagent or conversation turnover.
 
 | File | Source of truth for |
 | --- | --- |
@@ -50,7 +50,7 @@ or conversation turnover.
 
 Keep `spec.md` current rather than adding change history. Record why it changed in
 `decisions.md` when the reason will matter later. Follow repository policy for
-tracking `.codex/`; when unspecified, leave `.codex/coordinator/` untracked.
+tracking `.claude/`; when unspecified, leave `.claude/coordinator/` untracked.
 
 ## Establish the project
 
@@ -58,7 +58,7 @@ Before implementation or delegation:
 
 1. Preserve the user's request verbatim in `project.md`, plus resolved assumptions and
    constraints. Persist conversation-only inputs or protected-source summaries that
-   later agents need; do not rely on conversation history.
+   later subagents need; do not rely on conversation history.
 2. Consolidate the current behavior and cross-component contracts in `spec.md`.
    Resolve a missing decision with the user when it changes scope, architecture,
    external behavior, cost, or risk.
@@ -76,7 +76,7 @@ time or reassign owned work without a recorded handoff.
 ## Coordinate execution
 
 The parent coordinator is the only writer to the coordination directory. Delegated
-agents read `project.md`, `spec.md`, `tasks.md`, and `decisions.md`, edit only their
+subagents read `project.md`, `spec.md`, `tasks.md`, and `decisions.md`, edit only their
 assigned implementation scope, and return a report. They must not edit coordination
 files. This keeps concurrent updates serial and prevents task-state merge conflicts.
 
@@ -84,20 +84,20 @@ Before delegating a task:
 
 1. Re-read `spec.md`, `tasks.md`, and the latest `progress.md` entries.
 2. Confirm dependencies are `done` and the scope does not overlap another active task.
-3. Record the task as `active` with agent or session identifier, responsibility and
+3. Record the task as `active` with subagent or session identifier, responsibility and
    files, worktree and branch, start time with timezone, and verification command.
-4. Put the absolute coordination-directory path and task ID in the agent prompt.
-   Require the agent to report changed files, verification results, remaining work,
+4. Put the absolute coordination-directory path and task ID in the subagent prompt.
+   Require the subagent to report changed files, verification results, remaining work,
    and blockers.
 
-Use parallel agents only for independent `ready` tasks and only when delegation is
-available and authorized. Use separate worktrees when agents cannot safely edit the
-same checkout. Do not create parallel work merely to keep agents busy.
+Use parallel subagents only for independent `ready` tasks and only when delegation is
+available and authorized. Use separate worktrees when subagents cannot safely edit
+the same checkout. Do not create parallel work merely to keep subagents busy.
 
-Treat worker reports as claims. Inspect the resulting state and verification evidence
-before marking a task `review` or `done`. Append the outcome to `progress.md`, then
-update `tasks.md` and any affected `spec.md` or `decisions.md`. Re-read the coordination
-files before every user status report.
+Treat subagent reports as claims. Inspect the resulting state and verification
+evidence before marking a task `review` or `done`. Append the outcome to
+`progress.md`, then update `tasks.md` and any affected `spec.md` or `decisions.md`.
+Re-read the coordination files before every user status report.
 
 ## Limits and stop conditions
 
@@ -105,7 +105,7 @@ files before every user status report.
   checkpoint before continuing in a later invocation.
 - After two failed attempts for the same task, mark it `blocked` with the failure,
   restart condition, and required decision instead of retrying automatically.
-- Every wait for an agent or external state must have a timeout of at most ten
+- Every wait for a subagent or external state must have a timeout of at most ten
   minutes. On timeout, continue independent work or record the wait state; do not
   treat silence as task completion or abandonment.
 - Stop when all required tasks are verified `done`, a user decision is required, no

@@ -1,56 +1,59 @@
 ---
 name: start-project
-description: Initialize project planning or specification documents from a repository's existing templates, generators, and conventions. Use when asked to start a documented project, create a project-spec draft, or scaffold planning docs. Do not use for codebase scaffolding when no planning-document workflow is requested.
+description: Initialize project planning and specification documents from templates bundled with this skill. Use when asked to start a documented project, create a project-spec draft, or scaffold planning docs. Do not use for codebase scaffolding when no planning-document workflow is requested.
 ---
 
 # Start a documented project
 
-Create the repository-native project documentation without importing assumptions from
-another project. Repository instructions and the discovered template contract take
-precedence over this general workflow.
+Generate a self-contained planning workspace from this skill's templates. Repository
+instructions determine how the draft is refined, but the skill does not depend on a
+repository-local template or generator.
 
-## Discover the local contract
+## Inputs
 
-1. Resolve the workspace root, documentation root, and any target repositories. Read
-   the applicable `AGENTS.md` files and the relevant parts of `README.md`.
-2. Search for project-start instructions, generators, and templates. Check likely
-   locations such as repository skills, `scripts/`, `tools/`, package tasks,
-   `docs/_template/`, and the documentation index. Prefer `rg` and `rg --files` for
-   discovery.
-3. If a repository-local start-project skill or guide exists, read it completely and
-   follow it. Do not assume another assistant's configuration applies unless the
-   repository instructions explicitly route to it.
-4. Derive required inputs from the local contract. Typical inputs include a slug,
-   display name, participating components, source or parent issue, and an alternate
-   output directory. Infer values only when the user's request or repository makes
-   them unambiguous; ask for a material missing choice.
+Resolve the workspace root and read the applicable `AGENTS.md` files and relevant
+`README.md` sections. Determine:
 
-## Generate safely
+- a kebab-case project slug;
+- a display name;
+- the participating components, if the work has separately owned areas; and
+- an optional source document or parent issue URL.
 
-- Prefer the repository's maintained generator over manually copying a template.
-  Inspect its help or source first so supported arguments, defaults, and side effects
-  are understood.
-- Confirm the destination before writing. Never overwrite, delete, or "start over"
-  from an existing project directory without explicit user authorization.
-- Pass only supported values and preserve repository-defined naming rules. Use an
-  alternate output option for validation when the generator provides one.
-- If there is a template but no generator, reproduce the documented copy,
-  substitution, component-selection, numbering, and index-registration behavior.
-  Avoid broad replacements outside the new project and its documented index entry.
-- If neither a template nor a local workflow exists, do not invent a large document
-  taxonomy. Build only the smallest planning structure supported by the request and
-  current repository conventions, or ask for the intended format when that choice is
-  consequential.
-- Treat a failed run as potentially partial. Inspect its output and report the state;
-  do not remove or overwrite partial files automatically.
+Infer inputs only when the request or repository makes them unambiguous. Ask for a
+material missing choice. Component identifiers must be kebab-case and should describe
+responsibilities such as `backend`, `web`, `mobile`, or `infrastructure`; do not assume
+a fixed technology stack.
+
+## Generate
+
+Run the bundled generator from the workspace root:
+
+```bash
+python3 <skill-directory>/scripts/new_project.py \
+  --slug <project-slug> \
+  --name '<display name>' \
+  --components backend,web \
+  --source '<optional URL or document reference>'
+```
+
+`--components` and `--source` are optional. `--docs-dir` defaults to `docs` relative
+to the current directory. The generator reads only
+`assets/project-template/` from this skill, creates `docs/<slug>/` atomically, and
+refuses an existing destination. Do not copy templates by hand or substitute a
+repository-local template.
+
+Never overwrite, delete, or recreate an existing project directory without explicit
+user authorization. A failed run may be retried only after inspecting its output and
+confirming the destination was not created.
 
 ## Refine the draft
 
-- Populate facts available from the user's request and repository. Keep explicit
-  placeholders for unknown product decisions instead of fabricating them.
-- Preserve each file's intended responsibility, frontmatter, headings, and status
-  vocabulary. Apply repository-specific rules for source-of-truth ownership,
-  cross-document references, issue transfer, privacy, and progress tracking.
+- Populate facts available from the request and repository. Leave `TBD` for unknown
+  product or technical decisions instead of fabricating them.
+- Adapt component sections to the repository's actual architecture while preserving
+  each file's responsibility and avoiding duplicated requirements.
+- Apply repository-specific rules for source-of-truth ownership, references,
+  privacy, status tracking, and issue transfer.
 - Do not add AI attribution or signatures unless the user or repository requires
   them.
 - Creating local drafts does not authorize publishing issues, pull requests, or
@@ -61,12 +64,10 @@ precedence over this general workflow.
 Before reporting completion, verify:
 
 - the expected directory and files exist;
-- required template tokens were replaced and remaining placeholders are intentional;
-- selected and omitted components match the request;
-- any required documentation index was updated exactly once;
-- generated links, frontmatter, numbering, and status values satisfy the local
-  contract; and
+- no `{{PLACEHOLDER}}` tokens remain;
+- selected components each have one specification file and task section;
+- remaining `TBD` values are intentional; and
 - version-control status, where applicable, contains no unintended changes.
 
-Report the created paths, registration result, important defaults or inferred
-choices, and the remaining placeholders or next decisions.
+Report the created paths, selected components, source reference, and remaining
+decisions.

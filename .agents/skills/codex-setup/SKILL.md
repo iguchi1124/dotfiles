@@ -64,7 +64,7 @@ Review and Report use fresh built-in `default` agents: Review runs only an adopt
 
 - `$orchestrator` coordinates all five stages with durable project state.
 - `$code-review-autofix` handles bounded review, fix, push, and re-review cycles.
-- `$start-project` initializes planning and specification documents from each repository's own templates, generators, and conventions.
+- `$start-project` initializes planning and specification documents from templates and a generator bundled with the skill.
 - `$codex-setup` remains repository-scoped so it does not appear in unrelated projects.
 
 ## Verify

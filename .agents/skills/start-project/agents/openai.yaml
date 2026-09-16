@@ -1,0 +1,4 @@
+interface:
+  display_name: "Start Project"
+  short_description: "Scaffold project planning docs from repository templates"
+  default_prompt: "Use $start-project to initialize planning documents for this project from its repository-local template."

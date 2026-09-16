@@ -43,7 +43,7 @@ That skill is also where the rationale lives — why files are copied individual
 ## Codex setup
 
 `.codex/` holds Codex's global `AGENTS.md`, custom-agent TOML files, and the initial `config.toml.template`. `.agents/skills/` holds the `orchestrator`,
-`code-review-autofix`, and repository-scoped `codex-setup` skills.
+`code-review-autofix`, `start-project`, and repository-scoped `codex-setup` skills.
 
 Install them with:
 

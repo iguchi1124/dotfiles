@@ -13,10 +13,10 @@
 .vscode/
 
 # Claude Code
-**/.claude/harness/
+**/.claude/orchestrator/
 
 # Codex
-**/.codex/harness/
+**/.codex/orchestrator/
 
 # Local worktree file-copy configuration
 .worktreeinclude

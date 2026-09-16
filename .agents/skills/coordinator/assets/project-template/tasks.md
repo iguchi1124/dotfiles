@@ -20,7 +20,7 @@ overlap.
 - Owner/session: coordinator
 - Started/updated: {{CREATED_AT}}
 - Responsibility: Refine `project.md` and `spec.md`; replace this seed task with the executable task graph.
-- Files or systems: `.codex/coordinator/{{RUN_NAME}}/`
+- Files or systems: `.coordinator/{{RUN_NAME}}/`
 - Worktree/branch: current project root / current branch
 - Done when: Requirements, dependencies, task boundaries, and verification are explicit.
 - Verification: Re-read all coordination files and confirm every required outcome maps to at least one task.

@@ -27,7 +27,7 @@ It installs nothing under `~/.claude`, `~/.codex`, or `~/.agents`; the correspon
 
 ## Claude Code setup
 
-`.claude/` contains the global `CLAUDE.md`, custom agents, rules, skills, and the initial `settings.json.template`. Its `coordinator` skill manages durable specifications and parallel task ownership, while `orchestrator` runs bounded implementation workflows. Install or refresh them with:
+`.claude/` contains the global `CLAUDE.md`, custom agents, rules, skills, and the initial `settings.json.template`. Its `coordinator` skill shares durable project state with Codex under the active project's `.coordinator/`, while `orchestrator` runs bounded implementation workflows. Install or refresh them with:
 
 ```sh
 sh "$HOME/.dotfiles/.claude/skills/claude-setup/install.sh"
@@ -40,7 +40,7 @@ Read `.claude/skills/claude-setup/SKILL.md` before changing this layout. Like Co
 Codex configuration is versioned in two trees:
 
 - `.codex/` contains the global `AGENTS.md`, custom-agent TOML files, and the initial `config.toml.template`.
-- `.agents/skills/` contains Codex skills. `orchestrator` uses custom `planner` / `generator` / `evaluator` agents and built-in `default` agents for review and reporting, `coordinator` manages durable specifications and parallel task ownership, `code-review-autofix` handles review round-trips, and `codex-setup` installs everything.
+- `.agents/skills/` contains Codex skills. `orchestrator` uses custom `planner` / `generator` / `evaluator` agents and built-in `default` agents for review and reporting, `coordinator` shares durable project state with Claude Code under the active project's `.coordinator/`, `code-review-autofix` handles review round-trips, and `codex-setup` installs everything.
 
 The main installer deliberately leaves these user-owned locations alone. Install or refresh Codex configuration with:
 

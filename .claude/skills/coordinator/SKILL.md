@@ -1,6 +1,6 @@
 ---
 name: coordinator
-description: Coordinate multi-task or multi-agent projects through durable specifications, task dependencies, ownership, decisions, and progress records. Use when parallel or long-running work needs shared state to prevent overlap and rework. Do not use for a single bounded implementation or merely because several files change.
+description: Coordinate multi-task or multi-agent projects through durable, cross-tool specifications, task dependencies, ownership, decisions, and progress records. Use when parallel or long-running work needs shared state across Codex, Claude Code, agents, or sessions to prevent overlap and rework. Do not use for a single bounded implementation or merely because several files change.
 ---
 
 # Coordinator
@@ -29,14 +29,17 @@ python3 <skill-directory>/scripts/init_project.py \
   --request-file <file-containing-the-user-request>
 ```
 
-The initializer creates `.claude/coordinator/<YYYYMMDD>-<slug>/` atomically. Omit
+The initializer creates `.coordinator/<YYYYMMDD>-<slug>/` atomically. This path is
+shared with the Codex version of the skill. Omit
 `--request-file` only when the exact request will be inserted into `project.md`
 immediately afterward. `--root` may select another active worktree. Never overwrite,
 delete, or recreate an existing project directory without explicit authorization.
 
-Before creating a directory, search `.claude/coordinator/` for the same project.
-Resume the existing directory when the requested work is a continuation, even across
-subagent or conversation turnover.
+Before creating a directory, search `.coordinator/` for the same project. Resume the
+existing directory when the requested work is a continuation, even across tools,
+subagents, or conversations. Runs created by an older skill version under
+`.codex/coordinator/` or `.claude/coordinator/` remain resumable in place; do not copy,
+move, or merge them without explicit authorization.
 
 | File | Source of truth for |
 | --- | --- |
@@ -50,7 +53,7 @@ subagent or conversation turnover.
 
 Keep `spec.md` current rather than adding change history. Record why it changed in
 `decisions.md` when the reason will matter later. Follow repository policy for
-tracking `.claude/`; when unspecified, leave `.claude/coordinator/` untracked.
+tracking `.coordinator/`; when unspecified, leave `.coordinator/` untracked.
 
 ## Establish the project
 
@@ -79,6 +82,9 @@ The parent coordinator is the only writer to the coordination directory. Delegat
 subagents read `project.md`, `spec.md`, `tasks.md`, and `decisions.md`, edit only their
 assigned implementation scope, and return a report. They must not edit coordination
 files. This keeps concurrent updates serial and prevents task-state merge conflicts.
+Only one parent coordinator session may be active for a project across Codex and
+Claude Code. Before switching tools or sessions, append a handoff to `progress.md`;
+the receiving coordinator must re-read every coordination file before updating state.
 
 Before delegating a task:
 

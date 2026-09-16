@@ -30,7 +30,7 @@ TEMPLATE_FILES = (
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Create .claude/coordinator/<date>-<slug> from bundled templates."
+        description="Create .coordinator/<date>-<slug> from bundled templates."
     )
     parser.add_argument("--slug", required=True, help="short kebab-case project slug")
     parser.add_argument("--name", required=True, help="project display name")
@@ -110,7 +110,7 @@ def main() -> int:
         raise SystemExit(f"error: project root not found: {root}")
     status = initial_status(root)
     run_name = f"{args.date}-{args.slug}"
-    parent = root / ".claude" / "coordinator"
+    parent = root / ".coordinator"
     target = parent / run_name
     if target.exists():
         raise SystemExit(f"error: destination already exists: {target}")

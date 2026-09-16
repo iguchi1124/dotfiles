@@ -8,7 +8,7 @@ scope: "Original request, goal, boundaries, constraints, and completion criteria
 
 # {{PROJECT_NAME}}
 
-Coordination directory: `.claude/coordinator/{{RUN_NAME}}/`
+Coordination directory: `.coordinator/{{RUN_NAME}}/`
 
 ## Original request
 

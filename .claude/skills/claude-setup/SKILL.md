@@ -120,7 +120,7 @@ resumable from their original directory.
 
 The skill that maintains durable specifications, task dependencies, ownership,
 decisions, progress, and retrospectives for multi-task or multi-agent projects. Its
-state lives in the active project's `.claude/coordinator/<project-dir>/`, allowing
-independent subagents and later sessions to share a precise source of truth without
-overlapping work. It may delegate a bounded task to `orchestrator` when that task
-independently needs the orchestrated workflow.
+state lives in the active project's tool-neutral `.coordinator/<project-dir>/`, so
+Codex, Claude Code, independent subagents, and later sessions share one precise source
+of truth without overlapping work. It may delegate a bounded task to `orchestrator`
+when that task independently needs the orchestrated workflow.

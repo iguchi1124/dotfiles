@@ -436,7 +436,12 @@ stays inside the finished comment's `<details>` block, so a poll keyed on
 that phrase alone never terminates. The status signal is complete when
 the text leads with a terminal form ("No actionable comments were
 generated ..." / "Actionable comments posted: N") and its "up to `<sha>`"
-names the pushed head, paired with that agent's unresolved-thread check. The wait completes only when
+names the pushed head, paired with that agent's unresolved-thread check.
+Some CodeRabbit configurations never write an actionable line and end the
+walkthrough with a `**Merge Risk:** … · up to <sha>` block instead; there
+the review object (commit association plus a non-empty body or a new
+top-level comment) and the thread count are the only completion signals —
+a poll waiting for the actionable-line form would run to the cap. The wait completes only when
 **every** target agent has either shown post-push review activity or
 individually hit the 15-minute cap below — one agent's re-review plus
 another agent's old threads going outdated can drive an aggregate thread

@@ -2,7 +2,8 @@
 name: planner
 description: Breaks a task into verifiable steps and returns an implementation plan. Writes no code. Use for "plan this", "how should we proceed", "design this", or as the stage before generator. Suits vague requests and changes spanning several files.
 tools: Read, Grep, Glob, Bash, WebFetch, WebSearch
-model: inherit
+model: claude-fable-5-1
+effort: high
 ---
 
 # planner

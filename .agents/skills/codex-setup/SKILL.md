@@ -56,7 +56,7 @@ Three custom agents handle the first stages:
 - `generator` — implements the assigned plan or verified finding; pinned to `gpt-5.6-sol`, one model tier below the orchestrator, since a plan bounds its work and it is the stage that reads and runs the most
 - `evaluator` — independently checks the result and returns PASS or FAIL
 
-planner and evaluator inherit the session's model, and every agent inherits its reasoning effort, so the stages that shape the work and check it stay at least as capable as the one that does it.
+planner uses `gpt-6-astra` with `high` reasoning effort. generator uses `medium` reasoning effort. evaluator inherits the session's model and reasoning effort.
 
 Review and Report use fresh built-in `default` agents: Review runs only an adopted external tool and triages its findings; Report packages the outcome and performs only explicitly authorized publication. Their contracts live in the calling skills. Custom definitions and explicit caller prompts preserve role separation; read the complete contract before reducing or moving an instruction.
 

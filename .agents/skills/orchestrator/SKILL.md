@@ -284,10 +284,7 @@ nothing qualifies, skip silently - no forced findings. Otherwise:
 ## Gotchas
 
 - **One task-dir per feature.** A follow-up sprint on the same feature
-  continues in the same task-dir, including a legacy one under
-  `.claude/orchestrator/`, `.codex/orchestrator/`, `.claude/harness/`, or
-  `.codex/harness/` - resume those in place, never move them; new runs use
-  `.orchestrator/`, and a different feature gets a new one.
+  continues in the same task-dir; a different feature gets a new one.
 - Isolate the task in a worktree when the main working tree has another
   branch's work in progress, or before any stage that holds the tree for
   minutes (the external review, a full test run) - the user keeps using the

@@ -114,8 +114,7 @@ the outcome as a report or a GitHub Pull Request/Issue. State passes
 through files in the project's tool-neutral `.orchestrator/<task-dir>/`, so long tasks
 survive context compaction, every agent is spawned fresh, and a run started in Codex
 resumes here. Installed globally so it is one `/orchestrator` away in any project.
-Existing runs under `.claude/orchestrator/` or `.claude/harness/` remain resumable
-from their original directory. Like `coordinator` below, the skill is one source
+Like `coordinator` below, the skill is one source
 shared with Codex: `.agents/skills/orchestrator/`, linked from `.claude/skills/`.
 
 ### coordinator

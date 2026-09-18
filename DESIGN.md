@@ -126,8 +126,7 @@ instructions from the repository's root `AGENTS.md` when editing
 ## Machine state stays on the machine
 
 What a run produces or learns locally is not synced: `.orchestrator/` task
-state (and the legacy `.claude/orchestrator/` and `.codex/orchestrator/`
-directories) is globally ignored, as is `.coordinator/` project state. Per-project
+state and `.coordinator/` project state are globally ignored. Per-project
 `env.sh` is ignored, and skill learnings live under the installed
 `~/.claude/skills/` or `~/.agents/skills/` directory, not here. The repo
 describes behavior; the machine accumulates history.

@@ -56,23 +56,27 @@ Three custom agents handle the first stages:
 - `generator` — implements the assigned plan or verified finding; pinned to `gpt-5.6-sol`, one model tier below the orchestrator, since a plan bounds its work and it is the stage that reads and runs the most
 - `evaluator` — independently checks the result and returns PASS or FAIL
 
-planner uses `gpt-6-astra` with `high` reasoning effort. generator uses `medium` reasoning effort. evaluator inherits the session's model and reasoning effort.
+planner uses `gpt-6-astra` with `high` reasoning effort. generator uses `medium` reasoning effort. evaluator uses `gpt-6-astra` with `high` reasoning effort as well: it is the PASS/FAIL gate on generator's work and must not be weaker than what it checks.
 
 Review and Report use fresh built-in `default` agents: Review runs only an adopted external tool and triages its findings; Report packages the outcome and performs only explicitly authorized publication. Their contracts live in the calling skills. Custom definitions and explicit caller prompts preserve role separation; read the complete contract before reducing or moving an instruction.
 
 ### Skills
 
-- `$orchestrator` coordinates all five stages with durable project state.
-- `$code-review-autofix` handles bounded review, fix, push, and re-review cycles.
+- `$orchestrator` coordinates all five stages with durable task state in a
+  tool-neutral `.orchestrator/` directory shared with Claude Code.
 - `$coordinator` manages durable specifications, task dependencies, ownership,
   decisions, and progress in a tool-neutral `.coordinator/` directory shared with
   Claude Code.
 - `$codex-setup` remains repository-scoped so it does not appear in unrelated projects.
+
+The first two are one source each, shared with Claude Code through the
+`.claude/skills/<name>` symlinks; where the tools differ, the source names both
+variants.
 
 ## Verify
 
 Restart Codex after installation, then confirm:
 
 1. Repository-managed custom agents are `planner`, `generator`, and `evaluator`; confirmed stale `reviewer` and `reporter` definitions are absent. Review and Report use the built-in `default` type.
-2. Skill selection includes `orchestrator`, `coordinator`, and `code-review-autofix`.
+2. Skill selection includes `orchestrator` and `coordinator`.
 3. A newly created `config.toml` matches the template; an existing configuration remains unchanged.

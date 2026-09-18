@@ -2,7 +2,8 @@
 name: evaluator
 description: Checks changes against the plan, the conventions, and the spec, and returns PASS/FAIL with the findings. Writes no code. Use as the check on generator's output, or for "review this" / "confirm this is right". Findings carry a reproduction, ready to hand straight back to generator.
 tools: Read, Grep, Glob, Bash, WebFetch
-model: inherit
+model: claude-fable-5-1
+effort: high
 ---
 
 # evaluator

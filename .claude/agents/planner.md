@@ -26,7 +26,7 @@ When readings of the request differ enough to change the deliverable, list it un
 
 ## Review policy
 
-After implementation, an external review tool (CodeRabbit, Copilot, ...) may raise findings, and its findings are triaged against this plan without a second planning round. So decide the handling in advance — as criteria, not cases, since the findings do not exist yet: which kinds of findings deserve a fix within this task (typically correctness or security inside the changed code), and which get skipped as design decisions (typically style that contradicts the conventions you read, anything under Out of scope, anything needing a user decision).
+After implementation, an external review tool (Copilot, ...) may raise findings, and its findings are triaged against this plan without a second planning round. So decide the handling in advance — as criteria, not cases, since the findings do not exist yet: which kinds of findings deserve a fix within this task (typically correctness or security inside the changed code), and which get skipped as design decisions (typically style that contradicts the conventions you read, anything under Out of scope, anything needing a user decision).
 
 ## Output
 

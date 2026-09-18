@@ -12,11 +12,9 @@
 # Visual Studio Code
 .vscode/
 
-# Claude Code
-**/.claude/orchestrator/
-
-# Codex
-**/.codex/orchestrator/
+# Orchestrator and coordinator state (Claude Code and Codex share one skill each)
+**/.orchestrator/
+**/.coordinator/
 
 # Local worktree file-copy configuration
 .worktreeinclude

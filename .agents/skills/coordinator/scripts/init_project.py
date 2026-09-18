@@ -18,6 +18,7 @@ TEMPLATE_DIR = SKILL_DIR / "assets" / "project-template"
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 DATE_PATTERN = re.compile(r"^[0-9]{8}$")
 TOKEN_PATTERN = re.compile(r"{{[A-Z0-9_]+}}")
+GIT_STATUS_TIMEOUT = 30
 TEMPLATE_FILES = (
     "project.md",
     "spec.md",
@@ -69,19 +70,23 @@ def render(template_name: str, values: dict[str, str]) -> str:
         raise ValueError(
             f"unknown template tokens in {template_name}: {', '.join(unknown)}"
         )
-    for key, value in values.items():
-        content = content.replace("{{" + key + "}}", value)
-    return content
+    return TOKEN_PATTERN.sub(lambda match: values[match.group(0)[2:-2]], content)
 
 
 def initial_status(root: Path) -> str:
-    result = subprocess.run(
-        ["git", "status", "--porcelain"],
-        cwd=root,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    try:
+        result = subprocess.run(
+            ["git", "status", "--porcelain"],
+            cwd=root,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=GIT_STATUS_TIMEOUT,
+        )
+    except subprocess.TimeoutExpired:
+        return f"(git status timed out after {GIT_STATUS_TIMEOUT}s)\n"
+    except FileNotFoundError:
+        return "(git unavailable)\n"
     if result.returncode != 0:
         return "(not a Git worktree)\n"
     return result.stdout if result.stdout else "(clean)\n"

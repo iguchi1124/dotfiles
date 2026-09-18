@@ -42,7 +42,7 @@ A skill shared with Codex has one source in `.agents/skills/<name>/`, and `.clau
 Codex configuration is versioned in two trees:
 
 - `.codex/` contains the global `AGENTS.md`, custom-agent TOML files, and the initial `config.toml.template`.
-- `.agents/skills/` contains Codex skills. `orchestrator` uses custom `planner` / `generator` / `evaluator` agents and built-in `default` agents for review and reporting, keeping task state under the active project's `.orchestrator/`; `coordinator` shares durable project state under the active project's `.coordinator/`; `code-review-autofix` handles review round-trips; and `codex-setup` installs everything. The first three are single sources shared with Claude Code (linked from `.claude/skills/`).
+- `.agents/skills/` contains Codex skills. `orchestrator` uses custom `planner` / `generator` / `evaluator` agents and built-in `default` agents for review and reporting, keeping task state under the active project's `.orchestrator/`; `coordinator` shares durable project state under the active project's `.coordinator/`; `code-review-autofix` fixes review findings in one verify, push, and re-review pass; and `codex-setup` installs everything. The first three are single sources shared with Claude Code (linked from `.claude/skills/`).
 
 The main installer deliberately leaves these user-owned locations alone. Install or refresh Codex configuration with:
 

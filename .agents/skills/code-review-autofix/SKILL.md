@@ -1,35 +1,33 @@
 ---
 name: code-review-autofix
 description: >
-  Automatically fixes review findings on a pull request. Default is a single round;
-  -r / --recursive repeats fix → push → wait for re-review → fix again until
-  the findings reach zero (round cap 3, changeable with -n). Review agents
-  (Copilot, Gemini Code Assist, or any other bot reviewer) are waited on for
-  re-review. Every fixed finding author is notified, preferably by replying
-  in-thread; developer deferrals are also replied in-thread, but their
-  re-review is never waited on. Runs fully
-  unattended, with no per-change approval prompts. Use only when the user
-  explicitly asks to fix all review findings, handle review round-trips, run
-  recursive autofix, or run autofix on a branch. Do not use for an ordinary
-  code review.
-  On a branch with no pull request it runs the loop against the committed diff via the
-  repository's adopted local review CLI.
+  Automatically fixes review findings on a pull request in one pass: verify,
+  fix, push, then wait for the review agents (Copilot, Gemini Code Assist, or
+  any other bot reviewer) to re-review and report the resulting state. Every
+  fixed finding author is notified, preferably by replying in-thread;
+  developer deferrals are also replied in-thread, but their re-review is
+  never waited on. Runs fully unattended, with no per-change approval
+  prompts. Use only when the user explicitly asks to fix all review findings,
+  handle a review round-trip, or run autofix on a branch. Do not use for an
+  ordinary code review. On a branch with no pull request it runs the pass
+  against the committed diff via the repository's adopted local review CLI.
 ---
 
 # Code Review Autofix
 
-Drives the fix → push → re-review → fix-again cycle with any review agent,
-fully unattended. Run only after the user explicitly requests autofix; that request
+Drives one fix → push → re-review pass with any review agent, fully
+unattended. Run only after the user explicitly requests autofix; that request
 authorizes the documented operations below on the named or current branch or pull
-request, but not unrelated remote changes. The goal is a pull request that is clean by
-the time the user comes back to it; the price of running without approval prompts is
-strict adherence to the termination conditions and safety rules below.
+request, but not unrelated remote changes. The goal is a pull request whose current
+findings are fixed or answered by the time the user comes back to it; whatever the
+re-review raises next is reported, never looped on. The price of running without
+approval prompts is strict adherence to the termination conditions and safety rules
+below.
 
-Round count is an option, detailed under Arguments: single round by
-default, `-r` to loop until convergence, `-n` to change the cap. An
-unlimited cap cannot be requested — the finite round cap is how this
-skill implements its no-infinite-loop rule, so it always holds a
-concrete number.
+The run is always a single pass. There is no repeat option: the one pass, the
+per-finding retry cap, and the polling cap are how this skill implements its
+no-infinite-loop rule. To act on the re-review's new findings, the user runs it
+again.
 
 ## Concept — why a detached reviewer
 
@@ -80,21 +78,18 @@ in any combination:
 - Reviewer login (`copilot-pull-request-reviewer[bot]`, `gemini-code-assist[bot]`,
   ...) → pin the review agent whose re-review is waited on (developer-thread
   handling is unchanged)
-- `-r` / `--recursive` → recursive mode: loop until convergence, up to 3
-  rounds (combines with the other arguments)
-- `-n <N>` / `--max-rounds <N>` → change the round cap to N (positive
-  integers only; implies recursive, so `-r` is redundant). Invalid values
-  (0, negative, non-numeric, unlimited) are reported and stop the run
 - `-h` / `--help` → print the help below verbatim and **stop**. No review,
   no fixes
-- No arguments → run the current branch in single mode, one round
+- Any other option (including a round count or repeat flag) → report it as
+  unsupported and stop; the run is always one pass
+- No arguments → run the current branch
 
 ### What -h prints
 
 When `-h` / `--help` is passed, print the following in a code block and stop:
 
 ```text
-code-review-autofix [pull request number|pull request URL|branch] [reviewer login] [-r|--recursive] [-n <N>|--max-rounds <N>] [-h|--help]
+code-review-autofix [pull request number|pull request URL|branch] [reviewer login] [-h|--help]
 
 Arguments (any order, all optional):
   <pull request number> / #<num>
@@ -104,18 +99,17 @@ Arguments (any order, all optional):
   <branch>              check out that branch and run
   <reviewer login>      pin the review agent whose re-review is waited on
                         (e.g. copilot-pull-request-reviewer[bot], gemini-code-assist[bot])
-  -r, --recursive       repeat until the findings reach zero (default cap
-                        3 rounds). Default without it is a single round
-  -n, --max-rounds <N>  change the round cap to N (positive integer; implies -r)
   -h, --help            print this help and exit
 
-No arguments: run the current branch in single mode
+No arguments: run the current branch. The run is always one pass; run it
+again to act on the re-review's new findings.
 
 Modes (auto-detected):
   pull request mode  the branch has an open pull request
-                     → loop fix → push → wait for re-review
-  local mode         no open pull request → loop the local review CLI over
-                     the diff vs base (no pushing; the CLI is required)
+                     → fix → push → wait for re-review → report
+  local mode         no open pull request → run the local review CLI over
+                     the diff vs base, fix, commit (no pushing; the CLI is
+                     required)
 
 Precondition: a clean working tree
 ```
@@ -130,19 +124,18 @@ if not, run **local mode**.
 
 ## Local mode (no pull request)
 
-On a branch with no pull request yet, run the loop entirely through the
+On a branch with no pull request yet, run the pass entirely through the
 repository's adopted local review CLI, without GitHub:
 
 ```text
-for round in 1, 2, ..., cap:   # inclusive; the cap comes from -n / the mode
-  1. spawn a fresh built-in agent with the Local review contract
-     to run the CLI against the base branch
-     → zero findings: success, stop
-  2. verify each finding under the same safety rules as Step 2 and apply
-     only the valid fixes
-  3. nothing applied (all deferred) → abort, stop
-  4. create the consolidated commit (no push)
-findings remain after the last round → abort and report them
+1. spawn a fresh built-in agent with the Local review contract
+   to run the CLI against the base branch
+   → zero findings: success, stop
+2. verify each finding under the same safety rules as Step 2 and apply
+   only the valid fixes
+3. nothing applied (all deferred) → abort, stop
+4. create the consolidated commit (no push)
+deferred findings remain → abort and report them
 ```
 
 - The target is the **committed diff against the base branch** (the default
@@ -156,10 +149,9 @@ findings remain after the last round → abort and report them
 - This mode requires the local review CLI. Missing, unauthenticated,
   rate-limited, or unsupported → report and stop (include the wait time the
   error reports)
-- A CLI may share its review quota with pull-request-side reviews. A
-  recursive local run can exhaust it by itself, which then also blocks the
-  pre-review of a following pull request run — budget rounds accordingly
-  and never exceed the requested cap
+- A CLI may share its review quota with pull-request-side reviews, so a
+  local run spends quota a following pull request run would also need —
+  say so in the report when the CLI reports a limit
 - Use the invocation the adoption evidence documents, and check the CLI's
   `--help` for current flags first; never guess at options
 - No pushing and no pull request creation — those are the user's. Add to the final
@@ -202,7 +194,7 @@ Apply the caller's existing unavailable-tool handling to `NO-REVIEWER` and
 
 Reviewers are named by role: **review agents** (reviewers that re-review
 automatically in response to a push) and **developers** (reviewers whose
-re-review never comes on its own). Both are fixed; the loop treats them
+re-review never comes on its own). Both are fixed; the pass treats them
 differently:
 
 - **Review agents** (the ones whose re-review is waited on): unless a login
@@ -218,26 +210,27 @@ differently:
   the fix and commit SHA or the defer reason. Never resolve the thread —
   that is the author's call. **A thread whose last comment is our own reply, with
   nothing newer, counts as handled** and is skipped — without this check,
-  every run and every round would re-process already-answered findings
+  every run would re-process already-answered findings
 
-## The loop
+## The pass
 
 ```text
-for round in 1, 2, ..., cap:   # inclusive; the cap comes from -n / the mode
-  1. fetch the unresolved, non-outdated threads
-     → zero agent threads and no unhandled developer threads: success, stop
-  2. verify every finding (agents + developers) and apply only the valid
-     fixes (safety rules below)
-  3. findings existed but none were applied (all deferred) → reply to every
-     handled developer comment with its defer reason, then abort. Do not push;
-     report the remainder as "needs developer judgment"
-  4. if a local review CLI exists, run a local review → fix pass before
-     pushing (Step 1)
-  5. push the consolidated commit. Post finding-author notifications
-  6. wait for the review agents' re-review (polling, 15 minutes max) → next
-     round. If no review agent exists on the pull request (only developer findings
-     were handled), stop without waiting
-findings remain after the last round → abort and report them
+1. fetch the unresolved, non-outdated threads
+   → zero agent threads and no unhandled developer threads: success, stop
+2. verify every finding (agents + developers) and apply only the valid
+   fixes (safety rules below)
+3. findings existed but none were applied (all deferred) → reply to every
+   handled developer comment with its defer reason, then abort. Do not push;
+   report the remainder as "needs developer judgment"
+4. if a local review CLI exists, run a local review → fix pass before
+   pushing (Step 1)
+5. push the consolidated commit. Post finding-author notifications
+6. wait for the review agents' re-review (polling, 15 minutes max), then
+   fetch the threads once more and report the final state. If no review
+   agent exists on the pull request (only developer findings were handled),
+   stop without waiting
+findings remain after the re-review → abort and report them; never start
+a second pass
 ```
 
 Success means "unresolved agent threads = 0" **and** "every developer thread
@@ -262,14 +255,14 @@ review → fix → re-review pass
   still in progress, it has not failed: read its log file and wait for its
   second report instead of re-spawning it
 - Verify, fix, and defer findings under the same safety rules as Step 2
-- Stop when clean, or after **2 local rounds**, then push. Local rounds do
-  not count against the pull request loop's cap
+- Stop when clean, or after **2 local rounds**, then push. This inner
+  pre-push loop is the only repetition in the skill and is capped here
 - CLI missing, unauthenticated, or failing to start → skip and proceed with
-  the pull request loop alone (not a stop reason): record the local round
-  as NOT-RUN and do not retry the same invocation in that round
+  the pull request pass alone (not a stop reason): record the local round
+  as NOT-RUN and do not retry the same invocation
 - A locally clean diff can still draw new findings on the pull request side (different
   context: the final diff vs base, organization settings). Never skip the
-  pull request loop
+  pull request pass
 
 ### Fetching the pull request findings
 
@@ -293,7 +286,7 @@ with a bounded, non-blocking wait (as in Step 3) and fetch again.
 If a target review agent instead reports it declined to review at all
 (typically a draft-pull-request skip notice) — zero threads from that
 agent means "never reviewed," not "reviewed clean." Fall back to that
-agent's local CLI (Step 1) as the review source for the round instead,
+agent's local CLI (Step 1) as the review source for the pass instead,
 still pushing any resulting fixes to the pull request branch normally; do
 not wait for that agent's GitHub-side re-review while the decline
 condition holds (Step 3's skip-polling case extends to this); and do not
@@ -323,9 +316,9 @@ stages — above all the **independent validity check**: reviewer's `fix`
 triage is a classification against the policy you gave it, not
 verification, so before an item reaches generator you still read the
 target code and confirm the finding yourself (defer on doubt). If
-verification leaves no fix items at all, the round is complete without
+verification leaves no fix items at all, the pass is complete without
 touching generator (zero findings → success, all deferred → abort, as
-defined in the loop).
+defined in the pass).
 
 Process the fix items one at a time:
 
@@ -338,7 +331,7 @@ Process the fix items one at a time:
    generator's report
 3. Before accepting either verdict, inspect this item's own delta
    yourself — the change between the tree state noted in item 1 (the
-   round's single commit means earlier items' accepted fixes already
+   pass's single commit means earlier items' accepted fixes already
    sit in the working tree and are not up for judgment) and the tree
    now — and confirm every touched file and hunk in that delta stays
    within the verified finding's scope — evaluator checks that the
@@ -383,7 +376,7 @@ Also observe:
   anything beyond a reasonable lint/test scope (network egress, deletion,
   sudo, piped script execution, ...), noting "verification not run" in the
   final report for fixes left unverified
-- One consolidated commit per round (`fix: apply review-agent auto-fixes`
+- One consolidated commit for the pass (`fix: apply review-agent auto-fixes`
   or similar), following the repository's commit conventions (trailers,
   message language) where they exist
 
@@ -392,12 +385,12 @@ Also observe:
 Only **review agents** are waited on (developer threads are complete at
 Step 4's in-thread reply). Skipping the polling for a given agent is
 allowed only when **no target review agent exists on the pull request, or
-that agent declined to review this round** (the draft-skip case above) —
-if an agent is present and active, a push triggers its re-review even in a
-round where it had zero threads, so wait for that before deciding anything.
+that agent declined to review this pass** (the draft-skip case above) —
+if an agent is present and active, a push triggers its re-review even when
+it had zero threads, so wait for that before deciding anything.
 
-Before pushing, if Step 1's local pre-review is available, give this round's
-fixes one pass too. Just before pushing, record each target agent's latest
+Before pushing, if Step 1's local pre-review is available, give the fixes
+one pass too. Just before pushing, record each target agent's latest
 review timestamp and, when that agent has a status comment, that comment's
 current `updatedAt`; at push time record the pushed head commit OID — the
 timestamps, the post-push activity observation, and the unresolved-thread
@@ -473,10 +466,10 @@ developers and review agents. Reply to each original review comment or thread
 that provides a reply target; begin the reply with `@<login>` and state the fix
 and commit SHA. When a finding has no reply target, post a pull request
 notification that mentions its `@<login>` and states the fix and commit SHA.
-Consolidate these fallback notifications into one comment per round when possible
-and mention the same author only once there. Do not post a separate round summary.
+Consolidate these fallback notifications into one comment when possible
+and mention the same author only once there. Do not post a separate run summary.
 
-Before any round exits, give every handled developer comment with a reply target
+Before the run exits, give every handled developer comment with a reply target
 its own in-thread outcome reply. A fixed comment uses the fixed-finding reply
 above; reply to a deferred comment with `@<login>` and the defer reason, including
 before an all-deferred abort. Never resolve a thread — that stays with the author.
@@ -499,11 +492,11 @@ or private data.
 
 Every run ends by exactly one of these (no infinite loops):
 
-- **Success**: the loop's success condition, plus — in pull request mode —
-  post-push review activity observed for the final round; without it, zero
-  threads is reported as "zero findings (post-push re-review unconfirmed —
-  needs checking)", distinct from success (Step 3)
-- **Abort**: findings remain after the round cap / a round deferred
+- **Success**: the pass's success condition, plus — in pull request mode —
+  post-push review activity observed; without it, zero threads is reported
+  as "zero findings (post-push re-review unconfirmed — needs checking)",
+  distinct from success (Step 3)
+- **Abort**: findings remain after the re-review / the pass deferred
   everything
 - **Stop**: no re-review within 15 minutes / push failed / lint or tests
   keep failing even after reverting / uncommitted changes block checkout /
@@ -511,7 +504,7 @@ Every run ends by exactly one of these (no infinite loops):
   unavailable / a required custom agent is missing
 
 The final report is assembled by a fresh built-in agent in report
-mode: hand it the run's facts (mode, rounds, commits, fixes, defers with
+mode: hand it the run's facts (mode, commit, fixes, defers with
 reasons, remaining findings, finding-author notifications, re-review confirmation, the
 skill-improvement summary) and relay its deliverable verbatim. It packages
 faithfully: its prompt must require the format below, preserve finding
@@ -526,18 +519,18 @@ Always close with:
 
 ```markdown
 ## Code Review Autofix result
-- Mode: single / recursive
+- Mode: pull request / local (base..HEAD)
 - Target reviewers: <logins> (marking review agent vs developer)
-- Rounds run: N / <cap> (single 1, recursive default 3, or the -n value)
-- Fixes applied: X (commits: <sha>...; H finding authors replied to or mentioned)
+- Fixes applied: X (commit: <sha>; H finding authors replied to or mentioned)
 - Deferred findings: Y (each with its reason: invalid / CI-infra territory / lint failure ...)
-- Final state: zero findings ✅ / Z findings remain (need developer judgment) / re-review unconfirmed
+- Final state: zero findings ✅ / Z findings remain (need developer judgment) / N new findings from the re-review / re-review unconfirmed
 - Skill improvement: none / SKILL.md updated in N places (diff summary) / M entries added to learnings.md
 ```
 
 Remaining deferred findings are the ones judged unfit for mechanical fixing,
 so attach the next action (a developer reviews them, or re-run with explicit
-instructions).
+instructions). New findings the re-review raised are listed for the user to
+act on with another run; never start that run yourself.
 
 ## Self-improvement loop (every run, without exception)
 
@@ -633,9 +626,8 @@ spot:
   infrastructure stay unfixed)
 - The handling of developer threads (never wait for their re-review, never
   resolve, reply in-thread)
-- The termination conditions (a finite round cap, the polling cap, no
-  infinite loops — only the `-n` argument may change the cap's value, never
-  the skill itself)
+- The termination conditions (one pass per run, the per-finding retry cap,
+  the local pre-review cap, the polling cap, no infinite loops)
 - This self-improvement section itself
 
 These underwrite the skill's safety, not its precision, and are never
@@ -643,7 +635,7 @@ loosened on the grounds of efficiency.
 
 ## Notes
 
-- When the same finding reappears across rounds (the previous round's fix
+- When a finding reappears in the local pre-review after a fix (the fix
   was insufficient, ...), never repeat the same fix. Change the approach, or
   switch to defer on the second reappearance
 - Never touch resolved, outdated, or already-handled threads, nor threads of

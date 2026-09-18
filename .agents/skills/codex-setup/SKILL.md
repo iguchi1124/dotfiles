@@ -64,7 +64,7 @@ Review and Report use fresh built-in `default` agents: Review runs only an adopt
 
 - `$orchestrator` coordinates all five stages with durable task state in a
   tool-neutral `.orchestrator/` directory shared with Claude Code.
-- `$code-review-autofix` handles bounded review, fix, push, and re-review cycles.
+- `$code-review-autofix` fixes review findings in one verify, push, and re-review pass.
 - `$coordinator` manages durable specifications, task dependencies, ownership,
   decisions, and progress in a tool-neutral `.coordinator/` directory shared with
   Claude Code.

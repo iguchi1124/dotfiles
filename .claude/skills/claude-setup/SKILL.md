@@ -97,7 +97,7 @@ Three custom agents are available from any project:
 - **evaluator** - checks the result and returns PASS/FAIL with reproducible findings
 
 planner uses `claude-fable-5-1` with `high` effort. generator uses `medium` effort.
-evaluator inherits the conversation's model and effort.
+evaluator uses `claude-fable-5-1` with `high` effort as well: it is the PASS/FAIL gate on generator's work and must not be weaker than what it checks.
 
 Review and Report use fresh built-in `general-purpose` agents: Review runs the
 adopted external tool and triages its findings; Report packages the outcome and

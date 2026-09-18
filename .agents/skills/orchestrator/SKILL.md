@@ -48,7 +48,7 @@ and continue.
 | `plan.md` | you, from planner's output | the plan, verbatim; fix plans appended below it |
 | `progress.md` | you, from generator's reports | one appended section per round |
 | `eval-<n>.md` | you, from evaluator's output | one verdict per file, numbered by existing files |
-| `review-<n>.md` | you, from reviewer's output | one triage per file, same numbering rule. A project reviewer definition that names the file itself (e.g. `coderabbit-<n>.md`) wins |
+| `review-<n>.md` | you, from reviewer's output | one triage per file, same numbering rule. A project reviewer definition that names the file itself (e.g. `<reviewer>-<n>.md`) wins |
 | `retro.md` | you, as friction occurs | notes on where this skill's own instructions failed you - input for Retrospect |
 
 Write `spec.md` yourself before Plan so no agent's input depends on the
@@ -119,15 +119,15 @@ rubber stamp. Save the verdict to `eval-<n>.md`.
 
 ## 4. Review
 
-If the project's reviewer only reads committed diffs (CodeRabbit's
-`-t committed`, for instance), commit the working tree to a task branch
+If the project's reviewer only reads committed diffs, commit the working
+tree to a task branch
 first (`git switch -c`, never a push; each later review round commits its
 fixes on top before re-running that reviewer, so it sees the new diff and
 reporter reads `<base>..HEAD`) - spawning it against an uncommitted tree
 only reviews stale state or yields NOT-RUN. Then spawn a fresh built-in
 agent for Review with the task-dir path and the report number (same
 numbering rule, over the reviewer's report files). It runs the external
-review tool the project has adopted (CodeRabbit, Copilot, ...) and triages
+review tool the project has adopted (Copilot, ...) and triages
 each finding into `fix` or `skip` **by the plan's Review policy**. Include
 this contract in its prompt:
 

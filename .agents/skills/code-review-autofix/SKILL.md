@@ -78,41 +78,10 @@ in any combination:
 - Reviewer login (`copilot-pull-request-reviewer[bot]`, `gemini-code-assist[bot]`,
   ...) → pin the review agent whose re-review is waited on (developer-thread
   handling is unchanged)
-- `-h` / `--help` → print the help below verbatim and **stop**. No review,
-  no fixes
-- Any other option (including a round count or repeat flag) → report it as
-  unsupported and stop; the run is always one pass
+- Any option flag (a help, round-count, or repeat flag, ...) → report it as
+  unsupported and stop; the skill takes no options, and the run is always
+  one pass
 - No arguments → run the current branch
-
-### What -h prints
-
-When `-h` / `--help` is passed, print the following in a code block and stop:
-
-```text
-code-review-autofix [pull request number|pull request URL|branch] [reviewer login] [-h|--help]
-
-Arguments (any order, all optional):
-  <pull request number> / #<num>
-                        check out that pull request's branch and run in
-                        pull request mode
-  <pull request URL>    parse owner/repo, move to the local clone, and run
-  <branch>              check out that branch and run
-  <reviewer login>      pin the review agent whose re-review is waited on
-                        (e.g. copilot-pull-request-reviewer[bot], gemini-code-assist[bot])
-  -h, --help            print this help and exit
-
-No arguments: run the current branch. The run is always one pass; run it
-again to act on the re-review's new findings.
-
-Modes (auto-detected):
-  pull request mode  the branch has an open pull request
-                     → fix → push → wait for re-review → report
-  local mode         no open pull request → run the local review CLI over
-                     the diff vs base, fix, commit (no pushing; the CLI is
-                     required)
-
-Precondition: a clean working tree
-```
 
 If the working tree has uncommitted changes — regardless of whether a
 checkout is needed or which mode applies — report to the user and stop

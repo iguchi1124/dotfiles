@@ -119,12 +119,17 @@ rubber stamp. Save the verdict to `eval-<n>.md`.
 
 ## 4. Review
 
-If the project's reviewer only reads committed diffs, commit the working
-tree to a task branch
-first (`git switch -c`, never a push; each later review round commits its
-fixes on top before re-running that reviewer, so it sees the new diff and
-reporter reads `<base>..HEAD`) - spawning it against an uncommitted tree
-only reviews stale state or yields NOT-RUN. Then spawn a fresh built-in
+If the project's reviewer only reads committed diffs, commit generator's
+work to a task branch first (`git switch -c`, never a push; each later
+review round commits its fixes on top before re-running that reviewer, so
+it sees the new diff and reporter reads `<base>..HEAD`) - spawning it
+against an uncommitted tree only reviews stale state or yields NOT-RUN.
+This commit follows the same baseline guard as reporter's (stage 5): build
+the manifest from generator's Changes in `progress.md`, compare
+`git status` with `initial-status.txt`, stage only manifest files by name,
+and stop if a manifest file was initially dirty or staged, or a
+non-manifest change appeared - pre-existing staged or dirty work is the
+user's and never rides along. Then spawn a fresh built-in
 agent for Review with the task-dir path and the report number (same
 numbering rule, over the reviewer's report files). It runs the external
 review tool the project has adopted (Copilot, ...) and triages
@@ -226,18 +231,20 @@ Include this reporting contract in its prompt:
   and ask with a redacted draft naming only the category and redacted
   location, never the sensitive value. Publish only after this check passes.
 
-Relay reporter's deliverable to the user as the orchestrator's final message, add
-the task-dir path so the paper trail is findable, and nothing else beyond a
-closing status line - except a Retrospect note (stage 6). A post-review step
-the project's own workflow mandates but the orchestrator has no stage for (a
-behavior-verification skill, say) is named in the report as owed and run by
-you through the project's skill after the report is relayed.
+Hold reporter's deliverable until Retrospect (stage 6) has run, then relay
+it to the user as the orchestrator's final message: the deliverable, the
+task-dir path so the paper trail is findable, the Retrospect note when
+there is one, and nothing else beyond a closing status line. A post-review
+step the project's own workflow mandates but the orchestrator has no stage
+for (a behavior-verification skill, say) is named in the report as owed and
+run by you through the project's skill after the final message.
 
 ## 6. Retrospect - improve this skill
 
-After the report is delivered, read `retro.md` and decide whether this run
-exposed a defect in **this skill's own instructions** - not in the task, the
-code, or an agent's judgment. Throughout the run, whenever the skill fails
+With reporter's deliverable in hand and before relaying it, read `retro.md`
+and decide whether this run exposed a defect in **this skill's own
+instructions** - not in the task, the code, or an agent's judgment.
+Throughout the run, whenever the skill fails
 you, append one line to `retro.md` at that moment (waiting until the end
 loses them): an instruction an agent repeatedly misread, guidance you had to
 improvise because no rule covered the situation, a stage transition that
@@ -270,9 +277,10 @@ nothing qualifies, skip silently - no forced findings. Otherwise:
   the changed source with each installed copy using `cmp`
   (`~/.claude/skills/orchestrator/SKILL.md` and
   `~/.agents/skills/orchestrator/SKILL.md`). Summarize the source change
-  and refresh result after the orchestrator's final message; claim it is
-  reflected only after installation and all comparisons succeed, otherwise
-  record the pending refresh and reason. The commit is the user's.
+  and refresh result as the Retrospect note in the orchestrator's final
+  message; claim it is reflected only after installation and all
+  comparisons succeed, otherwise record the pending refresh and reason.
+  The commit is the user's.
 - A **semantic** change (anything that alters what the orchestrator does:
   safety rules, caps, stage structure) or any edit to a custom agent under
   `~/.dotfiles/.claude/agents/` or `~/.dotfiles/.codex/agents/` is proposed

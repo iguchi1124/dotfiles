@@ -252,7 +252,9 @@ When a target review agent has a local review CLI (CodeRabbit's
 - Each local review run is a fresh `general-purpose` agent, prompted as in
   local mode (base branch, invocation example, Step 2's defer criteria as
   the Review policy, adoption evidence, and the Local review contract) — the raw CLI output stays out of
-  your context
+  your context. When it returns early saying its background CLI run is
+  still in progress, it has not failed: read its log file and wait for its
+  second report instead of re-spawning it
 - Verify, fix, and defer findings under the same safety rules as Step 2
 - Stop when clean, or after **2 local rounds**, then push. Local rounds do
   not count against the pull request loop's cap

@@ -75,6 +75,11 @@ they shape how work happens on every machine. Two principles govern them:
   bias of whoever wrote it. The implementer never reviews itself.
 - **Skill design.** Skills follow the principles of the next section,
   including ending every run by improving themselves.
+- **One source per shared skill.** Claude Code reads `.claude/skills/` and
+  Codex reads `.agents/skills/`, so a skill whose instructions are the same
+  for both lives in `.agents/skills/<name>/` with `.claude/skills/<name>` a
+  symlink to it. Both installers still copy files into real directories.
+  A skill whose instructions differ per tool keeps a copy in each tree.
 
 ## Skill design
 

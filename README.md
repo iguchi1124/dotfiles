@@ -30,6 +30,9 @@ sh "$HOME/.dotfiles/.agents/skills/codex-setup/scripts/install.sh"
 
 See [.agents/skills/codex-setup/SKILL.md](.agents/skills/codex-setup/SKILL.md).
 
+A skill shared by both tools lives once in `.agents/skills/<name>/`, with
+`.claude/skills/<name>` a symlink to it; `coordinator` is shared this way.
+
 Both setup skills copy managed files individually into real directories. Re-run
 the corresponding installer after editing the dotfiles sources, then use `cmp` to
 compare changed sources refreshed by the installer with their installed copies.

@@ -29,9 +29,9 @@ python3 <skill-directory>/scripts/init_project.py \
   --request-file <file-containing-the-user-request>
 ```
 
-The initializer creates `.coordinator/<YYYYMMDD>-<slug>/` atomically. This path is
-shared with the Claude Code version of the skill. Omit
-`--request-file` only when the exact request will be inserted into `project.md`
+The initializer creates `.coordinator/<YYYYMMDD>-<slug>/` atomically. This skill is
+one source shared by Codex and Claude Code, so the path is the same in both tools.
+Omit `--request-file` only when the exact request will be inserted into `project.md`
 immediately afterward. `--root` may select another active worktree. Never overwrite,
 delete, or recreate an existing project directory without explicit authorization.
 

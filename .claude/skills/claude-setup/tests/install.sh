@@ -12,7 +12,7 @@ source_dir="$fixture/repo/.claude"
 install_script="$source_dir/skills/claude-setup/install.sh"
 mkdir -p "$source_dir/skills/claude-setup" "$source_dir/agents" \
   "$source_dir/rules" "$source_dir/skills/example skill/nested path" \
-  "$fixture/bin" "$fixture/tmp"
+  "$fixture/repo/.agents/skills/shared skill/scripts" "$fixture/bin" "$fixture/tmp"
 sed 's|^claude_dir=.*|claude_dir="$CLAUDE_TEST_DEST"|' \
   "$test_dir/../install.sh" > "$install_script"
 printf 'global instructions\n' > "$source_dir/CLAUDE.md"
@@ -21,6 +21,10 @@ printf 'rule\n' > "$source_dir/rules/example.md"
 printf 'skill\n' > "$source_dir/skills/example skill/SKILL.md"
 printf 'nested\n' > "$source_dir/skills/example skill/nested path/file name.md"
 printf '{}\n' > "$source_dir/settings.json.template"
+# A skill shared with Codex lives in .agents/skills and is linked from .claude/skills.
+printf 'shared skill\n' > "$fixture/repo/.agents/skills/shared skill/SKILL.md"
+printf 'shared script\n' > "$fixture/repo/.agents/skills/shared skill/scripts/run.sh"
+ln -s "../../.agents/skills/shared skill" "$source_dir/skills/shared skill"
 
 assert_clean_tmp() {
   for temporary_file in "$fixture/tmp"/* "$CLAUDE_TEST_DEST"/.claude-setup.*; do
@@ -47,6 +51,12 @@ cmp "$source_dir/skills/example skill/nested path/file name.md" \
   "$CLAUDE_TEST_DEST/skills/example skill/nested path/file name.md"
 cmp "$source_dir/settings.json.template" "$CLAUDE_TEST_DEST/settings.json"
 [ ! -e "$CLAUDE_TEST_DEST/skills/claude-setup" ]
+[ -d "$CLAUDE_TEST_DEST/skills/shared skill" ] && [ ! -L "$CLAUDE_TEST_DEST/skills/shared skill" ]
+[ ! -L "$CLAUDE_TEST_DEST/skills/shared skill/SKILL.md" ]
+cmp "$fixture/repo/.agents/skills/shared skill/SKILL.md" \
+  "$CLAUDE_TEST_DEST/skills/shared skill/SKILL.md"
+cmp "$fixture/repo/.agents/skills/shared skill/scripts/run.sh" \
+  "$CLAUDE_TEST_DEST/skills/shared skill/scripts/run.sh"
 assert_clean_tmp
 
 printf 'local settings\n' > "$CLAUDE_TEST_DEST/settings.json"
@@ -62,7 +72,7 @@ cmp "$fixture/expected-learning" "$CLAUDE_TEST_DEST/skills/example skill/learnin
 cmp "$source_dir/skills/example skill/nested path/file name.md" \
   "$CLAUDE_TEST_DEST/skills/example skill/nested path/file name.md"
 assert_clean_tmp
-echo 'PASS: successful install, nested/space paths, repeat install, local state, cleanup'
+echo 'PASS: successful install, nested/space/symlinked skills, repeat install, local state, cleanup'
 
 mkdir -p "$fixture/copy-bin"
 cat > "$fixture/copy-bin/cp" <<'EOF'
@@ -125,6 +135,7 @@ done
 
 cat > "$fixture/bin/find" <<'EOF'
 #!/bin/sh
+[ "$1" = -H ] && shift
 if [ "$CLAUDE_TEST_FIND_MODE" = partial ]; then
   printf '%s/SKILL.md\n' "$1"
 fi

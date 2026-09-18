@@ -18,7 +18,7 @@ unchanged.
 | `.claude/CLAUDE.md` | `~/.claude/CLAUDE.md` | Copied as the global instruction file, loaded in every session. |
 | `.claude/agents/*` | `~/.claude/agents/` | Copied file by file. |
 | `.claude/rules/*` | `~/.claude/rules/` | Copied file by file. Path-scoped rules (`paths:` frontmatter) load only when Claude touches matching files. |
-| `.claude/skills/*` | `~/.claude/skills/<name>/` | Copied file by file, including nested files. `claude-setup` itself is skipped - it stays a project skill of this repo. |
+| `.claude/skills/*` | `~/.claude/skills/<name>/` | Copied file by file, including nested files. A skill shared with Codex is a symlink to `.agents/skills/<name>`; the installer follows it, so the target is still a real directory of copies (its `agents/openai.yaml` comes along and is ignored by Claude Code). `claude-setup` itself is skipped - it stays a project skill of this repo. |
 | `.claude/settings.json.template` | `~/.claude/settings.json` | Copied only when absent; existing files and symlinks are left unchanged. |
 
 Targets are real directories containing independent file copies. Installed
@@ -122,5 +122,9 @@ The skill that maintains durable specifications, task dependencies, ownership,
 decisions, progress, and retrospectives for multi-task or multi-agent projects. Its
 state lives in the active project's tool-neutral `.coordinator/<project-dir>/`, so
 Codex, Claude Code, independent subagents, and later sessions share one precise source
-of truth without overlapping work. It may delegate a bounded task to `orchestrator`
+of truth without overlapping work. The skill itself is one source shared with Codex:
+it lives in `.agents/skills/coordinator/`, and `.claude/skills/coordinator` is a
+symlink to it, because Claude Code reads only `.claude/skills/` while Codex reads
+`.agents/skills/`. Skills whose Claude Code and Codex instructions differ keep
+separate copies in each tree. It may delegate a bounded task to `orchestrator`
 when that task independently needs the orchestrated workflow.

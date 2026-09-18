@@ -79,7 +79,10 @@ they shape how work happens on every machine. Two principles govern them:
   Codex reads `.agents/skills/`, so a skill whose instructions are the same
   for both lives in `.agents/skills/<name>/` with `.claude/skills/<name>` a
   symlink to it. Both installers still copy files into real directories.
-  A skill whose instructions differ per tool keeps a copy in each tree.
+  Where the tools differ (built-in agent type names, worktree tooling,
+  learning-log paths), the one source names both variants rather than
+  forking into two copies that drift; only the setup skills are
+  tool-specific.
 
 ## Skill design
 
@@ -122,8 +125,9 @@ instructions from the repository's root `AGENTS.md` when editing
 
 ## Machine state stays on the machine
 
-What a run produces or learns locally is not synced: `.claude/orchestrator/`
-and `.codex/orchestrator/` task state are globally ignored. Per-project
+What a run produces or learns locally is not synced: `.orchestrator/` task
+state (and the legacy `.claude/orchestrator/` and `.codex/orchestrator/`
+directories) is globally ignored. Per-project
 `env.sh` is ignored, and skill learnings live under the installed
 `~/.claude/skills/` or `~/.agents/skills/` directory, not here. The repo
 describes behavior; the machine accumulates history.

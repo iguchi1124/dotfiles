@@ -12,10 +12,10 @@
 # Visual Studio Code
 .vscode/
 
-# Claude Code
+# Orchestrator task state (Claude Code and Codex share one skill)
+**/.orchestrator/
+# Legacy per-tool task state, still resumable in place
 **/.claude/orchestrator/
-
-# Codex
 **/.codex/orchestrator/
 
 # Local worktree file-copy configuration

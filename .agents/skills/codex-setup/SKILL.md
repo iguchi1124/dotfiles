@@ -62,12 +62,17 @@ Review and Report use fresh built-in `default` agents: Review runs only an adopt
 
 ### Skills
 
-- `$orchestrator` coordinates all five stages with durable project state.
+- `$orchestrator` coordinates all five stages with durable task state in a
+  tool-neutral `.orchestrator/` directory shared with Claude Code.
 - `$code-review-autofix` handles bounded review, fix, push, and re-review cycles.
 - `$coordinator` manages durable specifications, task dependencies, ownership,
   decisions, and progress in a tool-neutral `.coordinator/` directory shared with
   Claude Code.
 - `$codex-setup` remains repository-scoped so it does not appear in unrelated projects.
+
+The first three are one source each, shared with Claude Code through the
+`.claude/skills/<name>` symlinks; where the tools differ, the source names both
+variants.
 
 ## Verify
 

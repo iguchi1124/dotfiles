@@ -111,10 +111,12 @@ The skill that chains all five stages: plan, implement, check, external review, 
 looping evaluator findings back into generator, and reviewer findings back into
 generator too, triaged by the Review policy the plan sets in advance - then delivering
 the outcome as a report or a GitHub Pull Request/Issue. State passes
-through files in the project's `.claude/orchestrator/<task-dir>/`, so long tasks survive
-context compaction and every agent is spawned fresh. Installed globally so it is one
-`/orchestrator` away in any project. Existing runs under `.claude/harness/` remain
-resumable from their original directory.
+through files in the project's tool-neutral `.orchestrator/<task-dir>/`, so long tasks
+survive context compaction, every agent is spawned fresh, and a run started in Codex
+resumes here. Installed globally so it is one `/orchestrator` away in any project.
+Existing runs under `.claude/orchestrator/` or `.claude/harness/` remain resumable
+from their original directory. Like `coordinator` below, the skill is one source
+shared with Codex: `.agents/skills/orchestrator/`, linked from `.claude/skills/`.
 
 ### coordinator
 
@@ -125,6 +127,7 @@ Codex, Claude Code, independent subagents, and later sessions share one precise 
 of truth without overlapping work. The skill itself is one source shared with Codex:
 it lives in `.agents/skills/coordinator/`, and `.claude/skills/coordinator` is a
 symlink to it, because Claude Code reads only `.claude/skills/` while Codex reads
-`.agents/skills/`. Skills whose Claude Code and Codex instructions differ keep
-separate copies in each tree. It may delegate a bounded task to `orchestrator`
+`.agents/skills/`. `orchestrator` and `code-review-autofix` are shared the same way;
+where the tools differ, the one source names both variants. Only `claude-setup` and
+`codex-setup` are tool-specific. It may delegate a bounded task to `orchestrator`
 when that task independently needs the orchestrated workflow.

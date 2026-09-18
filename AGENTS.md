@@ -35,14 +35,14 @@ sh "$HOME/.dotfiles/.claude/skills/claude-setup/install.sh"
 
 Read `.claude/skills/claude-setup/SKILL.md` before changing this layout. Like Codex setup, it copies owned files individually into real directories, overwriting installed copies while preserving machine-local files. Legacy file symlinks are replaced with copies; directory symlinks are refused. Existing `settings.json` files and symlinks remain unchanged. Re-run the installer after source changes and compare changed managed files with their installed copies.
 
-A skill shared with Codex has one source in `.agents/skills/<name>/`, and `.claude/skills/<name>` is a relative symlink to it (Claude Code reads only `.claude/skills/`, Codex only `.agents/skills/`). `coordinator` is shared this way; the installer follows the link and installs real copies. `orchestrator` and `code-review-autofix` keep separate, tool-specific copies in each tree.
+A skill shared with Codex has one source in `.agents/skills/<name>/`, and `.claude/skills/<name>` is a relative symlink to it (Claude Code reads only `.claude/skills/`, Codex only `.agents/skills/`). `orchestrator`, `coordinator`, and `code-review-autofix` are all shared this way; the installer follows the link and installs real copies. Tool differences (agent type names, worktree tooling, learning-log paths) are spelled out inside the one source. Only `claude-setup` and `codex-setup` are tool-specific.
 
 ## Codex setup
 
 Codex configuration is versioned in two trees:
 
 - `.codex/` contains the global `AGENTS.md`, custom-agent TOML files, and the initial `config.toml.template`.
-- `.agents/skills/` contains Codex skills. `orchestrator` uses custom `planner` / `generator` / `evaluator` agents and built-in `default` agents for review and reporting, `coordinator` is the single source shared with Claude Code (linked from `.claude/skills/`) and shares durable project state under the active project's `.coordinator/`, `code-review-autofix` handles review round-trips, and `codex-setup` installs everything.
+- `.agents/skills/` contains Codex skills. `orchestrator` uses custom `planner` / `generator` / `evaluator` agents and built-in `default` agents for review and reporting, keeping task state under the active project's `.orchestrator/`; `coordinator` shares durable project state under the active project's `.coordinator/`; `code-review-autofix` handles review round-trips; and `codex-setup` installs everything. The first three are single sources shared with Claude Code (linked from `.claude/skills/`).
 
 The main installer deliberately leaves these user-owned locations alone. Install or refresh Codex configuration with:
 

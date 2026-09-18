@@ -12,8 +12,9 @@
 # Visual Studio Code
 .vscode/
 
-# Orchestrator task state (Claude Code and Codex share one skill)
+# Orchestrator and coordinator state (Claude Code and Codex share one skill each)
 **/.orchestrator/
+**/.coordinator/
 # Legacy per-tool task state, still resumable in place
 **/.claude/orchestrator/
 **/.codex/orchestrator/

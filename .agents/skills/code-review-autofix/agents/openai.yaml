@@ -1,4 +1,0 @@
-interface:
-  display_name: "Code Review Autofix"
-  short_description: "Fix review findings in one verify, push, re-review pass"
-  default_prompt: "Use $code-review-autofix to verify and fix all active findings on the current pull request."

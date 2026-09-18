@@ -64,13 +64,12 @@ Review and Report use fresh built-in `default` agents: Review runs only an adopt
 
 - `$orchestrator` coordinates all five stages with durable task state in a
   tool-neutral `.orchestrator/` directory shared with Claude Code.
-- `$code-review-autofix` fixes review findings in one verify, push, and re-review pass.
 - `$coordinator` manages durable specifications, task dependencies, ownership,
   decisions, and progress in a tool-neutral `.coordinator/` directory shared with
   Claude Code.
 - `$codex-setup` remains repository-scoped so it does not appear in unrelated projects.
 
-The first three are one source each, shared with Claude Code through the
+The first two are one source each, shared with Claude Code through the
 `.claude/skills/<name>` symlinks; where the tools differ, the source names both
 variants.
 
@@ -79,5 +78,5 @@ variants.
 Restart Codex after installation, then confirm:
 
 1. Repository-managed custom agents are `planner`, `generator`, and `evaluator`; confirmed stale `reviewer` and `reporter` definitions are absent. Review and Report use the built-in `default` type.
-2. Skill selection includes `orchestrator`, `coordinator`, and `code-review-autofix`.
+2. Skill selection includes `orchestrator` and `coordinator`.
 3. A newly created `config.toml` matches the template; an existing configuration remains unchanged.

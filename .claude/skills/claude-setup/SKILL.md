@@ -126,7 +126,7 @@ Codex, Claude Code, independent subagents, and later sessions share one precise 
 of truth without overlapping work. The skill itself is one source shared with Codex:
 it lives in `.agents/skills/coordinator/`, and `.claude/skills/coordinator` is a
 symlink to it, because Claude Code reads only `.claude/skills/` while Codex reads
-`.agents/skills/`. `orchestrator` and `code-review-autofix` are shared the same way;
+`.agents/skills/`. `orchestrator` is shared the same way;
 where the tools differ, the one source names both variants. Only `claude-setup` and
 `codex-setup` are tool-specific. It may delegate a bounded task to `orchestrator`
 when that task independently needs the orchestrated workflow.

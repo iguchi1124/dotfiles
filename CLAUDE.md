@@ -40,13 +40,13 @@ sh "$HOME/.dotfiles/.claude/skills/claude-setup/install.sh"
 
 That skill is also where the rationale lives — why files are copied individually into real directories, what each stage is for and how custom definitions or explicit caller prompts preserve its boundaries. Legacy file symlinks are replaced with copies; directory symlinks are refused. Re-run the installer after source changes and compare changed managed files with their installed copies. Read the skill before changing anything under `.claude/`.
 
-A skill shared with Codex has one source in `.agents/skills/<name>/`, and `.claude/skills/<name>` is a relative symlink to it (Claude Code reads only `.claude/skills/`, Codex only `.agents/skills/`). `orchestrator`, `coordinator`, and `code-review-autofix` are all shared this way; the installer follows the link and installs real copies. Tool differences (agent type names, worktree tooling, learning-log paths) are spelled out inside the one source. Only `claude-setup` and `codex-setup` are tool-specific.
+A skill shared with Codex has one source in `.agents/skills/<name>/`, and `.claude/skills/<name>` is a relative symlink to it (Claude Code reads only `.claude/skills/`, Codex only `.agents/skills/`). `orchestrator` and `coordinator` are both shared this way; the installer follows the link and installs real copies. Tool differences (agent type names, worktree tooling, learning-log paths) are spelled out inside the one source. Only `claude-setup` and `codex-setup` are tool-specific.
 
 ## Codex setup
 
 `.codex/` holds Codex's global `AGENTS.md`, custom-agent TOML files, and the initial `config.toml.template`. `.agents/skills/` holds the `orchestrator`,
-`code-review-autofix`, `coordinator`, and repository-scoped `codex-setup` skills.
-The first three are the single sources for both tools, linked from `.claude/skills/`;
+`coordinator`, and repository-scoped `codex-setup` skills.
+The first two are the single sources for both tools, linked from `.claude/skills/`;
 `coordinator` shares each project's `.coordinator/` state and `orchestrator` its
 `.orchestrator/` task state.
 

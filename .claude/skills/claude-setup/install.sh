@@ -72,6 +72,8 @@ done
 
 # Skills too, one directory per skill. claude-setup itself stays a project
 # skill of this repo - installed globally it would load everywhere for nothing.
+# A skill shared with Codex is a symlink to .agents/skills/<name>; find -H
+# follows that link so the install is still a real directory of copies.
 skill_files=$(mktemp "${TMPDIR:-/tmp}/claude-setup.XXXXXXXXXX")
 trap 'rm -f "$skill_files"' 0
 trap 'exit 1' HUP INT TERM
@@ -85,7 +87,7 @@ do
     exit 1
   fi
   # Check traversal separately: a pipeline would hide find failures in /bin/sh.
-  find "$skill" -type f > "$skill_files"
+  find -H "$skill" -type f > "$skill_files"
   while IFS= read -r file
   do
     relative=${file#"$skill"/}

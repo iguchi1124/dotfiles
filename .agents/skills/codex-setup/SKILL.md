@@ -14,7 +14,7 @@ description: Install, repair, or verify this dotfiles repository's Codex configu
 | `.codex/config.toml.template` | `${CODEX_HOME:-$HOME/.codex}/config.toml` | copied only when absent; existing files and symlinks are left unchanged |
 | `.codex/AGENTS.md` | `${CODEX_HOME:-$HOME/.codex}/AGENTS.md` | copied as the global instruction file |
 | `.codex/agents/*.toml` | `${CODEX_HOME:-$HOME/.codex}/agents/` | copied file by file |
-| `.agents/skills/<name>/` | `$HOME/.agents/skills/<name>/` | copied file by file; `codex-setup` itself is skipped |
+| `.agents/skills/<name>/` | `$HOME/.agents/skills/<name>/` | copied file by file; `codex-setup` itself is skipped. A skill shared with Claude Code lives only here, and `.claude/skills/<name>` is a symlink to it that `claude-setup` follows |
 
 Targets are real directories containing independent file copies. Installed instructions, custom agents, and skills are overwritten from dotfiles; legacy file symlinks are removed before copying so their referents are not modified. Symlinked destination directories are refused. Files absent from the source, including machine-local learning logs, are preserved.
 
@@ -64,6 +64,9 @@ Review and Report use fresh built-in `default` agents: Review runs only an adopt
 
 - `$orchestrator` coordinates all five stages with durable project state.
 - `$code-review-autofix` handles bounded review, fix, push, and re-review cycles.
+- `$coordinator` manages durable specifications, task dependencies, ownership,
+  decisions, and progress in a tool-neutral `.coordinator/` directory shared with
+  Claude Code.
 - `$codex-setup` remains repository-scoped so it does not appear in unrelated projects.
 
 ## Verify
@@ -71,5 +74,5 @@ Review and Report use fresh built-in `default` agents: Review runs only an adopt
 Restart Codex after installation, then confirm:
 
 1. Repository-managed custom agents are `planner`, `generator`, and `evaluator`; confirmed stale `reviewer` and `reporter` definitions are absent. Review and Report use the built-in `default` type.
-2. Skill selection includes `orchestrator` and `code-review-autofix`.
+2. Skill selection includes `orchestrator`, `coordinator`, and `code-review-autofix`.
 3. A newly created `config.toml` matches the template; an existing configuration remains unchanged.

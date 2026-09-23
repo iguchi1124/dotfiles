@@ -53,12 +53,6 @@ hash. Recheck that identity immediately before removal; preserve and report
 mismatches. Never delete machine-local files such as `learnings.md` or whole
 directories containing them.
 
-The installer no longer manages `~/.claude/rules`. For upgrades, remove the legacy
-`rules/skills-and-agents.md` only after confirming it matches the prior repository
-source using the checks above. Preserve other rules and modified copies. This
-repository's design guidance now lives in its root `CLAUDE.md` and `AGENTS.md`;
-it is no longer installed as a global rule.
-
 ## 2. Initialize settings.json once
 
 `install.sh` copies `.claude/settings.json.template` to `~/.claude/settings.json`

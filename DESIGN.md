@@ -45,15 +45,17 @@ docs describe is the feature.
 Config lives under `.config/<app>/` and is installed to `$XDG_CONFIG_HOME`
 whenever the application can find it there (vim 9.1+, tmux 3.2+). Files land
 directly in `$HOME` only when the app demands it (`.zshrc`, `.zshenv`,
-`.zprofile`, `.Brewfile`). Preferring XDG keeps `$HOME` small and makes the
+`.zprofile`). Preferring XDG keeps `$HOME` small and makes the
 repo's layout mirror the installed layout.
 
 ## Dependencies are managed outside the repository
 
 Command-line tools, applications, and shell plugins such as
-`zsh-autosuggestions` and `zsh-syntax-highlighting` are declared in `.Brewfile`
-for Homebrew. On macOS, `setup.sh` installs Homebrew when missing and links
-the Brewfile; installing its packages is a separate step.
+`zsh-autosuggestions` and `zsh-syntax-highlighting` are declared in
+`.config/homebrew/Brewfile`. Setup links it into
+`$XDG_CONFIG_HOME/homebrew/Brewfile`; `brew bundle --global` reads it when
+`XDG_CONFIG_HOME` is set. On macOS, `setup.sh` installs Homebrew when missing;
+installing the declared packages is a separate step.
 
 Vim plugins are declared in `vimrc` and managed by vim-plug. `setup.sh`
 downloads vim-plug itself when missing. These dependencies are installed

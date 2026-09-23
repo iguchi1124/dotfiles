@@ -45,6 +45,11 @@ do
   done
 done
 
+# Remove only the legacy Brewfile link created by this installer.
+if [[ -L "$HOME/.Brewfile" ]] && [[ "$(readlink "$HOME/.Brewfile")" == "$DOTPATH/.Brewfile" ]]; then
+  rm "$HOME/.Brewfile"
+fi
+
 for file in ".zshrc" ".zshenv" ".zprofile"
 do
   src="$DOTPATH/$file"
@@ -57,12 +62,6 @@ fi
 
 case "$(uname)" in
 Darwin*)
-  for file in ".Brewfile"
-  do
-    src="$DOTPATH/$file"
-    ln -snfv "$src" "$HOME"
-  done
-
   if ! command -v brew &> /dev/null; then
     NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi

@@ -17,11 +17,11 @@ Personal dotfiles for macOS and Linux, installed with:
 Two different strategies are used, and the distinction matters when adding config:
 
 - **`.config/<app>/`** — create the target directory for real at `$XDG_CONFIG_HOME/<app>/`, then symlink each file inside it. Never symlink the directory itself; applications write runtime files beside their config, and a directory symlink would put that state in this repository.
-- **Top-level files** (`.zshrc`, `.zshenv`, `.zprofile`, `.Brewfile`) — symlink them directly into `$HOME`.
+- **Top-level files** (`.zshrc`, `.zshenv`, `.zprofile`) — symlink them directly into `$HOME`.
 
 Vim config lives in `.config/vim/`, and tmux config lives in `.config/tmux/`. Plugins and netrw state go to `$XDG_DATA_HOME/vim`; vim-plug itself goes to `$XDG_CONFIG_HOME/vim/autoload/`.
 
-`setup.sh` also installs vim-plug and Homebrew when missing. Zsh plugins and completions are Homebrew packages managed through `.Brewfile`.
+`setup.sh` also installs vim-plug and Homebrew when missing. Zsh plugins and completions are Homebrew packages managed through `.config/homebrew/Brewfile`, installed at `$XDG_CONFIG_HOME/homebrew/Brewfile` and read by `brew bundle --global` when `XDG_CONFIG_HOME` is set. Setup removes `~/.Brewfile` only when it is the legacy link to this repository's former `.Brewfile`; other files and links are preserved.
 
 It installs nothing under `~/.claude`, `~/.codex`, or `~/.agents`; the corresponding setup skills own those shared locations.
 

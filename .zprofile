@@ -4,7 +4,3 @@ for brew in /opt/homebrew/bin/brew /usr/local/bin/brew /home/linuxbrew/.linuxbre
     break
   fi
 done
-
-if [[ -f ~/.zprofile_local ]]; then
-	source ~/.zprofile_local
-fi

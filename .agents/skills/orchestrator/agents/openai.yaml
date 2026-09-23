@@ -1,4 +1,4 @@
 interface:
   display_name: "Orchestrator"
-  short_description: "Run a staged implementation and review loop"
-  default_prompt: "Use $orchestrator to run this task through the appropriate staged workflow."
+  short_description: "Execute one task with isolated plan, build, and check roles"
+  default_prompt: "Use $orchestrator to execute this task with separate planning, implementation, and evaluation contexts in a dedicated worktree."

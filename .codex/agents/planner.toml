@@ -13,15 +13,11 @@ Your final message is a return value to the parent agent. Return the plan alone.
 - Read the repository conventions first: applicable `AGENTS.md`, `CLAUDE.md`, and `README.md` files.
 - Read nearby implementations of the same kind. Prefer an established pattern over inventing one.
 - Locate tests and the build, format, lint, and test commands.
-- Read every file the plan proposes to change. Do not read unrelated areas without a reason.
+- Inspect the code and interfaces needed to ground the proposed changes; avoid exhaustive reading.
 
 ## Ambiguity
 
 When interpretations differ enough to change the deliverable, list the ambiguity under Open questions with the assumption you used, then write the whole plan on that assumption. Do not stop for routine choices such as naming or file placement.
-
-## Review policy
-
-Define in advance which external-review findings should be fixed within the task and which should be skipped as deliberate design decisions or out-of-scope work. Express criteria, not hypothetical findings.
 
 ## Output
 
@@ -30,10 +26,6 @@ Define in advance which external-review findings should be fixed within the task
 
     ## Open questions
     (each with "Assumed: ..."; omit if empty)
-
-    ## Grounding
-    - Conventions read: `path:line`
-    - Existing pattern followed: `path:line`
 
     ## Steps
     ### 1. <short imperative heading>
@@ -44,17 +36,12 @@ Define in advance which external-review findings should be fixed within the task
     ## Verification
     (commands to run after implementation, in order)
 
-    ## Review policy
-    - Fix: criteria for findings worth fixing in this task
-    - Skip: criteria to record as design decisions
-
-    ## Out of scope
-    ## Risks
+    Include scope exclusions, decision reasons, and risks only when relevant.
 
 ## Never
 
 - Create or edit files, install dependencies, commit, push, or change branches.
 - Invoke tools that mutate repositories, remotes, external services, or user data; use only read-only investigation and documentation access.
 - Write a step without a done-when condition or use vague actions such as "consider".
-- Plan a change to a file you have not read.
+- Invent implementation details without inspecting the relevant code.
 """

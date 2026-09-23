@@ -30,7 +30,7 @@ It also installs nothing under `~/.codex` or `~/.agents` — that is the
 
 ## Claude Code setup
 
-`.claude/` holds the Claude Code configuration — `CLAUDE.md`, the `planner` / `generator` / `evaluator` custom subagents, the `orchestrator` skill that uses them plus built-in `general-purpose` agents for review and reporting, and the `coordinator` skill for durable multi-task and multi-agent project state shared with Codex under each project's `.coordinator/` — but `setup.sh` installs none of it. The installer initializes `~/.claude/settings.json` from the template only when it is absent; existing machine- and project-specific settings remain unchanged.
+`.claude/` holds the Claude Code configuration — `CLAUDE.md`, the `planner` / `generator` / `evaluator` custom subagents, the `orchestrator` skill that uses them for Plan, Generate, and Evaluate, and the `coordinator` skill for durable multi-task and multi-agent project state shared with Codex under each project's `.coordinator/` — but `setup.sh` installs none of it. The installer initializes `~/.claude/settings.json` from the template only when it is absent; existing machine- and project-specific settings remain unchanged.
 
 `.claude/skills/claude-setup/` is the skill that does it: it copies owned files individually into `~/.claude`, overwriting installed copies while preserving machine-local files, copies the settings template only when `settings.json` is absent, and documents how to verify the result. It is a project skill of this repo, so it loads whenever Claude Code runs here. To install or refresh by hand, run its script directly:
 
@@ -41,6 +41,11 @@ sh "$HOME/.dotfiles/.claude/skills/claude-setup/install.sh"
 That skill is also where the rationale lives — why files are copied individually into real directories, what each stage is for and how custom definitions or explicit caller prompts preserve its boundaries. Legacy file symlinks are replaced with copies; directory symlinks are refused. Re-run the installer after source changes and compare changed managed files with their installed copies. Read the skill before changing anything under `.claude/`.
 
 A skill shared with Codex has one source in `.agents/skills/<name>/`, and `.claude/skills/<name>` is a relative symlink to it (Claude Code reads only `.claude/skills/`, Codex only `.agents/skills/`). `orchestrator` and `coordinator` are both shared this way; the installer follows the link and installs real copies. Tool differences (agent type names, worktree tooling, learning-log paths) are spelled out inside the one source. Only `claude-setup` and `codex-setup` are tool-specific.
+
+The conversation parent uses coordinator to create and maintain shared `spec.md`
+and `tasks.md`, with a root-level writer lock covering project selection and updates.
+Orchestrator executes one task in a dedicated worktree with isolated role contexts
+and its own `task.md`; it links to the shared board rather than managing or copying it.
 
 ## Codex setup
 

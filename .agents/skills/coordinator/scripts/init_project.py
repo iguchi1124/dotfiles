@@ -7,7 +7,6 @@ import argparse
 import json
 import re
 import shutil
-import subprocess
 import tempfile
 from datetime import datetime
 from pathlib import Path
@@ -18,14 +17,9 @@ TEMPLATE_DIR = SKILL_DIR / "assets" / "project-template"
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 DATE_PATTERN = re.compile(r"^[0-9]{8}$")
 TOKEN_PATTERN = re.compile(r"{{[A-Z0-9_]+}}")
-GIT_STATUS_TIMEOUT = 30
 TEMPLATE_FILES = (
-    "project.md",
     "spec.md",
     "tasks.md",
-    "progress.md",
-    "decisions.md",
-    "retro.md",
 )
 
 
@@ -43,8 +37,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--root",
         type=Path,
-        default=Path.cwd(),
-        help="active project or worktree root (default: current directory)",
+        required=True,
+        help="canonical shared root used by every agent, usually the primary checkout",
     )
     parser.add_argument(
         "--date",
@@ -73,25 +67,6 @@ def render(template_name: str, values: dict[str, str]) -> str:
     return TOKEN_PATTERN.sub(lambda match: values[match.group(0)[2:-2]], content)
 
 
-def initial_status(root: Path) -> str:
-    try:
-        result = subprocess.run(
-            ["git", "status", "--porcelain"],
-            cwd=root,
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=GIT_STATUS_TIMEOUT,
-        )
-    except subprocess.TimeoutExpired:
-        return f"(git status timed out after {GIT_STATUS_TIMEOUT}s)\n"
-    except FileNotFoundError:
-        return "(git unavailable)\n"
-    if result.returncode != 0:
-        return "(not a Git worktree)\n"
-    return result.stdout if result.stdout else "(clean)\n"
-
-
 def main() -> int:
     args = parse_args()
     if not SLUG_PATTERN.fullmatch(args.slug):
@@ -113,7 +88,6 @@ def main() -> int:
     root = args.root.resolve()
     if not root.is_dir():
         raise SystemExit(f"error: project root not found: {root}")
-    status = initial_status(root)
     run_name = f"{args.date}-{args.slug}"
     parent = root / ".coordinator"
     target = parent / run_name
@@ -125,7 +99,7 @@ def main() -> int:
         "PROJECT_NAME": args.name.strip(),
         "PROJECT_TITLE_YAML": json.dumps(args.name.strip(), ensure_ascii=False),
         "PROJECT_SLUG": args.slug,
-        "RUN_NAME": run_name,
+        "COORDINATION_DIR": str(target),
         "CREATED_AT": created_at,
         "ORIGINAL_REQUEST_BLOCK": quote_block(request),
     }
@@ -137,7 +111,6 @@ def main() -> int:
             (temporary / template_name).write_text(
                 render(template_name, values), encoding="utf-8"
             )
-        (temporary / "initial-status.txt").write_text(status, encoding="utf-8")
         temporary.rename(target)
     except Exception:
         shutil.rmtree(temporary, ignore_errors=True)

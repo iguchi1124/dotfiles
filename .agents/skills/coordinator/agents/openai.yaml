@@ -1,4 +1,4 @@
 interface:
   display_name: "Coordinator"
-  short_description: "Coordinate parallel tasks with durable shared state"
-  default_prompt: "Use $coordinator to organize this multi-task project, persist its specification and task graph, and coordinate safe parallel work."
+  short_description: "Manage shared tasks, ownership, and project progress"
+  default_prompt: "Use $coordinator to create or update the shared tasks.md, assign worktrees, and track this project's progress."

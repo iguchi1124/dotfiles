@@ -28,11 +28,10 @@ What a skill or agent must be:
 
 How these files evolve:
 
-- **The final step is improving the skill itself.** Each run ends with a
-  retrospective before the final report: log friction the moment it
-  occurs, fold lessons back into the skill's own `SKILL.md`. A lesson
-  observed once is only recorded and promotes after it recurs; obvious,
-  reproducibly-confirmed instruction defects may be fixed immediately.
+- **Improve without overfitting.** Promote a lesson into a skill only after
+  it recurs; obvious, reproducibly-confirmed instruction defects may be
+  fixed immediately. Neither coordinator nor orchestrator requires a
+  retrospective or self-edit as a completion step.
 - **Self-editing has boundaries.** Behavior-preserving clarifications may
   be applied without asking; semantic changes (loop caps, safety rules,
   stage structure) are the user's decision; safety rules are never relaxed

@@ -1,45 +1,35 @@
 ---
 title: {{PROJECT_TITLE_YAML}}
-status: active
-scope: "Task dependencies, ownership, work boundaries, and verification"
 ---
 
 # Tasks
 
+Shared directory: `{{COORDINATION_DIR}}`
 Allowed states: `backlog`, `ready`, `active`, `blocked`, `review`, `done`.
 
-The parent coordinator is the only writer to this file. Record assignment before
-delegation. `blocked` and `review` retain ownership; reassign only through an explicit
-handoff. Run tasks in parallel only when dependencies are done and scopes do not
-overlap.
+## Coordinator ownership and handoff
 
-## TASK-001 — Establish the executable project plan
+- Writer session: unclaimed (acquire `.writer-lock` before editing)
+- Updated: {{CREATED_AT}}
+- Next action: establish requirements and task assignments
+- Active agent sessions: none
 
-- Status: ready
-- Depends on: none
-- Owner/session: coordinator
-- Started/updated: {{CREATED_AT}}
-- Responsibility: Refine `project.md` and `spec.md`; replace this seed task with the executable task graph.
-- Files or systems: `.coordinator/{{RUN_NAME}}/`
-- Worktree/branch: current project root / current branch
-- Done when: Requirements, dependencies, task boundaries, and verification are explicit.
-- Verification: Re-read all coordination files and confirm every required outcome maps to at least one task.
-- Blocker/restart condition: none
+## Task entry
 
-## Task template
+Replace this example with real tasks. The coordinator reserves scope before
+delegation. Blocked and review tasks retain ownership until an explicit handoff.
 
-Copy this section for each new task, assign the next stable ID, then remove this
-instructional sentence when the task graph is established.
-
-### TASK-NNN — Outcome-oriented title
+### TASK-NNN — Outcome
 
 - Status: backlog
-- Depends on: TASK-NNN or none
+- Dependencies: none
 - Owner/session: unassigned
-- Started/updated: TBD (timestamp with timezone)
-- Responsibility: TBD
-- Files or systems: TBD
-- Worktree/branch: TBD
+- Updated: {{CREATED_AT}}
+- Scope: TBD (files, interfaces, or responsibility)
+- Worktree/branch: unassigned
+- Task record: unassigned (absolute path; detailed plan, baseline, and evidence live there)
 - Done when: TBD
 - Verification: TBD
+- Outcome/next action: TBD (include integration status)
 - Blocker/restart condition: none
+- Handoff: none

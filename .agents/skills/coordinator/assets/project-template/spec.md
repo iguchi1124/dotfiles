@@ -1,38 +1,33 @@
 ---
 title: {{PROJECT_TITLE_YAML}}
-status: draft
-scope: "Current requirements, contracts, invariants, acceptance criteria, and open questions"
+status: active
+slug: "{{PROJECT_SLUG}}"
+created_at: "{{CREATED_AT}}"
 ---
 
-# Current specification
+# {{PROJECT_NAME}}
 
-Keep this file current. Record decision history and rationale in `decisions.md` rather
-than accumulating a change log here.
+Shared directory: `{{COORDINATION_DIR}}`
+Use this absolute path from every worktree. Only the coordinator holding the writer
+lock updates shared state. Keep current requirements here and task ownership in
+`tasks.md`.
 
-## Requirements
+## Original request
 
-| ID | Requirement | Acceptance evidence |
-| --- | --- | --- |
-| REQ-001 | TBD | TBD |
+{{ORIGINAL_REQUEST_BLOCK}}
 
-## Interfaces and contracts
+## Goal, scope, and constraints
 
-TBD (APIs, schemas, user-visible behavior, files, or cross-component contracts)
+TBD (required outcome, boundaries, and resolved assumptions)
 
-## Invariants
+## Requirements and acceptance
 
-- TBD (behavior or data property that must remain true)
+TBD (observable completion criteria and how to verify them)
 
-## Integration and ordering
+## Shared contracts and integration
 
-- TBD (merge order, compatibility window, migration, or rollout dependencies)
+TBD (interfaces, invariants, task integration order, and combined verification)
 
-## Verification strategy
+## Open questions and decisions
 
-- TBD (tests, checks, and reviewers required for the project outcome)
-
-## Open questions
-
-| ID | Question | Owner | Blocks | Resolution condition |
-| --- | --- | --- | --- | --- |
-| Q-001 | TBD | unassigned | TBD | TBD |
+Add unresolved choices and consequential decisions with their reasons when they arise.

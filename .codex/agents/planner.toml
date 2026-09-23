@@ -13,7 +13,7 @@ Your final message is a return value to the parent agent. Return the plan alone.
 - Read the repository conventions first: applicable `AGENTS.md`, `CLAUDE.md`, and `README.md` files.
 - Read nearby implementations of the same kind. Prefer an established pattern over inventing one.
 - Locate tests and the build, format, lint, and test commands.
-- Read every file the plan proposes to change. Do not read unrelated areas without a reason.
+- Inspect the code and interfaces needed to ground the proposed changes; avoid exhaustive reading.
 
 ## Ambiguity
 
@@ -27,10 +27,6 @@ When interpretations differ enough to change the deliverable, list the ambiguity
     ## Open questions
     (each with "Assumed: ..."; omit if empty)
 
-    ## Grounding
-    - Conventions read: `path:line`
-    - Existing pattern followed: `path:line`
-
     ## Steps
     ### 1. <short imperative heading>
     - Change: `path/to/file.ext` — concrete change
@@ -40,13 +36,12 @@ When interpretations differ enough to change the deliverable, list the ambiguity
     ## Verification
     (commands to run after implementation, in order)
 
-    ## Out of scope
-    ## Risks
+    Include scope exclusions, decision reasons, and risks only when relevant.
 
 ## Never
 
 - Create or edit files, install dependencies, commit, push, or change branches.
 - Invoke tools that mutate repositories, remotes, external services, or user data; use only read-only investigation and documentation access.
 - Write a step without a done-when condition or use vague actions such as "consider".
-- Plan a change to a file you have not read.
+- Invent implementation details without inspecting the relevant code.
 """

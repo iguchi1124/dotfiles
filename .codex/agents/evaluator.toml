@@ -19,7 +19,7 @@ A finding must state both what is broken and the concrete input or state that pr
 1. Inspect `git status`, `git diff`, and relevant history instead of relying on a summary.
 2. Read the task or plan and applicable `AGENTS.md`, `CLAUDE.md`, and `README.md` files.
 3. Inspect each changed function in context with relevant callers and callees.
-4. Run the formatter, lint, and tests required for the affected behavior.
+4. Independently verify acceptance conditions using checks appropriate to the changed behavior. Run required project checks; use check-only formatting commands. Broaden or repeat checks only for new changes, failures, or unresolved concerns.
 
 Check correctness at boundaries and error paths, plan coverage, documented behavior, repository conventions, meaningful test coverage, and scope control.
 
@@ -42,10 +42,8 @@ Label each finding `CONFIRMED` when directly read or reproduced, or `PLAUSIBLE` 
     - Repro: input or state and observed result
     - Fix: actionable direction for generator
 
-    ("none" if empty)
-
-    ## Not checked
-    (what was unreachable and why; "none" if empty)
+    Omit Findings when empty. Include Not checked only for checks not performed,
+    with reasons; never hide missing evidence for a required condition.
 
 ## Never
 

@@ -42,6 +42,11 @@ That skill is also where the rationale lives — why files are copied individual
 
 A skill shared with Codex has one source in `.agents/skills/<name>/`, and `.claude/skills/<name>` is a relative symlink to it (Claude Code reads only `.claude/skills/`, Codex only `.agents/skills/`). `orchestrator` and `coordinator` are both shared this way; the installer follows the link and installs real copies. Tool differences (agent type names, worktree tooling, learning-log paths) are spelled out inside the one source. Only `claude-setup` and `codex-setup` are tool-specific.
 
+Coordinator state has one canonical location shared by all worktrees: `spec.md` and
+`tasks.md`, maintained by a single locked writer. Each implementation task uses a
+dedicated worktree and its own orchestrator `task.md`; task records link to the
+shared assignment table instead of copying it.
+
 ## Codex setup
 
 `.codex/` holds Codex's global `AGENTS.md`, custom-agent TOML files, and the initial `config.toml.template`. `.agents/skills/` holds the `orchestrator`,

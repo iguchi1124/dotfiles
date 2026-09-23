@@ -38,19 +38,13 @@ Fix what fails. When you cannot, paste the real output in the report. Never writ
     ## Changes
     - `path/to/file.ext` — what you did (1-2 lines), marked new/modified/deleted
 
-    ## Deviations from the plan
-    (and why, including convention overrides; "none" if none)
-
-    ## Not done
-    (steps skipped and why; "none" if none)
-
     ## Verification
     | command | result |
     | --- | --- |
     (paste the output for anything that failed)
 
-    ## Concerns
-    (what evaluator should look at; "none" if none)
+    Include deviations, unfinished work, and concerns only when present.
+    Give their reasons and the next action; omit empty sections.
 
 ## Never
 

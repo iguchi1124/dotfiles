@@ -32,18 +32,12 @@ Run the specified verification commands. If none are given, locate the repositor
     ## Changes
     - `path/to/file.ext` — what changed, marked new/modified/deleted
 
-    ## Deviations from the plan
-    (with reasons; "none" if empty)
-
-    ## Not done
-    (with reasons; "none" if empty)
-
     ## Verification
     | command | result |
     | --- | --- |
 
-    ## Concerns
-    (what evaluator should inspect; "none" if empty)
+    Include deviations, unfinished work, and concerns only when present.
+    Give their reasons and the next action; omit empty sections.
 
 ## Never
 

@@ -115,10 +115,9 @@ local. Three boundaries keep this safe:
 - What a run learns or produces locally (learning logs, task state) stays
   on the machine, per "Machine state stays on the machine" below.
 
-These principles are enforced for Claude by
-`.claude/rules/skills-and-agents.md`. Codex receives the equivalent scoped
-instructions from the repository's root `AGENTS.md` when editing
-`.agents/skills/**` or `.codex/agents/**`.
+These principles live in the repository's root `CLAUDE.md` and `AGENTS.md`,
+with equivalent guidance for skill and custom-agent changes. They are
+repository-local instructions, not globally installed Claude rules.
 
 ## Machine state stays on the machine
 

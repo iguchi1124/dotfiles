@@ -1,27 +1,33 @@
 # Design principles
 
-The rules this repository is built around. `CLAUDE.md` tells a tool how to
-work here; this file records *why* the repository is shaped the way it is,
-so that a future change can be judged against the intent, not just the
-current layout.
+The rules this repository is built around. `AGENTS.md` and `CLAUDE.md` tell
+the tools how to work here; this file records *why* the repository is shaped
+the way it is, so that a future change can be judged against the intent,
+not just the current layout.
 
-## One command, idempotent, from any state
+## Installation is repeatable
 
-A new machine is set up with a single `curl | bash` of `setup.sh`, and the
-same command is the upgrade path: it is safe to re-run after adding files,
-and every step either converges (`ln -snfv`, `mkdir -p`) or skips
-what already exists. There is no separate "update" procedure to remember.
+Shell and application configuration is installed with a single `curl | bash`
+of `setup.sh`. The script clones the repository when absent; an existing
+checkout must be updated separately before re-running the installer.
+Re-running applies the local sources: links are refreshed, directories are
+created as needed, and already installed bootstrap tools are left in place.
+Claude Code and Codex configuration use separate setup skills with the same
+repeatable installation approach.
 
 ## Real directories separate configuration from runtime state
 
-`setup.sh` creates real application directories and symlinks the files inside
-them one by one. Claude and Codex setup instead copy their managed files
-individually into real directories, replacing legacy file links and refusing
-directory links. A symlinked directory would make the target and the repo the
-same place, and applications write runtime state - logs, sockets, caches,
-sessions - next to their config. The repo owns the configuration sources;
-the machine owns the state. New app files and any Claude or Codex source
-changes need a re-run of the corresponding installer.
+`setup.sh` creates real application directories and symlinks each immediate
+entry inside them. Nested configuration directories, such as Vim's `after/`,
+are linked as whole directories. The application directory itself stays real
+so runtime files written beside those entries remain on the machine; writes
+inside a linked subdirectory reach the repository.
+
+Claude Code and Codex setup copy managed files individually into real
+directories, replacing legacy file links and refusing destination directory
+links. The repo owns the configuration sources; the machine owns runtime
+state. New app entries and changes to copied Claude Code or Codex sources
+need a re-run of the corresponding installer.
 
 ## Defaults first, configuration minimal
 
@@ -42,11 +48,16 @@ directly in `$HOME` only when the app demands it (`.zshrc`, `.zshenv`,
 `.zprofile`, `.Brewfile`). Preferring XDG keeps `$HOME` small and makes the
 repo's layout mirror the installed layout.
 
-## Dependencies belong to the package manager
+## Dependencies are managed outside the repository
 
-Tools and even shell plugins (`zsh-autosuggestions`, `zsh-syntax-highlighting`)
-are Homebrew packages declared in `.Brewfile`, not vendored clones or
-git submodules. The repo carries configuration, not software.
+Command-line tools, applications, and shell plugins such as
+`zsh-autosuggestions` and `zsh-syntax-highlighting` are declared in `.Brewfile`
+for Homebrew. On macOS, `setup.sh` installs Homebrew when missing and links
+the Brewfile; installing its packages is a separate step.
+
+Vim plugins are declared in `vimrc` and managed by vim-plug. `setup.sh`
+downloads vim-plug itself when missing. These dependencies are installed
+outside the repository; the repo carries their configuration.
 
 ## User settings are initialized once
 
@@ -63,7 +74,7 @@ both `claude-setup` and `codex-setup` copy those files individually.
 ## The AI workflow is configuration too
 
 Subagents and skills are versioned here like shell config, because
-they shape how work happens on every machine. Three principles govern them:
+they shape how work happens on every machine. Two principles govern them:
 
 - **Separation of roles.** Planning, generation, and evaluation remain
   separate stages. Custom planner / generator / evaluator definitions
@@ -74,14 +85,6 @@ they shape how work happens on every machine. Three principles govern them:
   bias of whoever wrote it. The implementer never reviews itself.
 - **Skill design.** Skills follow the principles of the next section,
   with explicit stop conditions and evidence-based instruction changes.
-- **One source per shared skill.** Claude Code reads `.claude/skills/` and
-  Codex reads `.agents/skills/`, so a skill whose instructions are the same
-  for both lives in `.agents/skills/<name>/` with `.claude/skills/<name>` a
-  symlink to it. Both installers still copy files into real directories.
-  Where the tools differ (built-in agent type names, worktree tooling,
-  learning-log paths), the one source names both variants rather than
-  forking into two copies that drift; only the setup skills are
-  tool-specific.
 
 ## Skill design
 
@@ -118,15 +121,14 @@ local. Three boundaries keep this safe:
 ## Machine state stays on the machine
 
 What a run produces or learns locally is not synced: `.orchestrator/` task
-state and `.coordinator/` project state are globally ignored. Per-project
-`env.sh` is ignored, and skill learnings live under the installed
-`~/.claude/skills/` or `~/.agents/skills/` directory, not here. The repo
-describes behavior; the machine accumulates history.
+state and `.coordinator/` project state are globally ignored. Skill learnings
+live under the installed `~/.claude/skills/` or `~/.agents/skills/` directory,
+not here. The repo describes behavior; the machine accumulates history.
 
 ## Rationale lives next to the mechanism
 
 Every non-obvious decision is written down where the code is: `setup.sh`
-comments explain the per-file linking, the Claude and Codex setup skills
+comments explain the linking strategy, the Claude and Codex setup skills
 explain their installation strategies, and each
 custom-agent definition or caller's stage contract explains its prohibitions. This file holds only the
 principles; the details stay with their implementation so they cannot drift

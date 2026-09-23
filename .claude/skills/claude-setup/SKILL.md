@@ -103,22 +103,23 @@ evaluation; read the complete contract before reducing or moving an instruction.
 
 ### orchestrator
 
-The skill that chains Plan, Generate, and Evaluate, looping evaluator blockers back
-into the same available generator until PASS or a stop condition. Evaluators start
-fresh. Each task uses a dedicated worktree and one durable
-`.orchestrator/<task-dir>/task.md`, shared across tools and later sessions.
+The skill that executes one task through isolated Plan, Generate, and Evaluate
+contexts, reusing its generator for fixes and starting fresh evaluators. Each task
+uses a dedicated worktree and one `.orchestrator/<task-dir>/task.md`. Shared
+`tasks.md` and overall project progress belong to coordinator.
 Installed globally so it is one `/orchestrator` away in any project.
 Like `coordinator` below, the skill is one source
 shared with Codex: `.agents/skills/orchestrator/`, linked from `.claude/skills/`.
 
 ### coordinator
 
-The skill that maintains durable specifications, task dependencies, ownership,
-decisions, and progress for multi-task or multi-agent projects. Its
+The skill used by the conversation parent to create and maintain the shared task
+board, assign worktrees, and track multi-task project progress. Its
 state lives in `spec.md` and `tasks.md` under one canonical
 `.coordinator/<project-dir>/` in the primary checkout or supplied shared root.
-All worktrees use that absolute path; a writer lock serializes coordinator sessions,
-and task ownership prevents duplicate assignments. The skill itself is shared with Codex:
+All worktrees use that absolute path; a root-level writer lock covers project
+selection and state updates. Dependency changes must be available before a task
+starts. The skill itself is shared with Codex:
 it lives in `.agents/skills/coordinator/`, and `.claude/skills/coordinator` is a
 symlink to it, because Claude Code reads only `.claude/skills/` while Codex reads
 `.agents/skills/`. `orchestrator` is shared the same way;

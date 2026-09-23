@@ -9,7 +9,7 @@ Allowed states: `backlog`, `ready`, `active`, `blocked`, `review`, `done`.
 
 ## Coordinator ownership and handoff
 
-- Writer session: unclaimed (acquire `.writer-lock` before editing)
+- Writer session: unclaimed (acquire the shared `.coordinator/.writer-lock` before editing)
 - Updated: {{CREATED_AT}}
 - Next action: establish requirements and task assignments
 - Active agent sessions: none
@@ -23,12 +23,13 @@ delegation. Blocked and review tasks retain ownership until an explicit handoff.
 
 - Status: backlog
 - Dependencies: none
+- Dependency base/evidence: TBD (required changes must be present before starting)
 - Owner/session: unassigned
 - Updated: {{CREATED_AT}}
 - Scope: TBD (files, interfaces, or responsibility)
 - Worktree/branch: unassigned
 - Task record: unassigned (absolute path; detailed plan, baseline, and evidence live there)
-- Done when: TBD
+- Done when: TBD (include required integration; stay in review while it is outstanding)
 - Verification: TBD
 - Outcome/next action: TBD (include integration status)
 - Blocker/restart condition: none

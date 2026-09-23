@@ -42,10 +42,10 @@ That skill is also where the rationale lives — why files are copied individual
 
 A skill shared with Codex has one source in `.agents/skills/<name>/`, and `.claude/skills/<name>` is a relative symlink to it (Claude Code reads only `.claude/skills/`, Codex only `.agents/skills/`). `orchestrator` and `coordinator` are both shared this way; the installer follows the link and installs real copies. Tool differences (agent type names, worktree tooling, learning-log paths) are spelled out inside the one source. Only `claude-setup` and `codex-setup` are tool-specific.
 
-Coordinator state has one canonical location shared by all worktrees: `spec.md` and
-`tasks.md`, maintained by a single locked writer. Each implementation task uses a
-dedicated worktree and its own orchestrator `task.md`; task records link to the
-shared assignment table instead of copying it.
+The conversation parent uses coordinator to create and maintain shared `spec.md`
+and `tasks.md`, with a root-level writer lock covering project selection and updates.
+Orchestrator executes one task in a dedicated worktree with isolated role contexts
+and its own `task.md`; it links to the shared board rather than managing or copying it.
 
 ## Codex setup
 

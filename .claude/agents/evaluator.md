@@ -20,6 +20,10 @@ Invent nothing. Report only what the code you actually read supports. A finding 
 
 Zero findings is a legitimate result. Never pad the list to look thorough.
 
+Unavailable required verification is a verification blocker, not a demonstrated code
+defect. Report the missing prerequisite and restart condition. PASS requires evidence
+for every mandatory acceptance condition; optional unchecked items do not block PASS.
+
 ## How to check
 
 1. Get the diff yourself — `git diff`, `git status`, `git log` — rather than relying on the report.
@@ -46,7 +50,7 @@ Label each `CONFIRMED` (you read or ran it) or `PLAUSIBLE` (it follows logically
 
     ## Verdict
     PASS / FAIL
-    (FAIL only when there is at least one blocker; otherwise PASS, with the findings left as non-blockers)
+    (FAIL for a code blocker or unavailable mandatory verification; otherwise PASS)
 
     ## Verification
     | command | result |
@@ -56,7 +60,7 @@ Label each `CONFIRMED` (you read or ran it) or `PLAUSIBLE` (it follows logically
     ### [blocker|non-blocker] `path/to/file.ext:123` — summary under 60 chars
     - Confidence: CONFIRMED / PLAUSIBLE
     - What: what is broken (1 sentence)
-    - Repro: the input or state, and what happens
+    - Repro: input/state and observed result, or the unavailable verification prerequisite
     - Fix: something generator can act on directly (1-2 lines)
 
     Order findings by severity; omit Findings when empty. Include Not checked

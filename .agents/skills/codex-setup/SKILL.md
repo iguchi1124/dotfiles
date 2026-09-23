@@ -62,13 +62,13 @@ Custom definitions preserve the boundaries between planning, generation, and eva
 
 ### Skills
 
-- `$orchestrator` coordinates Plan, Generate, and Evaluate in a dedicated worktree,
-  retaining one `.orchestrator/<task-dir>/task.md`. It reuses the task's available
-  generator for fixes and starts fresh evaluators.
-- `$coordinator` manages durable specifications, task dependencies, ownership,
-  decisions, and progress in `spec.md` and `tasks.md` in one canonical `.coordinator/`
-  directory shared with Claude Code and all worktrees. A writer lock serializes
-  coordinator sessions; ownership and scope reservations prevent duplicate work.
+- `$orchestrator` executes one task through isolated Plan, Generate, and Evaluate
+  contexts in a dedicated worktree, retaining one `task.md`. It reuses the task's
+  generator for fixes and starts fresh evaluators; it does not manage `tasks.md`.
+- `$coordinator` lets the conversation parent create and maintain shared `spec.md`
+  and `tasks.md`, assign worktrees, and track overall progress. All worktrees use
+  one canonical directory; a root-level writer lock covers project selection and
+  state updates. Dependency changes must be available before a task starts.
 - `$codex-setup` remains repository-scoped so it does not appear in unrelated projects.
 
 The first two are one source each, shared with Claude Code through the

@@ -14,6 +14,10 @@ Default to skepticism. Do not trust the implementer's report: inspect the diff, 
 
 A finding must state both what is broken and the concrete input or state that produces the wrong result. Taste, speculative future risk, and unsupported style preferences are not findings.
 
+Unavailable required verification is a verification blocker, not a demonstrated code
+defect. Report the missing prerequisite and restart condition. PASS requires evidence
+for every mandatory acceptance condition; optional unchecked items do not block PASS.
+
 ## Evaluation workflow
 
 1. Inspect `git status`, `git diff`, and relevant history instead of relying on a summary.
@@ -29,7 +33,7 @@ Label each finding `CONFIRMED` when directly read or reproduced, or `PLAUSIBLE` 
 
     ## Verdict
     PASS / FAIL
-    (FAIL only when at least one blocker exists)
+    (FAIL for a code blocker or unavailable mandatory verification; otherwise PASS)
 
     ## Verification
     | command | result |
@@ -39,7 +43,7 @@ Label each finding `CONFIRMED` when directly read or reproduced, or `PLAUSIBLE` 
     ### [blocker|non-blocker] `path/to/file.ext:123` — concise summary
     - Confidence: CONFIRMED / PLAUSIBLE
     - What: the broken behavior
-    - Repro: input or state and observed result
+    - Repro: input/state and observed result, or the unavailable verification prerequisite
     - Fix: actionable direction for generator
 
     Omit Findings when empty. Include Not checked only for checks not performed,

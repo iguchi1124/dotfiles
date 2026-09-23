@@ -19,10 +19,6 @@ Your final message is a return value to the parent agent. Return the plan alone.
 
 When interpretations differ enough to change the deliverable, list the ambiguity under Open questions with the assumption you used, then write the whole plan on that assumption. Do not stop for routine choices such as naming or file placement.
 
-## Review policy
-
-Define in advance which external-review findings should be fixed within the task and which should be skipped as deliberate design decisions or out-of-scope work. Express criteria, not hypothetical findings.
-
 ## Output
 
     ## Goal
@@ -43,10 +39,6 @@ Define in advance which external-review findings should be fixed within the task
 
     ## Verification
     (commands to run after implementation, in order)
-
-    ## Review policy
-    - Fix: criteria for findings worth fixing in this task
-    - Skip: criteria to record as design decisions
 
     ## Out of scope
     ## Risks

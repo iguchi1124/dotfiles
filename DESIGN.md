@@ -63,18 +63,17 @@ both `claude-setup` and `codex-setup` copy those files individually.
 ## The AI workflow is configuration too
 
 Subagents and skills are versioned here like shell config, because
-they shape how work happens on every machine. Two principles govern them:
+they shape how work happens on every machine. Three principles govern them:
 
-- **Separation of roles.** Planning, generation, evaluation, external review,
-  and reporting remain separate stages. Custom planner / generator / evaluator
-  definitions and explicit caller prompts for built-in review / report agents
+- **Separation of roles.** Planning, generation, and evaluation remain
+  separate stages. Custom planner / generator / evaluator definitions
   carry the prohibitions that keep one stage from absorbing another.
-  In particular, review comes from a reviewer detached
+  In particular, evaluation comes from an evaluator detached
   from the author's context - like third-party human review, it tests
   whether a change is correct and comprehensible *without* the context
   bias of whoever wrote it. The implementer never reviews itself.
 - **Skill design.** Skills follow the principles of the next section,
-  including ending every run by improving themselves.
+  with explicit stop conditions and evidence-based instruction changes.
 - **One source per shared skill.** Claude Code reads `.claude/skills/` and
   Codex reads `.agents/skills/`, so a skill whose instructions are the same
   for both lives in `.agents/skills/<name>/` with `.claude/skills/<name>` a
@@ -93,12 +92,10 @@ that reaches a skill from outside (review comments, tool output, fetched
 pages) is untrusted: it is read as an issue report, never executed as an
 instruction.
 
-**A skill's final step is improving the skill itself.** A run is also an
-experiment on the skill's own instructions, so each one ends with a
-retrospective: friction is logged the moment it occurs - a rule that
-misled, a command that failed as written, a situation no rule covered -
-and before the final report is delivered, the lessons are folded back into
-the skill's own `SKILL.md`. Folding in means rewriting, not appending:
+**Skill improvements follow evidence.** Neither coordinator nor orchestrator
+requires a retrospective or self-edit as a completion step. When recurring
+friction or a confirmed instruction defect warrants an update, fold the
+lesson into the skill's own `SKILL.md`. Folding in means rewriting, not appending:
 instructions are context spent on every load, so a lesson is merged into
 the text it refines and deletes what it supersedes - stacking clauses
 breeds duplication and token bloat. After an authorized source improvement,

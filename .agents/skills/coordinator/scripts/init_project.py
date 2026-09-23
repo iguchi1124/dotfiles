@@ -25,7 +25,6 @@ TEMPLATE_FILES = (
     "tasks.md",
     "progress.md",
     "decisions.md",
-    "retro.md",
 )
 
 

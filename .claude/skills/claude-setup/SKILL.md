@@ -75,7 +75,6 @@ Restart Claude Code after installation. Confirm that the repository-managed
 custom agents are `planner`, `generator`, and `evaluator`, confirmed stale
 `reviewer` and `reporter` definitions are absent, and `orchestrator` and `coordinator`
 are available.
-Review and Report use the built-in `general-purpose` type.
 A newly created `settings.json` should match the template; an
 existing settings file should remain unchanged.
 
@@ -99,18 +98,13 @@ Three custom agents are available from any project:
 planner uses `claude-fable-5-1` with `high` effort. generator uses `medium` effort.
 evaluator uses `claude-fable-5-1` with `high` effort as well: it is the PASS/FAIL gate on generator's work and must not be weaker than what it checks.
 
-Review and Report use fresh built-in `general-purpose` agents: Review runs the
-adopted external tool and triages its findings; Report packages the outcome and
-performs only explicitly authorized publication. Their contracts live in the
-calling skills. Custom definitions and explicit caller prompts preserve role
-separation; read the complete contract before reducing or moving an instruction.
+Custom definitions preserve the boundaries between planning, generation, and
+evaluation; read the complete contract before reducing or moving an instruction.
 
 ### orchestrator
 
-The skill that chains all five stages: plan, implement, check, external review, report -
-looping evaluator findings back into generator, and reviewer findings back into
-generator too, triaged by the Review policy the plan sets in advance - then delivering
-the outcome as a report or a GitHub Pull Request/Issue. State passes
+The skill that chains Plan, Generate, and Evaluate, looping evaluator blockers back
+into generator until PASS or a stop condition. State passes
 through files in the project's tool-neutral `.orchestrator/<task-dir>/`, so long tasks
 survive context compaction, every agent is spawned fresh, and a run started in Codex
 resumes here. Installed globally so it is one `/orchestrator` away in any project.
@@ -120,7 +114,7 @@ shared with Codex: `.agents/skills/orchestrator/`, linked from `.claude/skills/`
 ### coordinator
 
 The skill that maintains durable specifications, task dependencies, ownership,
-decisions, progress, and retrospectives for multi-task or multi-agent projects. Its
+decisions, and progress for multi-task or multi-agent projects. Its
 state lives in the active project's tool-neutral `.coordinator/<project-dir>/`, so
 Codex, Claude Code, independent subagents, and later sessions share one precise source
 of truth without overlapping work. The skill itself is one source shared with Codex:

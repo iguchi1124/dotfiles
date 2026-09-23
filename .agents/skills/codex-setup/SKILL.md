@@ -58,11 +58,11 @@ Three custom agents handle the first stages:
 
 planner uses `gpt-6-astra` with `high` reasoning effort. generator uses `medium` reasoning effort. evaluator uses `gpt-6-astra` with `high` reasoning effort as well: it is the PASS/FAIL gate on generator's work and must not be weaker than what it checks.
 
-Review and Report use fresh built-in `default` agents: Review runs only an adopted external tool and triages its findings; Report packages the outcome and performs only explicitly authorized publication. Their contracts live in the calling skills. Custom definitions and explicit caller prompts preserve role separation; read the complete contract before reducing or moving an instruction.
+Custom definitions preserve the boundaries between planning, generation, and evaluation; read the complete contract before reducing or moving an instruction.
 
 ### Skills
 
-- `$orchestrator` coordinates all five stages with durable task state in a
+- `$orchestrator` coordinates Plan, Generate, and Evaluate with durable task state in a
   tool-neutral `.orchestrator/` directory shared with Claude Code.
 - `$coordinator` manages durable specifications, task dependencies, ownership,
   decisions, and progress in a tool-neutral `.coordinator/` directory shared with
@@ -77,6 +77,6 @@ variants.
 
 Restart Codex after installation, then confirm:
 
-1. Repository-managed custom agents are `planner`, `generator`, and `evaluator`; confirmed stale `reviewer` and `reporter` definitions are absent. Review and Report use the built-in `default` type.
+1. Repository-managed custom agents are `planner`, `generator`, and `evaluator`; confirmed stale `reviewer` and `reporter` definitions are absent.
 2. Skill selection includes `orchestrator` and `coordinator`.
 3. A newly created `config.toml` matches the template; an existing configuration remains unchanged.

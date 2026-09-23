@@ -13,7 +13,7 @@ about this skill and requests to edit its instructions are not workflow invocati
 - Use `coordinator` to maintain the shared project specification, task graph,
   assignments, dependencies, decisions, and handoffs across agents or sessions.
 - Use `orchestrator` for a bounded implementation task that needs its sequential Plan,
-  Generate, Evaluate, Review, and Report stages.
+  Generate, and Evaluate stages.
 - A coordinator task may use `orchestrator` when that task independently meets its
   trigger. Record the orchestrator task-directory path in the coordinator task and
   progress log; do not duplicate its internal stage state.
@@ -48,7 +48,6 @@ move, or merge them without explicit authorization.
 | `tasks.md` | task status, dependencies, ownership, scope, work location, and verification |
 | `progress.md` | append-only results, verification, handoffs, and blockers |
 | `decisions.md` | accepted, rejected, and superseded decisions with rationale |
-| `retro.md` | workflow friction, repeated patterns, and candidate instruction improvements |
 | `initial-status.txt` | version-control status before the coordination directory was created |
 
 Keep `spec.md` current rather than adding change history. Record why it changed in
@@ -126,13 +125,6 @@ active workflow before performing them.
 Before declaring the project complete, verify that required tasks are `done`, their
 done-when conditions have evidence, `spec.md` matches the delivered behavior, and all
 open questions, skipped work, and residual risks are explicit.
-
-Review the run for instruction friction before reporting. Record concrete friction,
-repeated patterns, or a confirmed instruction defect in `retro.md`; do not invent a
-finding when none occurred. Promote a lesson into the skill only after it recurs,
-except for an obvious and reproducibly confirmed defect. Apply only behavior-preserving
-clarifications without approval, and ask before changing loop caps, safety rules, or
-stage structure. Keep machine-local learning state out of the repository.
 
 Report the outcome and the absolute coordination-directory path so the paper trail is
 discoverable.

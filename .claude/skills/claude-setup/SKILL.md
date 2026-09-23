@@ -90,7 +90,7 @@ Three custom agents are available from any project:
 
 - **planner** - breaks a task into verifiable steps; writes no code
 - **generator** - implements a plan and gets lint and tests passing. It is
-  pinned to `claude-opus-5`, one tier below the conversation's model: with a plan in
+  pinned to `claude-opus-5-5`, one tier below the conversation's model: with a plan in
   hand its work is bounded, and it is the stage that reads and runs the most
 - **evaluator** - checks the result and returns PASS/FAIL with reproducible findings
 

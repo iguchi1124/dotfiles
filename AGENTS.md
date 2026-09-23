@@ -27,7 +27,7 @@ It installs nothing under `~/.claude`, `~/.codex`, or `~/.agents`; the correspon
 
 ## Claude Code setup
 
-`.claude/` contains the global `CLAUDE.md`, custom agents, rules, skills, and the initial `settings.json.template`. Its `coordinator` skill shares durable project state with Codex under the active project's `.coordinator/`, while `orchestrator` runs bounded implementation workflows. Install or refresh them with:
+`.claude/` contains the global `CLAUDE.md`, custom agents, skills, and the initial `settings.json.template`. Its `coordinator` skill shares durable project state with Codex under the active project's `.coordinator/`, while `orchestrator` runs bounded implementation workflows. Install or refresh them with:
 
 ```sh
 sh "$HOME/.dotfiles/.claude/skills/claude-setup/install.sh"

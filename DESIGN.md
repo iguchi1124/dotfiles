@@ -115,11 +115,6 @@ local. Three boundaries keep this safe:
 - What a run learns or produces locally (learning logs, task state) stays
   on the machine, per "Machine state stays on the machine" below.
 
-These principles are enforced for Claude by
-`.claude/rules/skills-and-agents.md`. Codex receives the equivalent scoped
-instructions from the repository's root `AGENTS.md` when editing
-`.agents/skills/**` or `.codex/agents/**`.
-
 ## Machine state stays on the machine
 
 What a run produces or learns locally is not synced: `.orchestrator/` task

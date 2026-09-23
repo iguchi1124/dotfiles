@@ -11,7 +11,7 @@ dotpath=$(cd "$skill_dir/../../.." && pwd)
 claude_dir="$HOME/.claude"
 
 # Copy file by file into real directories so runtime state stays on this machine.
-for dir in "$claude_dir" "$claude_dir/agents" "$claude_dir/rules" "$claude_dir/skills"
+for dir in "$claude_dir" "$claude_dir/agents" "$claude_dir/skills"
 do
   if [ -L "$dir" ]; then
     echo "refusing symlinked runtime directory: $dir" >&2
@@ -55,19 +55,12 @@ copy_file() {
 }
 
 copy_file "$dotpath/.claude/CLAUDE.md" "$claude_dir/CLAUDE.md"
-mkdir -p "$claude_dir/agents" "$claude_dir/rules" "$claude_dir/skills"
+mkdir -p "$claude_dir/agents" "$claude_dir/skills"
 
 for file in "$dotpath/.claude/agents"/*
 do
   [ -f "$file" ] || continue
   copy_file "$file" "$claude_dir/agents/$(basename "$file")"
-done
-
-for file in "$dotpath/.claude/rules"/*
-do
-  # /bin/sh has no nullglob: an empty dir leaves the '*' literal.
-  [ -f "$file" ] || continue
-  copy_file "$file" "$claude_dir/rules/$(basename "$file")"
 done
 
 # Skills too, one directory per skill. claude-setup itself stays a project

@@ -53,7 +53,7 @@ to change preferences.
 Three custom agents handle the first stages:
 
 - `planner` — returns a grounded, verifiable plan without editing
-- `generator` — implements the assigned plan or verified finding; pinned to `gpt-5.6-sol`, one model tier below the orchestrator, since a plan bounds its work and it is the stage that reads and runs the most
+- `generator` — implements the assigned plan or verified finding; pinned to `gpt-6-sol`, one model tier below the orchestrator, since a plan bounds its work and it is the stage that reads and runs the most
 - `evaluator` — independently checks the result and returns PASS or FAIL
 
 planner uses `gpt-6-astra` with `high` reasoning effort. generator uses `medium` reasoning effort. evaluator uses `gpt-6-astra` with `high` reasoning effort as well: it is the PASS/FAIL gate on generator's work and must not be weaker than what it checks.

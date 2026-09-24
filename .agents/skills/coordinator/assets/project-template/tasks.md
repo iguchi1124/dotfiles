@@ -9,7 +9,7 @@ Allowed states: `backlog`, `ready`, `active`, `blocked`, `review`, `done`.
 
 ## Coordinator ownership and handoff
 
-- Writer session: unclaimed (acquire the shared `.coordinator/.writer-lock` before editing)
+- Coordinator session: unclaimed
 - Updated: {{CREATED_AT}}
 - Next action: establish requirements and task assignments
 - Active agent sessions: none

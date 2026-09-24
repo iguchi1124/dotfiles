@@ -8,8 +8,7 @@ created_at: "{{CREATED_AT}}"
 # {{PROJECT_NAME}}
 
 Shared directory: `{{COORDINATION_DIR}}`
-Use this absolute path from every worktree. Only the coordinator holding the shared
-root's `.coordinator/.writer-lock` updates state. Keep requirements here and ownership in
+Use this absolute path from every worktree. Keep requirements here and ownership in
 `tasks.md`.
 
 ## Original request

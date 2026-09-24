@@ -53,16 +53,11 @@ inputs using the project's worktree setup; create or extend an untracked
 For a new run, use `.orchestrator/<YYYYMMDD>-<slug>/task.md` in that worktree,
 or the assigned absolute task record path. First check for an existing record and
 never overwrite another task or session.
-The task's parent orchestrator is its sole writer. Generator and evaluator return
-results; they do not edit task state or shared project files. Before another parent
-session takes over, record a handoff and stop the old writer and its active agents.
-Never infer a handoff from elapsed time. Acquire
-`mkdir <task-directory>/.writer-lock` before writing task state, including when
-the task ID came from a shared board.
-If it exists, stop; do not steal or remove an unknown lock. Create the task directory
-before acquiring the lock, then write `task.md` only while holding it. Record the
-owning session there, and release only your own empty lock with `rmdir` after persisting
-state and ensuring no agent is still writing. Retain ownership if an agent is active.
+The task's parent owns `task.md`. Generator and evaluator return results; they do not
+edit task state or shared project files. Record the owning session in `task.md`.
+Before another parent session takes over, record a handoff and stop the old owner
+and its active agents. Never infer a handoff from elapsed time. On resumption, check
+the recorded owner and stop if another session may still be writing.
 
 Keep these sections sufficient to resume without conversation history:
 

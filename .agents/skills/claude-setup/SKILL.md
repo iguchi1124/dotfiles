@@ -121,9 +121,8 @@ board, prepare task IDs and worktree assignments for separate execution, and tra
 multi-task project progress. It does not launch orchestrator. Its
 state lives in `spec.md` and `tasks.md` under one canonical
 `.coordinator/<project-dir>/` in the primary checkout or supplied shared root.
-All worktrees use that absolute path; a root-level writer lock covers project
-selection and state updates. Dependency changes must be available before a task
-starts. The skill itself is shared with Codex:
+All worktrees use that absolute path. Dependency changes must be available before
+a task starts. The skill itself is shared with Codex:
 it lives in `.agents/skills/coordinator/`, exposed through the `.claude/skills`
 directory symlink. `orchestrator` is shared the same way;
 where the tools differ, the one source names both variants. Only `claude-setup` and

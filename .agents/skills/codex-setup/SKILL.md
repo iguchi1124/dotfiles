@@ -68,8 +68,8 @@ Custom definitions preserve the boundaries between planning, generation, and eva
 - `$coordinator` lets the conversation parent create and maintain shared `spec.md`
   and `tasks.md`, prepare task IDs and worktree assignments for explicit execution,
   and track overall progress. It does not launch orchestrator. All worktrees use
-  one canonical directory; a root-level writer lock covers project selection and
-  state updates. Dependency changes must be available before a task starts.
+  one canonical directory per project. Dependency changes must be available before
+  a task starts.
 - `$codex-setup` and `$claude-setup` remain repository-scoped so they do not appear in unrelated projects.
 
 The first two are one source each, shared with Claude Code through the

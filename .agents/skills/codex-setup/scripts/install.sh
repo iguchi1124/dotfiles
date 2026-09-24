@@ -55,7 +55,10 @@ for skill in "$dotpath/.agents/skills"/*
 do
   [ -d "$skill" ] || continue
   name=$(basename "$skill")
-  [ "$name" = "codex-setup" ] && continue
+  # Setup skills need this repository and remain project-local.
+  case "$name" in
+    codex-setup|claude-setup) continue ;;
+  esac
 
   mkdir -p "$personal_skills_dir/$name"
   find "$skill" -type f | while IFS= read -r file

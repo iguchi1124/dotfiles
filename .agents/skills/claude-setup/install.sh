@@ -63,10 +63,8 @@ do
   copy_file "$file" "$claude_dir/agents/$(basename "$file")"
 done
 
-# Skills too, one directory per skill. claude-setup itself stays a project
-# skill of this repo - installed globally it would load everywhere for nothing.
-# A skill shared with Codex is a symlink to .agents/skills/<name>; find -H
-# follows that link so the install is still a real directory of copies.
+# .claude/skills links to .agents/skills. Install global skills as real copies;
+# both setup skills need this repository and remain project-local.
 skill_files=$(mktemp "${TMPDIR:-/tmp}/claude-setup.XXXXXXXXXX")
 trap 'rm -f "$skill_files"' 0
 trap 'exit 1' HUP INT TERM
@@ -74,7 +72,9 @@ for skill in "$dotpath/.claude/skills"/*
 do
   [ -d "$skill" ] || continue
   name=$(basename "$skill")
-  [ "$name" = "claude-setup" ] && continue
+  case "$name" in
+    claude-setup|codex-setup) continue ;;
+  esac
   if [ -L "$claude_dir/skills/$name" ]; then
     echo "refusing symlinked runtime directory: $claude_dir/skills/$name" >&2
     exit 1

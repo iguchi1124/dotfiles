@@ -14,10 +14,10 @@ Claude Code configuration is installed separately from `setup.sh` by the
 repository's `claude-setup` skill:
 
 ```sh
-sh "$HOME/.dotfiles/.claude/skills/claude-setup/install.sh"
+sh "$HOME/.dotfiles/.agents/skills/claude-setup/install.sh"
 ```
 
-See [.claude/skills/claude-setup/SKILL.md](.claude/skills/claude-setup/SKILL.md).
+See [.agents/skills/claude-setup/SKILL.md](.agents/skills/claude-setup/SKILL.md).
 
 ## Codex
 

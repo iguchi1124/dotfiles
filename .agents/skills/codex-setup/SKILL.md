@@ -14,7 +14,7 @@ description: Install, repair, or verify this dotfiles repository's Codex configu
 | `.codex/config.toml.template` | `${CODEX_HOME:-$HOME/.codex}/config.toml` | copied only when absent; existing files and symlinks are left unchanged |
 | `.codex/AGENTS.md` | `${CODEX_HOME:-$HOME/.codex}/AGENTS.md` | copied as the global instruction file |
 | `.codex/agents/*.toml` | `${CODEX_HOME:-$HOME/.codex}/agents/` | copied file by file |
-| `.agents/skills/<name>/` | `$HOME/.agents/skills/<name>/` | copied file by file; `codex-setup` itself is skipped. A skill shared with Claude Code lives only here, and `.claude/skills/<name>` is a symlink to it that `claude-setup` follows |
+| `.agents/skills/<name>/` | `$HOME/.agents/skills/<name>/` | copied file by file; `codex-setup` and `claude-setup` are skipped; both remain repository-scoped. All skill sources live here, and `.claude/skills` is a symlink to this directory that `claude-setup` follows |
 
 Targets are real directories containing independent file copies. Installed instructions, custom agents, and skills are overwritten from dotfiles; legacy file symlinks are removed before copying so their referents are not modified. Symlinked destination directories are refused. Files absent from the source, including machine-local learning logs, are preserved.
 
@@ -69,10 +69,10 @@ Custom definitions preserve the boundaries between planning, generation, and eva
   and `tasks.md`, assign worktrees, and track overall progress. All worktrees use
   one canonical directory; a root-level writer lock covers project selection and
   state updates. Dependency changes must be available before a task starts.
-- `$codex-setup` remains repository-scoped so it does not appear in unrelated projects.
+- `$codex-setup` and `$claude-setup` remain repository-scoped so they do not appear in unrelated projects.
 
 The first two are one source each, shared with Claude Code through the
-`.claude/skills/<name>` symlinks; where the tools differ, the source names both
+`.claude/skills` directory symlink; where the tools differ, the source names both
 variants.
 
 ## Verify

@@ -11,13 +11,17 @@ description: Install, repair, or verify this repo's Claude Code configuration. C
 installer creates it from the template only when absent and leaves existing settings
 unchanged.
 
+All skill sources live in `.agents/skills/`; `.claude/skills` is a relative
+symlink to that directory. Both installers keep the setup skills repository-scoped.
+This installer works through either source path.
+
 ## What gets installed
 
 | Source in this repo | Target | Notes |
 | --- | --- | --- |
 | `.claude/CLAUDE.md` | `~/.claude/CLAUDE.md` | Copied as the global instruction file, loaded in every session. |
 | `.claude/agents/*` | `~/.claude/agents/` | Copied file by file. |
-| `.claude/skills/*` | `~/.claude/skills/<name>/` | Copied file by file, including nested files. A skill shared with Codex is a symlink to `.agents/skills/<name>`; the installer follows it, so the target is still a real directory of copies (its `agents/openai.yaml` comes along and is ignored by Claude Code). `claude-setup` itself is skipped - it stays a project skill of this repo. |
+| `.claude/skills/*` | `~/.claude/skills/<name>/` | Copied file by file, including nested files. The source directory is a symlink to `.agents/skills/`; installed skills are real directories of copies (`agents/openai.yaml` comes along and is ignored by Claude Code). Both `claude-setup` and `codex-setup` are skipped - they stay project skills of this repo. |
 | `.claude/settings.json.template` | `~/.claude/settings.json` | Copied only when absent; existing files and symlinks are left unchanged. |
 
 Targets are real directories containing independent file copies. Installed
@@ -33,7 +37,7 @@ are preserved.
 Idempotent, and safe to re-run after adding an agent or a skill:
 
 ```sh
-sh "$HOME/.dotfiles/.claude/skills/claude-setup/install.sh"
+sh "$HOME/.dotfiles/.agents/skills/claude-setup/install.sh"
 ```
 
 Report what it printed. Re-run it after changing dotfiles to refresh installed
@@ -108,7 +112,7 @@ uses a dedicated worktree and one `.orchestrator/<task-dir>/task.md`. Shared
 `tasks.md` and overall project progress belong to coordinator.
 Installed globally so it is one `/orchestrator` away in any project.
 Like `coordinator` below, the skill is one source
-shared with Codex: `.agents/skills/orchestrator/`, linked from `.claude/skills/`.
+shared with Codex: `.agents/skills/orchestrator/`, exposed through the `.claude/skills` directory symlink.
 
 ### coordinator
 
@@ -119,9 +123,8 @@ state lives in `spec.md` and `tasks.md` under one canonical
 All worktrees use that absolute path; a root-level writer lock covers project
 selection and state updates. Dependency changes must be available before a task
 starts. The skill itself is shared with Codex:
-it lives in `.agents/skills/coordinator/`, and `.claude/skills/coordinator` is a
-symlink to it, because Claude Code reads only `.claude/skills/` while Codex reads
-`.agents/skills/`. `orchestrator` is shared the same way;
+it lives in `.agents/skills/coordinator/`, exposed through the `.claude/skills`
+directory symlink. `orchestrator` is shared the same way;
 where the tools differ, the one source names both variants. Only `claude-setup` and
 `codex-setup` are tool-specific. It may delegate a bounded task to `orchestrator`
 when that task independently needs the orchestrated workflow.

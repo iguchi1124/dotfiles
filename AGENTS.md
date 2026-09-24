@@ -42,14 +42,14 @@ and `tasks.md` in one shared directory per project.
 Coordinator presents ready task IDs without starting execution; the user can invoke
 orchestrator separately with a task ID.
 Orchestrator executes one task in a dedicated worktree with isolated role contexts
-and its own `task.md`; it links to the shared board rather than managing or copying it.
+without creating a task record; it reads the shared board when given a task ID.
 
 ## Codex setup
 
 Codex configuration is versioned in two trees:
 
 - `.codex/` contains the global `AGENTS.md`, custom-agent TOML files, and the initial `config.toml.template`.
-- `.agents/skills/` contains all skill sources. `orchestrator` uses custom `planner` / `generator` / `evaluator` agents for Plan, Generate, and Evaluate, keeping task state under the active project's `.orchestrator/`; `coordinator` shares durable project state under the active project's `.coordinator/`; and the repository-scoped `claude-setup` and `codex-setup` install their respective configurations. The directory is shared with Claude Code through the `.claude/skills` symlink.
+- `.agents/skills/` contains all skill sources. `orchestrator` uses custom `planner` / `generator` / `evaluator` agents for Plan, Generate, and Evaluate; `coordinator` shares durable project state under the active project's `.coordinator/`; and the repository-scoped `claude-setup` and `codex-setup` install their respective configurations. The directory is shared with Claude Code through the `.claude/skills` symlink.
 
 The main installer deliberately leaves these user-owned locations alone. Install or refresh Codex configuration with:
 

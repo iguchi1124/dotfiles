@@ -122,8 +122,8 @@ local. Three boundaries keep this safe:
 
 ## Machine state stays on the machine
 
-What a run produces or learns locally is not synced: `.orchestrator/` task
-state and `.coordinator/` project state are globally ignored. Skill learnings
+What a run produces or learns locally is not synced: `.coordinator/` project
+state and legacy `.orchestrator/` task records are globally ignored. Skill learnings
 live under the installed `~/.claude/skills/` or `~/.agents/skills/` directory,
 not here. The repo describes behavior; the machine accumulates history.
 

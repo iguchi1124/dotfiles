@@ -12,7 +12,7 @@
 # Visual Studio Code
 .vscode/
 
-# Orchestrator and coordinator state (Claude Code and Codex share one skill each)
+# Coordinator state and legacy orchestrator records
 **/.orchestrator/
 **/.coordinator/
 

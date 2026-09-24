@@ -108,8 +108,8 @@ evaluation; read the complete contract before reducing or moving an instruction.
 
 The skill that executes one task through isolated Plan, Generate, and Evaluate
 contexts, reusing its generator for fixes and starting fresh evaluators. Each task
-uses a dedicated worktree and one `.orchestrator/<task-dir>/task.md`. Shared
-`tasks.md` and overall project progress belong to coordinator.
+uses a dedicated worktree. Shared `tasks.md` and overall project progress belong to
+coordinator.
 Installed globally so it is one `/orchestrator` away in any project.
 Like `coordinator` below, the skill is one source
 shared with Codex: `.agents/skills/orchestrator/`, exposed through the `.claude/skills` directory symlink.

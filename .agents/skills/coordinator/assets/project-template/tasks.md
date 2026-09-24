@@ -30,7 +30,7 @@ an explicit handoff.
 - Updated: {{CREATED_AT}}
 - Scope: TBD (files, interfaces, or responsibility)
 - Worktree/branch: unassigned (set both before ready)
-- Task record: unassigned (absolute path; detailed plan, baseline, and evidence live there)
+- Base commit/pre-existing changes: TBD
 - Done when: TBD (include required integration; stay in review while it is outstanding)
 - Verification: TBD
 - Outcome/next action: TBD (include integration status)

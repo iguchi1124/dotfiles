@@ -63,7 +63,7 @@ Custom definitions preserve the boundaries between planning, generation, and eva
 ### Skills
 
 - `$orchestrator` executes one task through isolated Plan, Generate, and Evaluate
-  contexts in a dedicated worktree, retaining one `task.md`. It reuses the task's
+  contexts in a dedicated worktree. It reuses the task's
   generator for fixes and starts fresh evaluators; it does not manage `tasks.md`.
 - `$coordinator` lets the conversation parent create and maintain shared `spec.md`
   and `tasks.md`, prepare task IDs and worktree assignments for explicit execution,

@@ -39,6 +39,8 @@ All skill sources live in `.agents/skills/`, and `.claude/skills` is a relative 
 
 The conversation parent uses coordinator to create and maintain shared `spec.md`
 and `tasks.md`, with a root-level writer lock covering project selection and updates.
+Coordinator presents ready task IDs without starting execution; the user can invoke
+orchestrator separately with a task ID.
 Orchestrator executes one task in a dedicated worktree with isolated role contexts
 and its own `task.md`; it links to the shared board rather than managing or copying it.
 

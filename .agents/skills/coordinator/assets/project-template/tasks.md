@@ -16,8 +16,10 @@ Allowed states: `backlog`, `ready`, `active`, `blocked`, `review`, `done`.
 
 ## Task entry
 
-Replace this example with real tasks. The coordinator reserves scope before
-delegation. Blocked and review tasks retain ownership until an explicit handoff.
+Replace this example with real tasks. The coordinator reserves scope and records
+the task ID and execution paths before marking a task ready. A user invokes the
+executor separately with that ID. Blocked and review tasks retain ownership until
+an explicit handoff.
 
 ### TASK-NNN — Outcome
 
@@ -27,7 +29,7 @@ delegation. Blocked and review tasks retain ownership until an explicit handoff.
 - Owner/session: unassigned
 - Updated: {{CREATED_AT}}
 - Scope: TBD (files, interfaces, or responsibility)
-- Worktree/branch: unassigned
+- Worktree/branch: unassigned (set both before ready)
 - Task record: unassigned (absolute path; detailed plan, baseline, and evidence live there)
 - Done when: TBD (include required integration; stay in review while it is outstanding)
 - Verification: TBD

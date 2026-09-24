@@ -31,7 +31,7 @@ python3 <skill-directory>/scripts/init_project.py \
 ```
 
 The initializer creates only `spec.md` and `tasks.md` under
-`.coordinator/<YYYYMMDD>-<slug>/`. If omitting `--request-file`, insert the exact
+`.coordinator/<slug>/`. If omitting `--request-file`, insert the exact
 request into `spec.md` before delegation. Never overwrite an existing project.
 
 | File | Owner and purpose |

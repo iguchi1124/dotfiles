@@ -15,7 +15,6 @@ from pathlib import Path
 SKILL_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = SKILL_DIR / "assets" / "project-template"
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-DATE_PATTERN = re.compile(r"^[0-9]{8}$")
 TOKEN_PATTERN = re.compile(r"{{[A-Z0-9_]+}}")
 TEMPLATE_FILES = (
     "spec.md",
@@ -25,7 +24,7 @@ TEMPLATE_FILES = (
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Create .coordinator/<date>-<slug> from bundled templates."
+        description="Create .coordinator/<slug> from bundled templates."
     )
     parser.add_argument("--slug", required=True, help="short kebab-case project slug")
     parser.add_argument("--name", required=True, help="project display name")
@@ -39,11 +38,6 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         required=True,
         help="canonical shared root used by every agent, usually the primary checkout",
-    )
-    parser.add_argument(
-        "--date",
-        default=datetime.now().astimezone().strftime("%Y%m%d"),
-        help=argparse.SUPPRESS,
     )
     return parser.parse_args()
 
@@ -73,8 +67,6 @@ def main() -> int:
         raise SystemExit("error: --slug must be short kebab-case")
     if not args.name.strip():
         raise SystemExit("error: --name must not be empty")
-    if not DATE_PATTERN.fullmatch(args.date):
-        raise SystemExit("error: --date must use YYYYMMDD")
     if not TEMPLATE_DIR.is_dir():
         raise SystemExit(f"error: bundled template is missing: {TEMPLATE_DIR}")
 
@@ -88,9 +80,8 @@ def main() -> int:
     root = args.root.resolve()
     if not root.is_dir():
         raise SystemExit(f"error: project root not found: {root}")
-    run_name = f"{args.date}-{args.slug}"
     parent = root / ".coordinator"
-    target = parent / run_name
+    target = parent / args.slug
     if target.exists():
         raise SystemExit(f"error: destination already exists: {target}")
 
@@ -105,7 +96,7 @@ def main() -> int:
     }
 
     parent.mkdir(parents=True, exist_ok=True)
-    temporary = Path(tempfile.mkdtemp(prefix=f".{run_name}.", dir=parent))
+    temporary = Path(tempfile.mkdtemp(prefix=f".{args.slug}.", dir=parent))
     try:
         for template_name in TEMPLATE_FILES:
             (temporary / template_name).write_text(

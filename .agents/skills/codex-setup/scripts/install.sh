@@ -36,9 +36,9 @@ copy_file() {
   fi
 
   mkdir -p "$(dirname "$target_file")"
-  # Remove legacy links first so copying never writes through to their sources.
   if [ -L "$target_file" ]; then
-    rm "$target_file"
+    echo "refusing symlinked target file: $target_file" >&2
+    exit 1
   fi
   cp -pv "$source_file" "$target_file"
 }

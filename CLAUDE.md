@@ -21,7 +21,7 @@ Two different strategies, and the distinction matters when adding new config:
 
 Vim config lives in `.config/vim/` (Vim 9.1.0327+ reads `$XDG_CONFIG_HOME/vim/vimrc` when `~/.vimrc` and `~/.vim/vimrc` are absent), tmux config in `.config/tmux/` (tmux 3.2+ reads `$XDG_CONFIG_HOME/tmux/tmux.conf` when `~/.tmux.conf` is absent; 3.1 only knows the literal `~/.config/tmux/tmux.conf` path). Plugins and netrw state go to `$XDG_DATA_HOME/vim`, vim-plug itself to `$XDG_CONFIG_HOME/vim/autoload/`.
 
-`setup.sh` also installs vim-plug and Homebrew when missing. Zsh plugins (`zsh-autosuggestions`, `zsh-syntax-highlighting`) and completions are Homebrew packages managed through `.config/homebrew/Brewfile`, installed at `$XDG_CONFIG_HOME/homebrew/Brewfile` and read by `brew bundle --global` when `XDG_CONFIG_HOME` is set. Setup removes `~/.Brewfile` only when it is the legacy link to this repository's former `.Brewfile`; other files and links are preserved.
+`setup.sh` also installs vim-plug and Homebrew when missing. Zsh plugins (`zsh-autosuggestions`, `zsh-syntax-highlighting`) and completions are Homebrew packages managed through `.config/homebrew/Brewfile`, installed at `$XDG_CONFIG_HOME/homebrew/Brewfile` and read by `brew bundle --global` when `XDG_CONFIG_HOME` is set.
 
 It installs nothing under `~/.claude` — that is the `claude-setup` skill's job, see below.
 
@@ -38,7 +38,7 @@ It also installs nothing under `~/.codex` or `~/.agents` — that is the
 sh "$HOME/.dotfiles/.agents/skills/claude-setup/install.sh"
 ```
 
-That skill is also where the rationale lives — why files are copied individually into real directories, what each stage is for and how custom definitions or explicit caller prompts preserve its boundaries. Legacy file symlinks are replaced with copies; directory symlinks are refused. Re-run the installer after source changes and compare changed managed files with their installed copies. Read the skill before changing anything under `.claude/`.
+That skill is also where the rationale lives — why files are copied individually into real directories, what each stage is for and how custom definitions or explicit caller prompts preserve its boundaries. Destination symlinks are refused. Re-run the installer after source changes and compare changed managed files with their installed copies. Read the skill before changing anything under `.claude/`.
 
 All skill sources live in `.agents/skills/`, and `.claude/skills` is a relative symlink to that directory (`../.agents/skills`). Both tools discover the same project skills. The installers copy global skills into real user directories; `claude-setup` and `codex-setup` remain repository-scoped and are skipped by both installers. Tool differences (agent type names, worktree tooling, learning-log paths) are spelled out inside each shared skill; the two setup skills retain tool-specific responsibilities.
 

@@ -12,8 +12,7 @@
 # Visual Studio Code
 .vscode/
 
-# Coordinator state and legacy orchestrator records
-**/.orchestrator/
+# Coordinator state
 **/.coordinator/
 
 # Local worktree file-copy configuration

@@ -24,10 +24,9 @@ so runtime files written beside those entries remain on the machine; writes
 inside a linked subdirectory reach the repository.
 
 Claude Code and Codex setup copy managed files individually into real
-directories, replacing legacy file links and refusing destination directory
-links. The repo owns the configuration sources; the machine owns runtime
-state. New app entries and changes to copied Claude Code or Codex sources
-need a re-run of the corresponding installer.
+directories and refuse destination symlinks. The repo owns the configuration
+sources; the machine owns runtime state. New app entries and changes to copied
+Claude Code or Codex sources need a re-run of the corresponding installer.
 
 ## Defaults first, configuration minimal
 
@@ -123,9 +122,9 @@ local. Three boundaries keep this safe:
 ## Machine state stays on the machine
 
 What a run produces or learns locally is not synced: `.coordinator/` project
-state and legacy `.orchestrator/` task records are globally ignored. Skill learnings
-live under the installed `~/.claude/skills/` or `~/.agents/skills/` directory,
-not here. The repo describes behavior; the machine accumulates history.
+state is globally ignored. Skill learnings live under the installed
+`~/.claude/skills/` or `~/.agents/skills/` directory, not here. The repo
+describes behavior; the machine accumulates history.
 
 ## Rationale lives next to the mechanism
 

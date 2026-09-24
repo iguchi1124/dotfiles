@@ -26,11 +26,8 @@ This installer works through either source path.
 
 Targets are real directories containing independent file copies. Installed
 instructions, custom agents, and skills are overwritten from dotfiles;
-legacy file symlinks are replaced only after a copy is prepared, leaving their
-referents unchanged and preserving the links if copying fails.
-Symlinked destination directories, including a legacy `~/.claude/skills` link,
-are refused. Files absent from the source, including machine-local learning logs,
-are preserved.
+symlinked destination files and directories are refused. Files absent from the
+source, including machine-local learning logs, are preserved.
 
 ## 1. Copy the files
 
@@ -49,13 +46,8 @@ Report refreshed changes as reflected only after installation and every applicab
 comparison succeed; otherwise report the source update and the refresh failure
 separately. Machine-local learning logs remain local.
 
-A source removal or rename leaves the old target behind.
-List the affected installed directories; remove only
-confirmed repository-owned stale files or links. Resolve symlink targets to the
-removed repository source, or compare copies with the prior source or a pre-change
-hash. Recheck that identity immediately before removal; preserve and report
-mismatches. Never delete machine-local files such as `learnings.md` or whole
-directories containing them.
+A source removal or rename leaves the old target behind. The installer does not
+delete installed files.
 
 ## 2. Initialize settings.json once
 
@@ -75,8 +67,7 @@ installation, manage settings in `~/.claude/settings.json`.
 ## 3. Verify
 
 Restart Claude Code after installation. Confirm that the repository-managed
-custom agents are `planner`, `generator`, and `evaluator`, confirmed stale
-`reviewer` and `reporter` definitions are absent, and `orchestrator` and `coordinator`
+custom agents are `planner`, `generator`, and `evaluator`, and `orchestrator` and `coordinator`
 are available.
 A newly created `settings.json` should match the template; an
 existing settings file should remain unchanged.

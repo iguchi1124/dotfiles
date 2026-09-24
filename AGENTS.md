@@ -37,12 +37,10 @@ Read `.agents/skills/claude-setup/SKILL.md` before changing this layout. Like Co
 
 All skill sources live in `.agents/skills/`, and `.claude/skills` is a relative symlink to that directory (`../.agents/skills`). Both tools discover the same project skills. The installers copy global skills into real user directories; `claude-setup` and `codex-setup` remain repository-scoped and are skipped by both installers. Tool differences (agent type names, worktree tooling, learning-log paths) are spelled out inside each shared skill; the two setup skills retain tool-specific responsibilities.
 
-The conversation parent uses coordinator to create and maintain shared `spec.md`
-and `tasks.md` in one shared directory per project.
-Coordinator presents ready task IDs without starting execution; the user can invoke
-orchestrator separately with a task ID.
-Orchestrator executes one task in a dedicated worktree with isolated role contexts
-without creating a task record; it reads the shared board when given a task ID.
+The conversation parent uses coordinator to persist stable task IDs and shared
+context under `.coordinator/`. Recording tasks does not start implementation.
+The user or agent chooses how to proceed. Orchestrator can execute one task in a
+dedicated worktree with isolated role contexts, using a task ID when supplied.
 
 ## Codex setup
 

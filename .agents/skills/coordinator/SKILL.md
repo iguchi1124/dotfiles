@@ -7,10 +7,9 @@ description: Create and maintain shared tasks.md for multi-task or cross-session
 
 The conversation's parent acts as coordinator; no extra management agent is required.
 Own the shared specification and task board. Create stable task IDs and prepare
-ready tasks for a later, explicit invocation of orchestrator. Do not start
-orchestrator or implementation agents as a consequence of coordinating. Do not
-duplicate implementation plans or task records here. Editing this skill does not
-invoke its workflow.
+ready tasks for later, explicit execution. Do not start implementation agents as a
+consequence of coordinating, or duplicate implementation plans or task records
+here. Editing this skill does not invoke its workflow.
 
 ## Shared state and one writer
 
@@ -72,10 +71,8 @@ Keep implementation tasks in separate worktrees and reuse them for fixes. Record
 base commits and pre-existing changes in each task record. Mark tasks ready in
 parallel only when their scopes are independent; worktrees do not prevent conflicts
 in shared APIs, files, or environments. Report the ready task IDs, shared directory,
-and the exact invocation to run one, such as `Use $orchestrator for TASK-001 from
-<absolute-shared-directory>`. A later explicit invocation executes that task;
-coordinator does not launch it. On a later coordinator invocation, incorporate the
-executor's result and update project progress.
+and execution paths so the user can select a task for a separate run. On a later
+invocation, incorporate the executor's result and update project progress.
 
 ## Bounds and handoff
 

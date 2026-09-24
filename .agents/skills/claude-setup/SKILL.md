@@ -26,11 +26,8 @@ This installer works through either source path.
 
 Targets are real directories containing independent file copies. Installed
 instructions, custom agents, and skills are overwritten from dotfiles;
-legacy file symlinks are replaced only after a copy is prepared, leaving their
-referents unchanged and preserving the links if copying fails.
-Symlinked destination directories, including a legacy `~/.claude/skills` link,
-are refused. Files absent from the source, including machine-local learning logs,
-are preserved.
+symlinked destination files and directories are refused. Files absent from the
+source, including machine-local learning logs, are preserved.
 
 ## 1. Copy the files
 
@@ -49,13 +46,8 @@ Report refreshed changes as reflected only after installation and every applicab
 comparison succeed; otherwise report the source update and the refresh failure
 separately. Machine-local learning logs remain local.
 
-A source removal or rename leaves the old target behind.
-List the affected installed directories; remove only
-confirmed repository-owned stale files or links. Resolve symlink targets to the
-removed repository source, or compare copies with the prior source or a pre-change
-hash. Recheck that identity immediately before removal; preserve and report
-mismatches. Never delete machine-local files such as `learnings.md` or whole
-directories containing them.
+A source removal or rename leaves the old target behind. The installer does not
+delete installed files.
 
 ## 2. Initialize settings.json once
 
@@ -75,8 +67,7 @@ installation, manage settings in `~/.claude/settings.json`.
 ## 3. Verify
 
 Restart Claude Code after installation. Confirm that the repository-managed
-custom agents are `planner`, `generator`, and `evaluator`, confirmed stale
-`reviewer` and `reporter` definitions are absent, and `orchestrator` and `coordinator`
+custom agents are `planner`, `generator`, and `evaluator`, and `orchestrator` and `coordinator`
 are available.
 A newly created `settings.json` should match the template; an
 existing settings file should remain unchanged.
@@ -108,8 +99,8 @@ evaluation; read the complete contract before reducing or moving an instruction.
 
 The skill that executes one task through isolated Plan, Generate, and Evaluate
 contexts, reusing its generator for fixes and starting fresh evaluators. Each task
-uses a dedicated worktree and one `.orchestrator/<task-dir>/task.md`. Shared
-`tasks.md` and overall project progress belong to coordinator.
+uses a dedicated worktree. Shared `tasks.md` and overall project progress belong to
+coordinator.
 Installed globally so it is one `/orchestrator` away in any project.
 Like `coordinator` below, the skill is one source
 shared with Codex: `.agents/skills/orchestrator/`, exposed through the `.claude/skills` directory symlink.
@@ -117,14 +108,14 @@ shared with Codex: `.agents/skills/orchestrator/`, exposed through the `.claude/
 ### coordinator
 
 The skill used by the conversation parent to create and maintain the shared task
-board, assign worktrees, and track multi-task project progress. Its
+board, prepare task IDs and worktree assignments for separate execution, and track
+multi-task project progress. It does not launch orchestrator. Its
 state lives in `spec.md` and `tasks.md` under one canonical
 `.coordinator/<project-dir>/` in the primary checkout or supplied shared root.
-All worktrees use that absolute path; a root-level writer lock covers project
-selection and state updates. Dependency changes must be available before a task
-starts. The skill itself is shared with Codex:
+All worktrees use that absolute path. Dependency changes must be available before
+a task starts. The skill itself is shared with Codex:
 it lives in `.agents/skills/coordinator/`, exposed through the `.claude/skills`
 directory symlink. `orchestrator` is shared the same way;
 where the tools differ, the one source names both variants. Only `claude-setup` and
-`codex-setup` are tool-specific. It may delegate a bounded task to `orchestrator`
-when that task independently needs the orchestrated workflow.
+`codex-setup` are tool-specific. The user may invoke `orchestrator` separately with
+a ready task ID.

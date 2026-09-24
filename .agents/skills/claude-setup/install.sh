@@ -38,20 +38,11 @@ copy_file() {
   fi
 
   mkdir -p "$(dirname "$target_file")"
-  # Prepare copies before removing legacy links; never write through to sources.
   if [ -L "$target_file" ]; then
-    (
-      copy_temp=$(mktemp "$(dirname "$target_file")/.claude-setup.XXXXXXXXXX")
-      trap 'rm -f "$copy_temp"' 0
-      trap 'exit 1' HUP INT TERM
-      cp -pv "$source_file" "$copy_temp"
-      # Unlink explicitly: mv can follow a destination link to a directory.
-      rm "$target_file"
-      mv "$copy_temp" "$target_file"
-    )
-  else
-    cp -pv "$source_file" "$target_file"
+    echo "refusing symlinked target file: $target_file" >&2
+    exit 1
   fi
+  cp -pv "$source_file" "$target_file"
 }
 
 copy_file "$dotpath/.claude/CLAUDE.md" "$claude_dir/CLAUDE.md"

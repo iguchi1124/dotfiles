@@ -35,7 +35,8 @@ do
   target="$XDG_CONFIG_HOME/$name"
 
   if [[ -L "$target" ]]; then
-    rm "$target"
+    echo "refusing symlinked config directory: $target" >&2
+    exit 1
   fi
   mkdir -p "$target"
 
@@ -44,11 +45,6 @@ do
     ln -snfv "$file" "$target"
   done
 done
-
-# Remove only the legacy Brewfile link created by this installer.
-if [[ -L "$HOME/.Brewfile" ]] && [[ "$(readlink "$HOME/.Brewfile")" == "$DOTPATH/.Brewfile" ]]; then
-  rm "$HOME/.Brewfile"
-fi
 
 for file in ".zshrc" ".zshenv" ".zprofile"
 do

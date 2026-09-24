@@ -1,4 +1,4 @@
 interface:
   display_name: "Coordinator"
   short_description: "Manage shared tasks, ownership, and project progress"
-  default_prompt: "Use $coordinator to create or update the shared tasks.md, assign worktrees, and track this project's progress."
+  default_prompt: "Use $coordinator to prepare task IDs and update the shared project board. Show which tasks are ready for separate execution."

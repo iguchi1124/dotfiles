@@ -16,7 +16,7 @@ description: Install, repair, or verify this dotfiles repository's Codex configu
 | `.codex/agents/*.toml` | `${CODEX_HOME:-$HOME/.codex}/agents/` | copied file by file |
 | `.agents/skills/<name>/` | `$HOME/.agents/skills/<name>/` | copied file by file; `codex-setup` and `claude-setup` are skipped; both remain repository-scoped. All skill sources live here, and `.claude/skills` is a symlink to this directory that `claude-setup` follows |
 
-Targets are real directories containing independent file copies. Installed instructions, custom agents, and skills are overwritten from dotfiles; legacy file symlinks are removed before copying so their referents are not modified. Symlinked destination directories are refused. Files absent from the source, including machine-local learning logs, are preserved.
+Targets are real directories containing independent file copies. Installed instructions, custom agents, and skills are overwritten from dotfiles. Symlinked destination files and directories are refused. Files absent from the source, including machine-local learning logs, are preserved.
 
 ## Install
 
@@ -28,7 +28,7 @@ sh "$HOME/.dotfiles/.agents/skills/codex-setup/scripts/install.sh"
 
 Report the script's output. The operation is idempotent. Re-run it after changing dotfiles to refresh installed copies, then use `cmp` to compare each changed source refreshed by the installer with its installed file. Compare `.codex/config.toml.template` with `config.toml` only when this run created the previously absent destination; existing configuration files and symlinks are preserved and need not match the template. Report refreshed changes as reflected only after installation and every applicable comparison succeed; otherwise report the source update and the refresh failure separately. Machine-local learning logs remain local.
 
-After a source removal or rename, the installer leaves the old target in place. List the target `agents` and skill directories, then remove only confirmed repository-owned stale files or links: compare copies with the prior source or a pre-change hash, and resolve symlink targets to the removed repository source. Recheck that identity immediately before removal; preserve and report mismatches. Never delete machine-local files such as `learnings.md` or whole directories containing them.
+After a source removal or rename, the installer leaves the old target in place. It does not delete installed files.
 
 ## What is installed
 
@@ -63,12 +63,13 @@ Custom definitions preserve the boundaries between planning, generation, and eva
 ### Skills
 
 - `$orchestrator` executes one task through isolated Plan, Generate, and Evaluate
-  contexts in a dedicated worktree, retaining one `task.md`. It reuses the task's
+  contexts in a dedicated worktree. It reuses the task's
   generator for fixes and starts fresh evaluators; it does not manage `tasks.md`.
 - `$coordinator` lets the conversation parent create and maintain shared `spec.md`
-  and `tasks.md`, assign worktrees, and track overall progress. All worktrees use
-  one canonical directory; a root-level writer lock covers project selection and
-  state updates. Dependency changes must be available before a task starts.
+  and `tasks.md`, prepare task IDs and worktree assignments for explicit execution,
+  and track overall progress. It does not launch orchestrator. All worktrees use
+  one canonical directory per project. Dependency changes must be available before
+  a task starts.
 - `$codex-setup` and `$claude-setup` remain repository-scoped so they do not appear in unrelated projects.
 
 The first two are one source each, shared with Claude Code through the
@@ -79,6 +80,6 @@ variants.
 
 Restart Codex after installation, then confirm:
 
-1. Repository-managed custom agents are `planner`, `generator`, and `evaluator`; confirmed stale `reviewer` and `reporter` definitions are absent.
+1. Repository-managed custom agents are `planner`, `generator`, and `evaluator`.
 2. Skill selection includes `orchestrator` and `coordinator`.
 3. A newly created `config.toml` matches the template; an existing configuration remains unchanged.

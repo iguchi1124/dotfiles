@@ -21,7 +21,7 @@ Two different strategies are used, and the distinction matters when adding confi
 
 Vim config lives in `.config/vim/`, and tmux config lives in `.config/tmux/`. Plugins and netrw state go to `$XDG_DATA_HOME/vim`; vim-plug itself goes to `$XDG_CONFIG_HOME/vim/autoload/`.
 
-`setup.sh` also installs vim-plug and Homebrew when missing. Zsh plugins and completions are Homebrew packages managed through `.config/homebrew/Brewfile`, installed at `$XDG_CONFIG_HOME/homebrew/Brewfile` and read by `brew bundle --global` when `XDG_CONFIG_HOME` is set. Setup removes `~/.Brewfile` only when it is the legacy link to this repository's former `.Brewfile`; other files and links are preserved.
+`setup.sh` also installs vim-plug and Homebrew when missing. Zsh plugins and completions are Homebrew packages managed through `.config/homebrew/Brewfile`, installed at `$XDG_CONFIG_HOME/homebrew/Brewfile` and read by `brew bundle --global` when `XDG_CONFIG_HOME` is set.
 
 It installs nothing under `~/.claude`, `~/.codex`, or `~/.agents`; the corresponding setup skills own those shared locations.
 
@@ -33,21 +33,23 @@ It installs nothing under `~/.claude`, `~/.codex`, or `~/.agents`; the correspon
 sh "$HOME/.dotfiles/.agents/skills/claude-setup/install.sh"
 ```
 
-Read `.agents/skills/claude-setup/SKILL.md` before changing this layout. Like Codex setup, it copies owned files individually into real directories, overwriting installed copies while preserving machine-local files. Legacy file symlinks are replaced with copies; directory symlinks are refused. Existing `settings.json` files and symlinks remain unchanged. Re-run the installer after source changes and compare changed managed files with their installed copies.
+Read `.agents/skills/claude-setup/SKILL.md` before changing this layout. Like Codex setup, it copies owned files individually into real directories, overwriting installed copies while preserving machine-local files. Destination symlinks are refused. Existing `settings.json` files and symlinks remain unchanged. Re-run the installer after source changes and compare changed managed files with their installed copies.
 
 All skill sources live in `.agents/skills/`, and `.claude/skills` is a relative symlink to that directory (`../.agents/skills`). Both tools discover the same project skills. The installers copy global skills into real user directories; `claude-setup` and `codex-setup` remain repository-scoped and are skipped by both installers. Tool differences (agent type names, worktree tooling, learning-log paths) are spelled out inside each shared skill; the two setup skills retain tool-specific responsibilities.
 
 The conversation parent uses coordinator to create and maintain shared `spec.md`
-and `tasks.md`, with a root-level writer lock covering project selection and updates.
+and `tasks.md` in one shared directory per project.
+Coordinator presents ready task IDs without starting execution; the user can invoke
+orchestrator separately with a task ID.
 Orchestrator executes one task in a dedicated worktree with isolated role contexts
-and its own `task.md`; it links to the shared board rather than managing or copying it.
+without creating a task record; it reads the shared board when given a task ID.
 
 ## Codex setup
 
 Codex configuration is versioned in two trees:
 
 - `.codex/` contains the global `AGENTS.md`, custom-agent TOML files, and the initial `config.toml.template`.
-- `.agents/skills/` contains all skill sources. `orchestrator` uses custom `planner` / `generator` / `evaluator` agents for Plan, Generate, and Evaluate, keeping task state under the active project's `.orchestrator/`; `coordinator` shares durable project state under the active project's `.coordinator/`; and the repository-scoped `claude-setup` and `codex-setup` install their respective configurations. The directory is shared with Claude Code through the `.claude/skills` symlink.
+- `.agents/skills/` contains all skill sources. `orchestrator` uses custom `planner` / `generator` / `evaluator` agents for Plan, Generate, and Evaluate; `coordinator` shares durable project state under the active project's `.coordinator/`; and the repository-scoped `claude-setup` and `codex-setup` install their respective configurations. The directory is shared with Claude Code through the `.claude/skills` symlink.
 
 The main installer deliberately leaves these user-owned locations alone. Install or refresh Codex configuration with:
 

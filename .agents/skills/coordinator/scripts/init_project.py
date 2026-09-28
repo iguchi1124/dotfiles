@@ -13,7 +13,7 @@ from pathlib import Path
 
 
 SKILL_DIR = Path(__file__).resolve().parent.parent
-TEMPLATE_DIR = SKILL_DIR / "assets" / "project-template"
+TEMPLATE_DIR = SKILL_DIR / "assets" / "template"
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 TOKEN_PATTERN = re.compile(r"{{[A-Z0-9_]+}}")
 TEMPLATE_FILES = (

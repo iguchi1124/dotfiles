@@ -6,12 +6,6 @@ title: {{PROJECT_TITLE_YAML}}
 
 Shared directory: `{{COORDINATION_DIR}}`
 
-## Task ID prefixes
-
-| Prefix | Kind of work |
-| --- | --- |
-| {{TASK_ID_PREFIX}} | TBD |
-
 ## Critical path
 
 Undetermined until dependencies and duration estimates are recorded.

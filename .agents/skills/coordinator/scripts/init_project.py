@@ -93,6 +93,7 @@ def main() -> int:
         "COORDINATION_DIR": str(target),
         "CREATED_AT": created_at,
         "ORIGINAL_REQUEST_BLOCK": quote_block(request),
+        "TASK_ID": "{{TASK_ID}}",  # The coordinator chooses the ID format.
     }
 
     parent.mkdir(parents=True, exist_ok=True)

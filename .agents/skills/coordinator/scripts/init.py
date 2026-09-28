@@ -13,7 +13,7 @@ from pathlib import Path
 
 
 SKILL_DIR = Path(__file__).resolve().parent.parent
-TEMPLATE_DIR = SKILL_DIR / "assets" / "project-template"
+TEMPLATE_DIR = SKILL_DIR / "assets" / "template"
 SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 TOKEN_PATTERN = re.compile(r"{{[A-Z0-9_]+}}")
 TEMPLATE_FILES = (
@@ -87,10 +87,10 @@ def main() -> int:
 
     created_at = datetime.now().astimezone().isoformat(timespec="seconds")
     values = {
-        "PROJECT_NAME": args.name.strip(),
-        "PROJECT_TITLE_YAML": json.dumps(args.name.strip(), ensure_ascii=False),
-        "PROJECT_SLUG": args.slug,
-        "COORDINATION_DIR": str(target),
+        "NAME": args.name.strip(),
+        "TITLE_YAML": json.dumps(args.name.strip(), ensure_ascii=False),
+        "SLUG": args.slug,
+        "SHARED_DIR": str(target),
         "CREATED_AT": created_at,
         "ORIGINAL_REQUEST_BLOCK": quote_block(request),
         "TASK_ID": "{{TASK_ID}}",  # The coordinator chooses the ID format.

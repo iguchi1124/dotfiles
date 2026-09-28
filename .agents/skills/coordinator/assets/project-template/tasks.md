@@ -8,8 +8,6 @@ Shared directory: `{{COORDINATION_DIR}}`
 
 ## Task ID prefixes
 
-Each task is one pull request. IDs are `<PREFIX>-<number>`, numbered sequentially within each prefix and never reused. Define the prefixes for this project here before recording tasks.
-
 | Prefix | Kind of work |
 | --- | --- |
 | {{TASK_ID_PREFIX}} | TBD |

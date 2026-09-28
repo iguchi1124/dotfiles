@@ -1,10 +1,10 @@
 ---
-title: {{PROJECT_TITLE_YAML}}
+title: {{TITLE_YAML}}
 ---
 
 # Tasks
 
-Shared directory: `{{COORDINATION_DIR}}`
+Shared directory: `{{SHARED_DIR}}`
 
 ## Critical path
 

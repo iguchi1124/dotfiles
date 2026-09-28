@@ -1,13 +1,13 @@
 ---
-title: {{PROJECT_TITLE_YAML}}
+title: {{TITLE_YAML}}
 status: active
-slug: "{{PROJECT_SLUG}}"
+slug: "{{SLUG}}"
 created_at: "{{CREATED_AT}}"
 ---
 
-# {{PROJECT_NAME}}
+# {{NAME}}
 
-Shared directory: `{{COORDINATION_DIR}}`
+Shared directory: `{{SHARED_DIR}}`
 
 ## Original request
 

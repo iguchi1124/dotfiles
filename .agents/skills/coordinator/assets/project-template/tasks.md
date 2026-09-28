@@ -10,7 +10,7 @@ Shared directory: `{{COORDINATION_DIR}}`
 
 Undetermined until dependencies and duration estimates are recorded.
 
-## {{TASK_ID}} — Outcome
+## {{TASK_ID}}
 
 - State: pending
 - Dependencies: none

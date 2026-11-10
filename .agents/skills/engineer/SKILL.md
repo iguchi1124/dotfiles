@@ -1,9 +1,9 @@
 ---
-name: orchestrator
+name: engineer
 description: Execute one implementation task through isolated Plan, Generate, and Evaluate contexts using tiered models and a dedicated worktree. Use when explicitly requested or separate roles are warranted; not for project-wide task management.
 ---
 
-# Orchestrator
+# Engineer
 
 Execute one task through separate planner, generator, and evaluator contexts. The parent delegates, tracks progress, and reports; it does not implement or evaluate. Use configured models and effort. If a role is unavailable, stop and refer to the tool's setup skill. Editing this skill does not invoke it.
 

@@ -4,11 +4,9 @@
 from __future__ import annotations
 
 import argparse
-import json
 import re
 import shutil
 import tempfile
-from datetime import datetime
 from pathlib import Path
 
 
@@ -29,22 +27,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--slug", required=True, help="short kebab-case project slug")
     parser.add_argument("--name", required=True, help="project display name")
     parser.add_argument(
-        "--request-file",
-        type=Path,
-        help="UTF-8 file containing the user's request verbatim",
-    )
-    parser.add_argument(
         "--root",
         type=Path,
         required=True,
         help="canonical shared root used by every agent, usually the primary checkout",
     )
     return parser.parse_args()
-
-
-def quote_block(value: str) -> str:
-    lines = value.rstrip("\n").splitlines() or [""]
-    return "\n".join(">" if not line else f"> {line}" for line in lines)
 
 
 def render(template_name: str, values: dict[str, str]) -> str:
@@ -70,13 +58,6 @@ def main() -> int:
     if not TEMPLATE_DIR.is_dir():
         raise SystemExit(f"error: bundled template is missing: {TEMPLATE_DIR}")
 
-    request = "TBD (replace with the user's request verbatim)"
-    if args.request_file is not None:
-        request_file = args.request_file.resolve()
-        if not request_file.is_file():
-            raise SystemExit(f"error: request file not found: {request_file}")
-        request = request_file.read_text(encoding="utf-8")
-
     root = args.root.resolve()
     if not root.is_dir():
         raise SystemExit(f"error: project root not found: {root}")
@@ -85,14 +66,8 @@ def main() -> int:
     if target.exists():
         raise SystemExit(f"error: destination already exists: {target}")
 
-    created_at = datetime.now().astimezone().isoformat(timespec="seconds")
     values = {
         "NAME": args.name.strip(),
-        "TITLE_YAML": json.dumps(args.name.strip(), ensure_ascii=False),
-        "SLUG": args.slug,
-        "SHARED_DIR": str(target),
-        "CREATED_AT": created_at,
-        "ORIGINAL_REQUEST_BLOCK": quote_block(request),
         "TASK_ID": "{{TASK_ID}}",  # The coordinator chooses the ID format.
     }
 

@@ -1,5 +1,5 @@
 name = "evaluator"
-model = "gpt-6-astra"
+model = "gpt-6.2-astra"
 model_reasoning_effort = "high"
 description = "Checks changes against the task, plan, conventions, and tests, then returns PASS or FAIL with reproducible findings. Use after implementation or when asked to verify that a change is correct."
 sandbox_mode = "workspace-write"

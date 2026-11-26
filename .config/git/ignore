@@ -17,3 +17,5 @@
 
 # MCP
 .mcp.json
+
+**/.claude/settings.local.json

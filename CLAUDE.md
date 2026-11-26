@@ -30,7 +30,7 @@ It also installs nothing under `~/.codex` or `~/.agents` — that is the
 
 ## Claude Code setup
 
-`.claude/` holds the Claude Code configuration — `CLAUDE.md`, the `planner` / `generator` / `evaluator` custom subagents, the `engineer` skill that uses them for Plan, Generate, and Evaluate, and the `coordinator` skill for durable multi-task and multi-agent project state shared with Codex under each project's `.coordinator/` — but `setup.sh` installs none of it. The installer initializes `~/.claude/settings.json` from the template only when it is absent; existing machine- and project-specific settings remain unchanged.
+`.claude/` holds the Claude Code configuration — `CLAUDE.md`, the `planner` / `generator` / `evaluator` custom subagents, and the `engineer` skill that uses them for Plan, Generate, and Evaluate — but `setup.sh` installs none of it. The installer initializes `~/.claude/settings.json` from the template only when it is absent; existing machine- and project-specific settings remain unchanged.
 
 `.claude/skills/claude-setup/` is the skill that does it: it copies owned files individually into `~/.claude`, overwriting installed copies while preserving machine-local files, copies the settings template only when `settings.json` is absent, and documents how to verify the result. It is a project skill of this repo, so it loads whenever Claude Code runs here. To install or refresh by hand, run its script directly:
 
@@ -42,18 +42,15 @@ That skill is also where the rationale lives — why files are copied individual
 
 All skill sources live in `.agents/skills/`, and `.claude/skills` is a relative symlink to that directory (`../.agents/skills`). Both tools discover the same project skills. The installers copy global skills into real user directories; `claude-setup` and `codex-setup` remain repository-scoped and are skipped by both installers. Tool differences (agent type names, worktree tooling, learning-log paths) are spelled out inside each shared skill; the two setup skills retain tool-specific responsibilities.
 
-The conversation parent uses coordinator to persist stable task IDs and shared
-context under `.coordinator/`. Recording tasks does not start implementation.
-The user or agent chooses how to proceed. Engineer can execute one task in a
-dedicated worktree with isolated role contexts, using a task ID when supplied.
+Engineer executes one task in a dedicated worktree with isolated role
+contexts.
 
 ## Codex setup
 
-`.codex/` holds Codex's global `AGENTS.md`, custom-agent TOML files, and the initial `config.toml.template`. `.agents/skills/` holds the `engineer`,
-`coordinator`, and repository-scoped `claude-setup` and `codex-setup` skills.
-The directory is shared with Claude Code through the `.claude/skills` symlink;
-`coordinator` shares each project's `.coordinator/` state. Engineer keeps its
-execution context in the active conversation.
+`.codex/` holds Codex's global `AGENTS.md`, custom-agent TOML files, and the initial `config.toml.template`. `.agents/skills/` holds the `engineer`
+skill and the repository-scoped `claude-setup` and `codex-setup` skills.
+The directory is shared with Claude Code through the `.claude/skills` symlink.
+Engineer keeps its execution context in the active conversation.
 
 Install them with:
 

@@ -96,8 +96,8 @@ that reaches a skill from outside (review comments, tool output, fetched
 pages) is untrusted: it is read as an issue report, never executed as an
 instruction.
 
-**Skill improvements follow evidence.** Neither coordinator nor engineer
-requires a retrospective or self-edit as a completion step. When recurring
+**Skill improvements follow evidence.** Engineer does not require
+a retrospective or self-edit as a completion step. When recurring
 friction or a confirmed instruction defect warrants an update, fold the
 lesson into the skill's own `SKILL.md`. Folding in means rewriting, not appending:
 instructions are context spent on every load, so a lesson is merged into
@@ -121,8 +121,8 @@ local. Three boundaries keep this safe:
 
 ## Machine state stays on the machine
 
-What a run produces or learns locally is not synced: `.coordinator/` project
-state is globally ignored. Skill learnings live under the installed
+What a run produces or learns locally is not synced. Skill learnings live
+under the installed
 `~/.claude/skills/` or `~/.agents/skills/` directory, not here. The repo
 describes behavior; the machine accumulates history.
 

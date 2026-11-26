@@ -12,9 +12,6 @@
 # Visual Studio Code
 .vscode/
 
-# Coordinator state
-**/.coordinator/
-
 # Local worktree file-copy configuration
 .worktreeinclude
 
